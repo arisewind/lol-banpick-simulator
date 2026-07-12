@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx skills *)",
+      "Bash(curl -sL https://github.com/tw93/Waza/releases/latest/download/setup-statusline.sh)",
+      "Bash(bash)",
+      "Bash(winget install *)",
+      "Bash(where jq *)",
+      "Bash(ls -la \"/c/Users/11978/AppData/Local/Microsoft/WinGet/Packages/jqlang.jq_1.8.2_win64_bin/\")",
+      "Read(//c/Users/11978/AppData/Local/Microsoft/WinGet/Packages/**)",
+      "Bash(cp \"/c/Users/11978/AppData/Local/Microsoft/WinGet/Packages/jqlang.jq_Microsoft.Winget.Source_8wekyb3d8bbwe/jq.exe\" /usr/local/bin/jq.exe)",
+      "Bash(chmod +x /usr/local/bin/jq.exe)",
+      "Read(//tmp/**)",
+      "Read(//c/Users/11978/.claude/**)",
+      "Bash(python3 -c \"import json, sys; json.load\\(sys.stdin\\)\")",
+      "Bash(SETTINGS_FILE=/c/Users/11978/.claude/settings.json python3 -c ' *)",
+      "Bash(pnpm create *)",
+      "Bash(npm install *)"
+    ]
+  }
+}
