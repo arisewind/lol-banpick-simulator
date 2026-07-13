@@ -22,8 +22,22 @@ pnpm electron:dev
 # Build frontend
 pnpm build
 
-# Lint TypeScript/TSX files
+# Lint (ESLint, config in .eslintrc.cjs)
 pnpm lint
+
+# Type-check without emitting (primary static check)
+pnpm tsc --noEmit
+
+# Run tests once (Vitest)
+pnpm test
+
+# Run a single test file / match a test name
+pnpm test src/utils/__tests__/cn.test.ts
+pnpm test -t "拼接多个字符串类名"
+
+# Watch mode / coverage
+pnpm test:watch
+pnpm test:coverage
 
 # Preview production build
 pnpm preview
@@ -31,6 +45,8 @@ pnpm preview
 # Build Windows installer (electron-builder)
 pnpm electron:build
 ```
+
+> **Lint config**: [.eslintrc.cjs](.eslintrc.cjs) — eslint 8 + `@typescript-eslint` + react-hooks/react-refresh, standard baseline + single-quote / no-semicolon style. Two overrides: `src/main/*.js` (CommonJS) uses `espree` + node env; `src/contexts/**` turns off `react-refresh/only-export-components` (provider + hook + default export coexist intentionally). Verification gate: `pnpm lint` + `pnpm tsc --noEmit` + `pnpm test`.
 
 **Alternative**: Use the batch files in project root:
 - `启动开发环境.bat` - Full Electron development
@@ -52,6 +68,20 @@ The project uses pnpm 11+. Critical configuration files:
 1. Check `node_modules/electron/dist/electron.exe` and `path.txt` exist. If missing, run: `ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ node node_modules/electron/install.js`
 2. Check `env | grep ELECTRON_RUN_AS_NODE`. If `1`, unset it before running: `unset ELECTRON_RUN_AS_NODE`
 3. Only suspect code issues after both are verified.
+
+## Testing
+
+The suite (Vitest + @testing-library/react + jsdom) follows the layered conventions defined in [`AGENTS-Subject of Imitation.md`](AGENTS-Subject%20of%20Imitation.md) (the LambChat dev guide) — that file is the canonical reference for test style in this repo.
+
+- **Config**: `vitest.config.ts` (default environment `node`); global setup `vitest.setup.ts`.
+- **Location**: `src/**/__tests__/**/*.test.{ts,tsx,js}`, co-located with the code under test.
+- **Layering by environment**:
+  - Pure utilities & Electron main-process logic → default `node` env (fast, no DOM). e.g. `src/utils/__tests__/cn.test.ts`, `src/main/services/__tests__/heroService.test.js`.
+  - Components & hooks that need a DOM → put `/** @vitest-environment jsdom */` as the **first line** of the file. e.g. `src/components/bp/__tests__/HeroCard.test.tsx`, `src/contexts/__tests__/BPContext.test.tsx`.
+- **Globals are off** (`test.globals` is not enabled), so `@testing-library/react`'s built-in auto-cleanup does **not** fire. `vitest.setup.ts` manually registers `afterEach(cleanup)` to stop `screen` queries leaking between tests — keep it.
+- **Component tests** mock `react-i18next` (`useTranslation: () => ({ t: (k) => k })`) and stub `window.electronAPI`, since neither exists outside Electron.
+
+There is no separate backend service: the "backend" here is the Electron main process (`src/main/`), tested under the node environment.
 
 ## Architecture
 
@@ -159,10 +189,19 @@ This is defined in `BPContext.tsx` `BP_PHASES` constant. Do not modify without v
 - `src/types/hero.ts` - Hero, HeroStats, CounterInfo, DataDragonResponse types
 - `src/types/global.d.ts` - ElectronResponse<T>, ElectronAPI interface, window.electronAPI
 
-## TailwindCSS Custom Colors
+## TailwindCSS & Styling
 
-Extended theme in `tailwind.config.js`:
-- `lol-blue`, `lol-red`, `lol-gold`, `lol-dark`, `lol-darker` - League of Legends brand colors
+Theme extensions live in `tailwind.config.js`:
+
+- **Colors**: `lol-blue` / `-glow` / `-dark`, `lol-red` / `-glow` / `-dark`, `lol-gold` / `-glow`, plus `lol-dark`, `lol-darker`.
+- **Glow shadow tiers**: `blue-sm` / `blue` / `blue-lg`, and matching `-sm` / `-lg` tiers for `red-*` and `gold-*`.
+- **Animations**: `glow`, `border`, `fade-in`, `slide-in-up`, `scale-in` (keyframes are co-located in the same config).
+
+**Custom `boxShadow` keys do NOT support Tailwind's opacity modifier.** Writing `shadow-blue/40` is silently reinterpreted as shadow-*color* tinting and emits no glow at all — the named key is ignored. That's why each intensity is its own explicit key (`blue-sm` / `blue` / `blue-lg`): use the named tiers directly and never append `/N` to them. (Standard color utilities like `border-lol-blue/30` are unaffected — this caveat is specific to the custom `boxShadow` keys.)
+
+**Editing `tailwind.config.js` requires restarting the Vite dev server.** HMR does not reload the Tailwind config, so config-driven style changes silently appear to "not work" until the server is restarted.
+
+Game-feel design tokens and motion live in `src/styles/`, imported once via the app entry: `main.tsx` → `globals.css` → (`@import './design-system.css'`, `@import './animations.css'`). Add CSS custom properties / keyframes there rather than inlining them in components.
 
 ## Key Implementation Details
 
