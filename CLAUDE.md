@@ -58,14 +58,16 @@ The project uses pnpm 11+. Critical configuration files:
 ### Electron Structure
 
 ```
-electron/
+src/main/
 ├── main.js                    # Main process entry, window creation
 ├── preload.js                 # IPC bridge via contextBridge
-├── ipc/heroHandler.js         # IPC handlers for hero data
-└── services/heroService.js    # Hero data service with caching
+├── ipc/
+│   └── heroHandler.js         # IPC handlers for hero data
+└── services/
+    └── heroService.js         # Hero data service with caching
 ```
 
-**IPC Pattern**: Main process handlers register in `electron/ipc/heroHandler.js`. Preload exposes via `contextBridge` as `window.electronAPI`. Renderer invokes with `await window.electronAPI.handlerName()`.
+**IPC Pattern**: Main process handlers register in `src/main/ipc/heroHandler.js`. Preload exposes via `contextBridge` as `window.electronAPI`. Renderer invokes with `await window.electronAPI.handlerName()`.
 
 Available IPC methods:
 - `fetchHeroes()` - Fetch all champions from Data Dragon API
@@ -166,7 +168,7 @@ Extended theme in `tailwind.config.js`:
 
 ### Hero Data Caching
 
-The Electron main process (`electron/services/heroService.js`) implements a 6-hour cache for hero data to minimize API calls to Data Dragon. The cache is stored in a Map and cleared on app restart if expired.
+The Electron main process (`src/main/services/heroService.js`) implements a 6-hour cache for hero data to minimize API calls to Data Dragon. The cache is stored in a Map and cleared on app restart if expired.
 
 **Data Dragon locale**: Uses `zh_CN` endpoint, returning Chinese hero names and descriptions.
 
@@ -177,5 +179,5 @@ HeroProvider is outermost because other components may need hero data independen
 ### TypeScript Configs
 
 - `tsconfig.json` - Frontend (src/), includes React types, JSX
-- `tsconfig.electron.json` - Electron main process (electron/), outputs to dist-electron/
+- `tsconfig.electron.json` - Electron main process (src/main/), outputs to build/main/
 - `tsconfig.node.json` - Vite config files only

@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "description": "League of Legends Ban/Pick Simulator",
-  "main": "electron/main.js",
+  "main": "src/main/main.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -45,8 +45,7 @@
       "output": "release"
     },
     "files": [
-      "dist/**/*",
-      "dist-electron/**/*",
+      "build/**/*",
       "package.json"
     ],
     "win": {

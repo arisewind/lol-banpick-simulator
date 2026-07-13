@@ -10,9 +10,9 @@
     "strict": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": false,
-    "outDir": "dist-electron",
-    "rootDir": "electron"
+    "outDir": "build/main",
+    "rootDir": "src/main"
   },
-  "include": ["electron/**/*"],
+  "include": ["src/main/**/*"],
   "exclude": ["node_modules"]
 }

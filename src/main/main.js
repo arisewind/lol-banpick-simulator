@@ -5,8 +5,8 @@ const fs = require('fs')
 
 let mainWindow = null
 
-// 更可靠的开发环境检测：检查 dist 目录是否存在
-const distPath = path.join(__dirname, '../dist')
+// 更可靠的开发环境检测：检查 build/renderer 目录是否存在
+const distPath = path.join(__dirname, '../../build/renderer')
 const isDev = !fs.existsSync(distPath) || process.env.NODE_ENV === 'development'
 
 function createWindow() {
@@ -29,7 +29,7 @@ function createWindow() {
     mainWindow.loadURL('http://localhost:5173')
     mainWindow.webContents.openDevTools()
   } else {
-    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'))
+    mainWindow.loadFile(path.join(__dirname, '../../build/renderer/index.html'))
   }
 
   mainWindow.once('ready-to-show', () => {
