@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 导入设计系统和动画 */
+@import './design-system.css';
+@import './animations.css';
+
 /* 自定义滚动条 */
 ::-webkit-scrollbar {
   width: 8px;

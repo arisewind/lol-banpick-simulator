@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { HeroWithStats } from '../../types/hero'
+import { cn } from '../../utils/cn'
 
 interface HeroCardProps {
   hero: HeroWithStats
@@ -40,19 +41,39 @@ export default function HeroCard({ hero, isDisabled, isCurrentPhase, actionType,
 
   const getCardStyle = () => {
     if (isDisabled) {
-      return 'opacity-30 cursor-not-allowed bg-slate-800'
+      return cn(
+        'opacity-40 grayscale cursor-not-allowed bg-slate-900/80 border-2 border-slate-700',
+        'transition-all duration-150 ease-out'
+      )
     }
 
     if (!isCurrentPhase) {
-      return 'opacity-50 cursor-not-allowed bg-slate-800'
+      return cn(
+        'opacity-50 cursor-not-allowed bg-slate-900/60 border-2 border-slate-700',
+        'transition-all duration-150 ease-out'
+      )
     }
 
-    const baseStyle = 'cursor-pointer transition hover:scale-105 hover:shadow-lg'
+    // 可交互状态
+    const baseStyle = cn(
+      'cursor-pointer bg-slate-900/80 border-2',
+      'transition-all duration-150 ease-out',
+      'hover:scale-105 active:scale-100',
+      'hover:shadow-lg hover:shadow-lol-gold/20'
+    )
 
     if (actionType === 'ban') {
-      return `${baseStyle} bg-red-950/30 hover:bg-red-950/50 border-red-900/30 hover:border-red-700/50`
+      return cn(
+        baseStyle,
+        'border-lol-red/40 hover:border-lol-red/60 hover:shadow-red',
+        'animate-fade-in'
+      )
     } else {
-      return `${baseStyle} bg-blue-950/30 hover:bg-blue-950/50 border-blue-900/30 hover:border-blue-700/50`
+      return cn(
+        baseStyle,
+        'border-lol-blue/40 hover:border-lol-blue/60 hover:shadow-blue',
+        'animate-fade-in'
+      )
     }
   }
 
@@ -61,13 +82,25 @@ export default function HeroCard({ hero, isDisabled, isCurrentPhase, actionType,
 
     if (actionType === 'ban') {
       return (
-        <div className="absolute right-1 top-1 rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white shadow">
+        <div className={cn(
+          'absolute right-1 top-1 rounded px-2 py-1',
+          'bg-lol-red text-white text-[10px] font-bold shadow-red',
+          'border border-lol-red/50',
+          'animate-glow',
+          'transition-all duration-150'
+        )}>
           {t('bp.ban')}
         </div>
       )
     } else if (actionType === 'pick') {
       return (
-        <div className="absolute right-1 top-1 rounded bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold text-white shadow">
+        <div className={cn(
+          'absolute right-1 top-1 rounded px-2 py-1',
+          'bg-lol-blue text-white text-[10px] font-bold shadow-blue',
+          'border border-lol-blue/50',
+          'animate-glow',
+          'transition-all duration-150'
+        )}>
           {t('bp.pick')}
         </div>
       )

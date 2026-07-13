@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useBP } from '../../contexts/BPContext'
 import { useHeroes } from '../../contexts/HeroContext'
+import { cn } from '../../utils/cn'
 
 interface TeamSlotProps {
   heroId: string | null
@@ -46,11 +47,13 @@ function TeamSlot({ heroId, type, side, index }: TeamSlotProps) {
   if (!hero) {
     return (
       <div
-        className={`${baseStyle} border-2 border-dashed ${
-          isBan
-            ? 'border-slate-700 bg-slate-900/50'
-            : `border-${isBlue ? 'lol-blue' : 'lol-red'}/30 bg-slate-900/50`
-        }`}
+        className={cn(
+          baseStyle,
+          'border-2 border-dashed bg-slate-900/50',
+          isBan ? 'border-slate-700' : cn(
+            isBlue ? 'border-lol-blue/30 shadow-blue-sm' : 'border-lol-red/30 shadow-red-sm'
+          )
+        )}
       >
         <span className="text-xs text-slate-700">{index + 1}</span>
       </div>
@@ -59,11 +62,18 @@ function TeamSlot({ heroId, type, side, index }: TeamSlotProps) {
 
   return (
     <div
-      className={`${baseStyle} ${
+      className={cn(
+        baseStyle,
+        'overflow-hidden',
         isBan
           ? 'bg-slate-800/80 border border-slate-700'
-          : `bg-${isBlue ? 'lol-blue' : 'lol-red'}/10 border border-${isBlue ? 'lol-blue' : 'lol-red'}/30`
-      } overflow-hidden`}
+          : cn(
+              'bg-slate-900/50 border-2',
+              isBlue
+                ? 'border-lol-blue/40 shadow-blue-sm'
+                : 'border-lol-red/40 shadow-red-sm'
+            )
+      )}
       title={hero.name}
     >
       {imageUrl ? (
@@ -84,42 +94,53 @@ function TeamSlot({ heroId, type, side, index }: TeamSlotProps) {
 
 export default function BanPickArena() {
   const { t } = useTranslation()
-  const { currentPhase, blueTeam, redTeam, getCurrentPhase, undo, reset } = useBP()
+  const { currentPhase, blueTeam, redTeam, getCurrentPhase } = useBP()
 
   const phase = getCurrentPhase()
 
   return (
     <div className="flex h-full flex-col">
       {/* 阶段指示器 */}
-      <div className="mb-6 rounded-lg bg-gradient-to-r from-slate-900/50 to-slate-800/50 p-4 border border-slate-700/50">
+      <div className="mb-6 rounded-lg bg-gradient-to-r from-slate-900/80 to-slate-800/80 p-4 border border-slate-700/50 backdrop-blur-sm">
         <div className="mb-2 flex items-center justify-between">
           <span className="text-sm text-slate-400">{t('bp.phase')}</span>
-          <span className="text-sm text-slate-500">
-            {currentPhase + 1}/20
-          </span>
+          <div className="flex items-center gap-2">
+            <div className="h-1.5 w-24 rounded-full bg-slate-800 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-lol-blue to-lol-blue-glow transition-all duration-300"
+                style={{ width: `${((currentPhase + 1) / 20) * 100}%` }}
+              />
+            </div>
+            <span className="text-sm text-slate-400 font-mono">
+              {currentPhase + 1}/20
+            </span>
+          </div>
         </div>
 
         {phase ? (
           <div className="flex items-center gap-3">
             <div
-              className={`rounded px-4 py-2 text-sm font-bold transition-all ${
+              className={cn(
+                'rounded px-4 py-2 text-sm font-bold transition-all duration-200',
+                'shadow-lg animate-glow',
                 phase.side === 'blue'
-                  ? 'bg-lol-blue text-lol-darker shadow-lg shadow-blue-900/20'
-                  : 'bg-lol-red text-white shadow-lg shadow-red-900/20'
-              }`}
+                  ? 'bg-lol-blue text-lol-darker shadow-blue'
+                  : 'bg-lol-red text-white shadow-red'
+              )}
             >
               {t(`bp.${phase.side}Team`)}
             </div>
-            <div className="text-sm text-slate-300">
-              {t(`bp.${phase.action}Hero`)}
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-bold text-slate-200">{t(`bp.${phase.action}`)}</span>
+              <span className="text-sm text-slate-400">{t('bp.turn')}</span>
             </div>
-            <div className="ml-auto text-xs text-slate-500">
-              {t('common.step', { step: phase.step })}
+            <div className="ml-auto text-xs text-slate-500 font-mono">
+              STEP {phase.step}
             </div>
           </div>
         ) : (
           <div className="text-sm font-medium text-green-400 flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+            <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse shadow-green-500/50" />
             {t('bp.complete')}
           </div>
         )}
@@ -128,9 +149,15 @@ export default function BanPickArena() {
       {/* BP 区域 */}
       <div className="grid flex-1 grid-cols-2 gap-8">
         {/* 蓝方 */}
-        <div className="rounded-lg bg-gradient-to-b from-slate-900/50 to-slate-900/30 p-6 border border-lol-blue/20">
+        <div className={cn(
+          'rounded-lg bg-gradient-to-b from-slate-900/80 to-slate-900/40 p-6 border backdrop-blur-sm',
+          'border-lol-blue/30 shadow-blue-sm transition-all duration-300'
+        )}>
           <div className="mb-6 flex items-center gap-3">
-            <div className="h-3 w-3 rounded-full bg-lol-blue shadow-lg shadow-blue-500/50" />
+            <div className={cn(
+              'h-3 w-3 rounded-full shadow-lg',
+              'bg-lol-blue animate-glow shadow-blue-lg'
+            )} />
             <h3 className="text-base font-bold text-lol-blue">{t('bp.blueTeam')}</h3>
             <span className="ml-auto text-xs text-slate-500">
               {t('bp.picksCount', { count: blueTeam.picks.length })}
@@ -171,9 +198,15 @@ export default function BanPickArena() {
         </div>
 
         {/* 红方 */}
-        <div className="rounded-lg bg-gradient-to-b from-slate-900/50 to-slate-900/30 p-6 border border-lol-red/20">
+        <div className={cn(
+          'rounded-lg bg-gradient-to-b from-slate-900/80 to-slate-900/40 p-6 border backdrop-blur-sm',
+          'border-lol-red/30 shadow-red-sm transition-all duration-300'
+        )}>
           <div className="mb-6 flex items-center gap-3">
-            <div className="h-3 w-3 rounded-full bg-lol-red shadow-lg shadow-red-500/50" />
+            <div className={cn(
+              'h-3 w-3 rounded-full shadow-lg',
+              'bg-lol-red animate-glow shadow-red-lg'
+            )} />
             <h3 className="text-base font-bold text-lol-red">{t('bp.redTeam')}</h3>
             <span className="ml-auto text-xs text-slate-500">
               {t('bp.picksCount', { count: redTeam.picks.length })}
@@ -212,23 +245,6 @@ export default function BanPickArena() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* 操作按钮 */}
-      <div className="mt-6 flex justify-center gap-3">
-        <button
-          onClick={undo}
-          disabled={currentPhase === 0}
-          className="rounded bg-slate-700 px-6 py-2.5 text-sm font-medium hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg"
-        >
-          {t('common.undo')}
-        </button>
-        <button
-          onClick={reset}
-          className="rounded bg-slate-700 px-6 py-2.5 text-sm font-medium hover:bg-slate-600 transition-all shadow-lg"
-        >
-          {t('common.reset')}
-        </button>
       </div>
     </div>
   )

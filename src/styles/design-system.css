@@ -1,0 +1,217 @@
+/* LoL Ban/Pick Simulator 设计系统 */
+
+@layer base {
+  :root {
+    /* === LoL 游戏化配色 === */
+    /* 蓝方配色 */
+    --lol-blue-primary: #0ac8b9;
+    --lol-blue-glow: #00d4ff;
+    --lol-blue-dark: #08a094;
+
+    /* 红方配色 */
+    --lol-red-primary: #f2385b;
+    --lol-red-glow: #ff5c7c;
+    --lol-red-dark: #c92641;
+
+    /* 金色装饰 */
+    --lol-gold: #c8aa6e;
+    --lol-gold-glow: #ffd700;
+
+    /* 背景色系 */
+    --bg-primary: #091428;
+    --bg-secondary: #0a152e;
+    --bg-card: #010a13;
+    --bg-glass: rgba(10, 21, 46, 0.85);
+
+    /* 边框色系 */
+    --border-subtle: #1e293b;
+    --border-default: #334155;
+    --border-accent: #475569;
+
+    /* 文本色系 */
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+
+    /* === 间距系统（8px 基准） === */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-6: 24px;
+    --space-8: 32px;
+
+    /* === 阴影系统 === */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-base: 0 4px 6px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.7);
+
+    /* 游戏化光效 */
+    --shadow-blue: 0 0 20px rgba(10, 200, 185, 0.4);
+    --shadow-red: 0 0 20px rgba(242, 56, 91, 0.4);
+    --shadow-gold: 0 0 20px rgba(200, 170, 110, 0.3);
+
+    /* === 动画参数 === */
+    --transition-fast: 150ms;
+    --transition-base: 250ms;
+    --transition-slow: 350ms;
+    --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* === 游戏化边框类 === */
+@layer components {
+  /* 蓝方游戏化边框 */
+  .border-game-blue {
+    position: relative;
+    border: 1px solid rgba(10, 200, 185, 0.4);
+    box-shadow:
+      0 0 10px rgba(10, 200, 185, 0.2),
+      inset 0 0 20px rgba(10, 200, 185, 0.05);
+  }
+
+  .border-game-blue::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 200, 185, 0.5) 0%,
+      transparent 50%,
+      rgba(10, 200, 185, 0.2) 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* 红方游戏化边框 */
+  .border-game-red {
+    position: relative;
+    border: 1px solid rgba(242, 56, 91, 0.4);
+    box-shadow:
+      0 0 10px rgba(242, 56, 91, 0.2),
+      inset 0 0 20px rgba(242, 56, 91, 0.05);
+  }
+
+  .border-game-red::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      180deg,
+      rgba(242, 56, 91, 0.5) 0%,
+      transparent 50%,
+      rgba(242, 56, 91, 0.2) 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* 金色装饰边框 */
+  .border-game-gold {
+    border: 1px solid rgba(200, 170, 110, 0.5);
+    box-shadow:
+      0 0 15px rgba(200, 170, 110, 0.3),
+      inset 0 0 10px rgba(200, 170, 110, 0.1);
+  }
+
+  /* 玻璃态背景 */
+  .bg-glass {
+    background: var(--bg-glass);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* 卡片基础样式 */
+  .card-base {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-base);
+  }
+
+  /* 输入框游戏化样式 */
+  .input-game {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid var(--border-default);
+    transition: all var(--transition-base) var(--ease-out);
+  }
+
+  .input-game:focus {
+    border-color: var(--lol-blue-primary);
+    box-shadow: 0 0 15px rgba(10, 200, 185, 0.3);
+    outline: none;
+  }
+
+  /* 按钮游戏化样式 */
+  .btn-game {
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-fast) var(--ease-out);
+  }
+
+  .btn-game::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 100%
+    );
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  .btn-game:hover::before {
+    opacity: 1;
+  }
+
+  .btn-game:active {
+    transform: scale(0.98);
+  }
+}
+
+/* === 槽位样式 === */
+@layer components {
+  /* 空槽位 */
+  .slot-empty {
+    background: rgba(15, 23, 42, 0.6);
+    border: 2px dashed var(--border-subtle);
+    transition: all var(--transition-base) var(--ease-out);
+  }
+
+  .slot-empty-blue {
+    border-color: rgba(10, 200, 185, 0.3);
+    box-shadow: inset 0 0 20px rgba(10, 200, 185, 0.05);
+  }
+
+  .slot-empty-red {
+    border-color: rgba(242, 56, 91, 0.3);
+    box-shadow: inset 0 0 20px rgba(242, 56, 91, 0.05);
+  }
+
+  /* 已填充槽位 */
+  .slot-filled-blue {
+    border: 2px solid rgba(10, 200, 185, 0.6);
+    box-shadow:
+      0 0 10px rgba(10, 200, 185, 0.3),
+      inset 0 0 15px rgba(10, 200, 185, 0.1);
+  }
+
+  .slot-filled-red {
+    border: 2px solid rgba(242, 56, 91, 0.6);
+    box-shadow:
+      0 0 10px rgba(242, 56, 91, 0.3),
+      inset 0 0 15px rgba(242, 56, 91, 0.1);
+  }
+}

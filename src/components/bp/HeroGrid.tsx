@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useBP } from '../../contexts/BPContext'
 import { useHeroes } from '../../contexts/HeroContext'
 import HeroCard from './HeroCard'
+import { cn } from '../../utils/cn'
 
 // 获取标签的翻译文本
 function getTagLabel(tag: string, t: (key: string) => string): string {
@@ -52,7 +53,11 @@ export default function HeroGrid() {
           placeholder={t('hero.searchPlaceholder')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full rounded border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+          className={cn(
+            'input-game w-full rounded px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500',
+            'border-slate-700 bg-slate-900/80 backdrop-blur-sm',
+            'focus:ring-2 focus:ring-lol-blue/20'
+          )}
         />
       </div>
 
@@ -60,14 +65,26 @@ export default function HeroGrid() {
       <div className="mb-3">
         <button
           onClick={() => setShowTags(!showTags)}
-          className="mb-2 flex w-full items-center justify-between rounded border border-slate-700 bg-slate-800/50 px-3 py-2 text-xs text-slate-400 hover:bg-slate-800"
+          className={cn(
+            'mb-2 flex w-full items-center justify-between rounded px-3 py-2 text-xs',
+            'border border-slate-700 bg-slate-900/60 backdrop-blur-sm text-slate-400',
+            'hover:bg-slate-800 hover:border-slate-600',
+            'transition-all duration-150'
+          )}
         >
           <span>{t('hero.tagFilter')} {selectedTags.length > 0 && `(${selectedTags.length})`}</span>
-          <span className="text-slate-500">{showTags ? '▼' : '▶'}</span>
+          <span className={cn(
+            'transition-transform duration-150',
+            showTags ? 'rotate-90' : ''
+          )}>▶</span>
         </button>
 
         {showTags && (
-          <div className="mt-2 flex flex-wrap gap-1.5 rounded border border-slate-700/50 bg-slate-800/30 p-2">
+          <div className={cn(
+            'mt-2 flex flex-wrap gap-2 rounded p-3',
+            'border border-slate-700/50 bg-slate-900/40 backdrop-blur-sm',
+            'animate-slide-in-up'
+          )}>
             {availableTags.map((tagEn) => {
               const isSelected = selectedTags.includes(tagEn)
               return (
@@ -80,11 +97,19 @@ export default function HeroGrid() {
                       setSelectedTags([...selectedTags, tagEn])
                     }
                   }}
-                  className={`rounded px-2 py-1 text-xs transition ${
+                  className={cn(
+                    'rounded px-3 py-1.5 text-xs font-medium transition-all duration-150',
+                    'hover:scale-105',
                     isSelected
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-slate-700 text-slate-400 hover:bg-slate-600'
-                  }`}
+                      ? cn(
+                          'bg-lol-blue text-white shadow-blue',
+                          'border border-lol-blue/50'
+                        )
+                      : cn(
+                          'bg-slate-800 text-slate-400 border border-slate-700',
+                          'hover:border-slate-600 hover:text-slate-300'
+                        )
+                  )}
                 >
                   {getTagLabel(tagEn, t)}
                 </button>
@@ -93,7 +118,10 @@ export default function HeroGrid() {
             {selectedTags.length > 0 && (
               <button
                 onClick={() => setSelectedTags([])}
-                className="ml-auto rounded px-2 py-1 text-xs text-slate-500 hover:text-slate-300"
+                className={cn(
+                  'ml-auto rounded px-3 py-1.5 text-xs font-medium transition-all duration-150',
+                  'text-slate-500 hover:text-lol-gold hover:scale-105'
+                )}
               >
                 {t('common.clear')}
               </button>
@@ -104,8 +132,15 @@ export default function HeroGrid() {
 
       {/* 当前操作提示 */}
       {phase && (
-        <div className="mb-3 rounded bg-slate-800/50 p-2 text-center">
-          <span className="text-xs text-slate-400">
+        <div className={cn(
+          'mb-3 rounded p-3 text-center',
+          'border backdrop-blur-sm transition-all duration-200',
+          phase.side === 'blue'
+            ? 'bg-lol-blue/10 border-lol-blue/30 text-lol-blue'
+            : 'bg-lol-red/10 border-lol-red/30 text-lol-red',
+          'animate-fade-in'
+        )}>
+          <span className="text-xs font-medium">
             {t(`bp.${phase.action}Hero`)} -{' '}
             {t(`bp.${phase.side}Team`)}{t('bp.turn')}
           </span>
@@ -148,11 +183,17 @@ export default function HeroGrid() {
         </div>
         <div className="flex gap-2 text-xs">
           <div className="flex items-center gap-1">
-            <div className="h-3 w-3 rounded border border-red-900/30 bg-red-950/30" />
+            <div className={cn(
+              'h-3 w-3 rounded border-2',
+              'border-lol-red/60 bg-lol-red/20'
+            )} />
             <span className="text-slate-600">{t('bp.ban')}</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="h-3 w-3 rounded border border-blue-900/30 bg-blue-950/30" />
+            <div className={cn(
+              'h-3 w-3 rounded border-2',
+              'border-lol-blue/60 bg-lol-blue/20'
+            )} />
             <span className="text-slate-600">{t('bp.pick')}</span>
           </div>
         </div>
