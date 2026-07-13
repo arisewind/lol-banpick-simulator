@@ -101,14 +101,8 @@ export default function HeroGrid() {
                     'rounded px-3 py-1.5 text-xs font-medium transition-all duration-150',
                     'hover:scale-105',
                     isSelected
-                      ? cn(
-                          'bg-lol-blue text-white shadow-blue',
-                          'border border-lol-blue/50'
-                        )
-                      : cn(
-                          'bg-slate-800 text-slate-400 border border-slate-700',
-                          'hover:border-slate-600 hover:text-slate-300'
-                        )
+                      ? 'bg-lol-blue text-white shadow-blue border border-lol-blue/50'
+                      : 'bg-slate-800 text-slate-400 border border-slate-700 hover:border-slate-600 hover:text-slate-300'
                   )}
                 >
                   {getTagLabel(tagEn, t)}

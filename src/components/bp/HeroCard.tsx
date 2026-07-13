@@ -54,58 +54,40 @@ export default function HeroCard({ hero, isDisabled, isCurrentPhase, actionType,
       )
     }
 
-    // 可交互状态
-    const baseStyle = cn(
+    // 可交互状态：ban/pick 仅颜色 token 不同。必须用完整字面量三元，禁止 `${color}` 拼接——
+    // Tailwind JIT 只扫描字面量，动态拼接的类名不会被生成。
+    const accent = actionType === 'ban'
+      ? 'border-lol-red/40 hover:border-lol-red/60 hover:shadow-red'
+      : 'border-lol-blue/40 hover:border-lol-blue/60 hover:shadow-blue'
+
+    return cn(
       'cursor-pointer bg-slate-900/80 border-2',
       'transition-all duration-150 ease-out',
       'hover:scale-105 active:scale-100',
-      'hover:shadow-lg hover:shadow-lol-gold/20'
+      'hover:shadow-lg hover:shadow-lol-gold/20',
+      accent,
+      'animate-fade-in'
     )
-
-    if (actionType === 'ban') {
-      return cn(
-        baseStyle,
-        'border-lol-red/40 hover:border-lol-red/60 hover:shadow-red',
-        'animate-fade-in'
-      )
-    } else {
-      return cn(
-        baseStyle,
-        'border-lol-blue/40 hover:border-lol-blue/60 hover:shadow-blue',
-        'animate-fade-in'
-      )
-    }
   }
 
   const getActionBadge = () => {
-    if (!isCurrentPhase || isDisabled) return null
+    if (!isCurrentPhase || isDisabled || !actionType) return null
 
-    if (actionType === 'ban') {
-      return (
-        <div className={cn(
-          'absolute right-1 top-1 rounded px-2 py-1',
-          'bg-lol-red text-white text-[10px] font-bold',
-          'border border-lol-red/50',
-          'animate-glow glow-red',
-          'transition-all duration-150'
-        )}>
-          {t('bp.ban')}
-        </div>
-      )
-    } else if (actionType === 'pick') {
-      return (
-        <div className={cn(
-          'absolute right-1 top-1 rounded px-2 py-1',
-          'bg-lol-blue text-white text-[10px] font-bold',
-          'border border-lol-blue/50',
-          'animate-glow glow-blue',
-          'transition-all duration-150'
-        )}>
-          {t('bp.pick')}
-        </div>
-      )
-    }
-    return null
+    // ban/pick 仅颜色 token 与文案不同；同样用字面量三元，不可拼接
+    const isBan = actionType === 'ban'
+
+    return (
+      <div className={cn(
+        'absolute right-1 top-1 rounded px-2 py-1 text-white text-[10px] font-bold border',
+        isBan
+          ? 'bg-lol-red border-lol-red/50 glow-red'
+          : 'bg-lol-blue border-lol-blue/50 glow-blue',
+        'animate-glow',
+        'transition-all duration-150'
+      )}>
+        {t(isBan ? 'bp.ban' : 'bp.pick')}
+      </div>
+    )
   }
 
   return (

@@ -47,9 +47,6 @@
     --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.7);
 
     /* 游戏化光效 */
-    --shadow-blue: 0 0 20px rgba(10, 200, 185, 0.4);
-    --shadow-red: 0 0 20px rgba(242, 56, 91, 0.4);
-    --shadow-gold: 0 0 20px rgba(200, 170, 110, 0.3);
 
     /* === 动画参数 === */
     --transition-fast: 150ms;

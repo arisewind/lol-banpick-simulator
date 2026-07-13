@@ -50,9 +50,7 @@ function TeamSlot({ heroId, type, side, index }: TeamSlotProps) {
         className={cn(
           baseStyle,
           'border-2 border-dashed bg-slate-900/50',
-          isBan ? 'border-slate-700' : cn(
-            isBlue ? 'border-lol-blue/30 shadow-blue-sm' : 'border-lol-red/30 shadow-red-sm'
-          )
+          isBan ? 'border-slate-700' : (isBlue ? 'border-lol-blue/30 shadow-blue-sm' : 'border-lol-red/30 shadow-red-sm')
         )}
       >
         <span className="text-xs text-slate-700">{index + 1}</span>
@@ -67,12 +65,7 @@ function TeamSlot({ heroId, type, side, index }: TeamSlotProps) {
         'overflow-hidden',
         isBan
           ? 'bg-slate-800/80 border border-slate-700'
-          : cn(
-              'bg-slate-900/50 border-2',
-              isBlue
-                ? 'border-lol-blue/40 shadow-blue-sm'
-                : 'border-lol-red/40 shadow-red-sm'
-            )
+          : 'bg-slate-900/50 border-2 ' + (isBlue ? 'border-lol-blue/40 shadow-blue-sm' : 'border-lol-red/40 shadow-red-sm')
       )}
       title={hero.name}
     >
