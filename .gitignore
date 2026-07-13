@@ -9,7 +9,6 @@ out/
 
 # Local files
 TODO.md
-*.bat
 
 # IDE
 .vscode/
