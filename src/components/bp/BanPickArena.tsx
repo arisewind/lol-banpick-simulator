@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useBP } from '../../contexts/BPContext'
 import { useHeroes } from '../../contexts/HeroContext'
 
@@ -82,6 +83,7 @@ function TeamSlot({ heroId, type, side, index }: TeamSlotProps) {
 }
 
 export default function BanPickArena() {
+  const { t } = useTranslation()
   const { currentPhase, blueTeam, redTeam, getCurrentPhase, undo, reset } = useBP()
 
   const phase = getCurrentPhase()
@@ -91,7 +93,7 @@ export default function BanPickArena() {
       {/* 阶段指示器 */}
       <div className="mb-6 rounded-lg bg-gradient-to-r from-slate-900/50 to-slate-800/50 p-4 border border-slate-700/50">
         <div className="mb-2 flex items-center justify-between">
-          <span className="text-sm text-slate-400">当前阶段</span>
+          <span className="text-sm text-slate-400">{t('bp.phase')}</span>
           <span className="text-sm text-slate-500">
             {currentPhase + 1}/20
           </span>
@@ -106,19 +108,19 @@ export default function BanPickArena() {
                   : 'bg-lol-red text-white shadow-lg shadow-red-900/20'
               }`}
             >
-              {phase.side === 'blue' ? '蓝方' : '红方'}
+              {t(`bp.${phase.side}Team`)}
             </div>
             <div className="text-sm text-slate-300">
-              {phase.action === 'ban' ? '禁用英雄' : '选择英雄'}
+              {t(`bp.${phase.action}Hero`)}
             </div>
             <div className="ml-auto text-xs text-slate-500">
-              第 {phase.step} 步
+              {t('common.step', { step: phase.step })}
             </div>
           </div>
         ) : (
           <div className="text-sm font-medium text-green-400 flex items-center gap-2">
             <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-            BP 流程已完成
+            {t('bp.complete')}
           </div>
         )}
       </div>
@@ -129,16 +131,16 @@ export default function BanPickArena() {
         <div className="rounded-lg bg-gradient-to-b from-slate-900/50 to-slate-900/30 p-6 border border-lol-blue/20">
           <div className="mb-6 flex items-center gap-3">
             <div className="h-3 w-3 rounded-full bg-lol-blue shadow-lg shadow-blue-500/50" />
-            <h3 className="text-base font-bold text-lol-blue">蓝方</h3>
+            <h3 className="text-base font-bold text-lol-blue">{t('bp.blueTeam')}</h3>
             <span className="ml-auto text-xs text-slate-500">
-              {blueTeam.picks.length}/5 已选择
+              {t('bp.picksCount', { count: blueTeam.picks.length })}
             </span>
           </div>
 
           {/* Ban 区 */}
           <div className="mb-6">
             <div className="mb-3 flex items-center gap-2">
-              <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">禁用</span>
+              <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">{t('bp.ban')}</span>
               <div className="flex-1 h-px bg-slate-800" />
             </div>
             <div className="grid grid-cols-5 gap-2">
@@ -154,7 +156,7 @@ export default function BanPickArena() {
           {/* Pick 区 */}
           <div>
             <div className="mb-3 flex items-center gap-2">
-              <span className="text-xs font-medium text-lol-blue uppercase tracking-wider">选择</span>
+              <span className="text-xs font-medium text-lol-blue uppercase tracking-wider">{t('bp.pick')}</span>
               <div className="flex-1 h-px bg-lol-blue/20" />
             </div>
             <div className="grid grid-cols-5 gap-2">
@@ -172,16 +174,16 @@ export default function BanPickArena() {
         <div className="rounded-lg bg-gradient-to-b from-slate-900/50 to-slate-900/30 p-6 border border-lol-red/20">
           <div className="mb-6 flex items-center gap-3">
             <div className="h-3 w-3 rounded-full bg-lol-red shadow-lg shadow-red-500/50" />
-            <h3 className="text-base font-bold text-lol-red">红方</h3>
+            <h3 className="text-base font-bold text-lol-red">{t('bp.redTeam')}</h3>
             <span className="ml-auto text-xs text-slate-500">
-              {redTeam.picks.length}/5 已选择
+              {t('bp.picksCount', { count: redTeam.picks.length })}
             </span>
           </div>
 
           {/* Ban 区 */}
           <div className="mb-6">
             <div className="mb-3 flex items-center gap-2">
-              <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">禁用</span>
+              <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">{t('bp.ban')}</span>
               <div className="flex-1 h-px bg-slate-800" />
             </div>
             <div className="grid grid-cols-5 gap-2">
@@ -197,7 +199,7 @@ export default function BanPickArena() {
           {/* Pick 区 */}
           <div>
             <div className="mb-3 flex items-center gap-2">
-              <span className="text-xs font-medium text-lol-red uppercase tracking-wider">选择</span>
+              <span className="text-xs font-medium text-lol-red uppercase tracking-wider">{t('bp.pick')}</span>
               <div className="flex-1 h-px bg-lol-red/20" />
             </div>
             <div className="grid grid-cols-5 gap-2">
@@ -219,13 +221,13 @@ export default function BanPickArena() {
           disabled={currentPhase === 0}
           className="rounded bg-slate-700 px-6 py-2.5 text-sm font-medium hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg"
         >
-          撤销
+          {t('common.undo')}
         </button>
         <button
           onClick={reset}
           className="rounded bg-slate-700 px-6 py-2.5 text-sm font-medium hover:bg-slate-600 transition-all shadow-lg"
         >
-          重置
+          {t('common.reset')}
         </button>
       </div>
     </div>

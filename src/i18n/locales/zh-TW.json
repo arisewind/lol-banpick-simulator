@@ -1,0 +1,76 @@
+{
+  "app": {
+    "title": "英雄聯盟 BP 模擬器",
+    "status": "英雄數據模組完成"
+  },
+  "common": {
+    "confirm": "確認",
+    "cancel": "取消",
+    "save": "儲存",
+    "undo": "復原",
+    "reset": "重設",
+    "export": "匯出",
+    "import": "匯入",
+    "search": "搜尋英雄",
+    "loading": "載入中...",
+    "error": "發生錯誤",
+    "clear": "清除",
+    "selected": "已選擇",
+    "step": "第 {{step}} 步",
+    "analyzing": "分析中...",
+    "calculating": "計算中...",
+    "pending": "待驗證"
+  },
+  "bp": {
+    "ban": "禁用",
+    "pick": "選擇",
+    "blueTeam": "藍方",
+    "redTeam": "紅方",
+    "banPhase": "禁用階段",
+    "pickPhase": "選擇階段",
+    "phase": "目前階段",
+    "complete": "BP 流程已完成",
+    "banHero": "禁用英雄",
+    "pickHero": "選擇英雄",
+    "turn": "回合",
+    "picksCount": "{{count}}/5 已選擇"
+  },
+  "hero": {
+    "tags": {
+      "assassin": "刺客",
+      "fighter": "戰士",
+      "mage": "法師",
+      "marksman": "射手",
+      "support": "輔助",
+      "tank": "坦克"
+    },
+    "searchPlaceholder": "搜尋英雄...",
+    "tagFilter": "標籤篩選",
+    "noHeroesFound": "未找到符合的英雄",
+    "noHeroData": "暫無英雄數據",
+    "loadingHeroes": "載入英雄數據...",
+    "totalHeroes": "共 {{count}} 位英雄",
+    "selectToBan": "點擊禁用",
+    "selectToPick": "點擊選擇",
+    "alreadySelected": "該英雄已被選擇"
+  },
+  "stats": {
+    "totalHeroes": "英雄總數",
+    "filteredHeroes": "篩選結果",
+    "winRate": "勝率",
+    "synergy": "陣容協同度",
+    "matchupAdvantage": "對陣優勢",
+    "accuracy": "推薦準確度",
+    "high": "高",
+    "medium": "中",
+    "low": "低"
+  },
+  "analysis": {
+    "title": "數據分析",
+    "subtitle": "即時 BP 分析與推薦",
+    "startAnalysis": "開始分析",
+    "recommendations": "推薦 Ban/Pick",
+    "noRecommendations": "暫無推薦數據",
+    "quickStats": "快速統計"
+  }
+}

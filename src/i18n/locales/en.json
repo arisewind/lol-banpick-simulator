@@ -1,0 +1,76 @@
+{
+  "app": {
+    "title": "LoL Draft Simulator",
+    "status": "Champion data module complete"
+  },
+  "common": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "undo": "Undo",
+    "reset": "Reset",
+    "export": "Export",
+    "import": "Import",
+    "search": "Search champions",
+    "loading": "Loading...",
+    "error": "Error occurred",
+    "clear": "Clear",
+    "selected": "Selected",
+    "step": "Step {{step}}",
+    "analyzing": "Analyzing...",
+    "calculating": "Calculating...",
+    "pending": "Pending"
+  },
+  "bp": {
+    "ban": "Ban",
+    "pick": "Pick",
+    "blueTeam": "Blue Team",
+    "redTeam": "Red Team",
+    "banPhase": "Ban Phase",
+    "pickPhase": "Pick Phase",
+    "phase": "Current Phase",
+    "complete": "Draft Complete",
+    "banHero": "Ban champion",
+    "pickHero": "Pick champion",
+    "turn": "Turn",
+    "picksCount": "{{count}}/5 Selected"
+  },
+  "hero": {
+    "tags": {
+      "assassin": "Assassin",
+      "fighter": "Fighter",
+      "mage": "Mage",
+      "marksman": "Marksman",
+      "support": "Support",
+      "tank": "Tank"
+    },
+    "searchPlaceholder": "Search champions...",
+    "tagFilter": "Filter by tags",
+    "noHeroesFound": "No champions found",
+    "noHeroData": "No champion data available",
+    "loadingHeroes": "Loading champion data...",
+    "totalHeroes": "{{count}} champions total",
+    "selectToBan": "Click to ban",
+    "selectToPick": "Click to pick",
+    "alreadySelected": "This champion is already selected"
+  },
+  "stats": {
+    "totalHeroes": "Total Champions",
+    "filteredHeroes": "Filtered Results",
+    "winRate": "Win Rate",
+    "synergy": "Team Synergy",
+    "matchupAdvantage": "Matchup Advantage",
+    "accuracy": "Recommendation Accuracy",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+  "analysis": {
+    "title": "Data Analysis",
+    "subtitle": "Real-time draft analysis and recommendations",
+    "startAnalysis": "Start Analysis",
+    "recommendations": "Recommended Bans/Picks",
+    "noRecommendations": "No recommendations available",
+    "quickStats": "Quick Stats"
+  }
+}

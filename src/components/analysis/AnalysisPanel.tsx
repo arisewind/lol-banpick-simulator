@@ -1,14 +1,24 @@
+import { useTranslation } from 'react-i18next'
 import { useData } from '../../contexts/DataContext'
 
 export default function AnalysisPanel() {
+  const { t } = useTranslation()
   const { recommendations, loading, analyze } = useData()
+
+  // 优先级标签映射
+  const getPriorityLabel = (priority: string): string => {
+    if (priority === 'high') return t('stats.high')
+    if (priority === 'medium') return t('stats.medium')
+    if (priority === 'low') return t('stats.low')
+    return priority
+  }
 
   return (
     <div className="flex h-full flex-col">
       {/* 标题 */}
       <div className="mb-4">
-        <h3 className="text-sm font-medium text-slate-100">数据分析</h3>
-        <p className="text-xs text-slate-500">实时 BP 分析与推荐</p>
+        <h3 className="text-sm font-medium text-slate-100">{t('analysis.title')}</h3>
+        <p className="text-xs text-slate-500">{t('analysis.subtitle')}</p>
       </div>
 
       {/* 分析按钮 */}
@@ -17,18 +27,18 @@ export default function AnalysisPanel() {
         disabled={loading}
         className="mb-4 rounded bg-blue-600 px-4 py-2 text-sm hover:bg-blue-700 disabled:bg-slate-700"
       >
-        {loading ? '分析中...' : '开始分析'}
+        {loading ? t('common.analyzing') : t('analysis.startAnalysis')}
       </button>
 
       {/* 推荐列表 */}
       <div className="mb-6">
         <h4 className="mb-2 text-xs font-medium text-slate-400">
-          推荐 Ban/Pick
+          {t('analysis.recommendations')}
         </h4>
         <div className="space-y-2">
           {recommendations.length === 0 ? (
             <div className="rounded bg-slate-900/30 p-3 text-center text-xs text-slate-500">
-              暂无推荐数据
+              {t('analysis.noRecommendations')}
             </div>
           ) : (
             recommendations.map((rec) => (
@@ -49,13 +59,13 @@ export default function AnalysisPanel() {
                         : 'bg-green-500/20 text-green-400'
                     }`}
                   >
-                    {rec.priority}
+                    {getPriorityLabel(rec.priority)}
                   </span>
                 </div>
                 <p className="text-xs text-slate-500">{rec.reason}</p>
                 {rec.winRate && (
                   <div className="mt-1 text-xs text-slate-600">
-                    胜率: {rec.winRate.toFixed(1)}%
+                    {t('stats.winRate')}: {rec.winRate.toFixed(1)}%
                   </div>
                 )}
               </div>
@@ -67,20 +77,20 @@ export default function AnalysisPanel() {
       {/* 统计信息 */}
       <div className="mt-auto">
         <h4 className="mb-2 text-xs font-medium text-slate-400">
-          快速统计
+          {t('analysis.quickStats')}
         </h4>
         <div className="rounded bg-slate-900/30 p-3">
           <div className="mb-2 flex justify-between text-xs">
-            <span className="text-slate-500">阵容协同度</span>
-            <span className="text-slate-400">计算中...</span>
+            <span className="text-slate-500">{t('stats.synergy')}</span>
+            <span className="text-slate-400">{t('common.calculating')}</span>
           </div>
           <div className="mb-2 flex justify-between text-xs">
-            <span className="text-slate-500">对阵优势</span>
-            <span className="text-slate-400">分析中...</span>
+            <span className="text-slate-500">{t('stats.matchupAdvantage')}</span>
+            <span className="text-slate-400">{t('common.analyzing')}</span>
           </div>
           <div className="flex justify-between text-xs">
-            <span className="text-slate-500">推荐准确度</span>
-            <span className="text-slate-400">待验证</span>
+            <span className="text-slate-500">{t('stats.accuracy')}</span>
+            <span className="text-slate-400">{t('common.pending')}</span>
           </div>
         </div>
       </div>

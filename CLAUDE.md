@@ -8,6 +8,8 @@ A Windows desktop application for simulating League of Legends Ban/Pick phases. 
 
 **Package manager**: pnpm (not npm). The project uses pnpm 11+ with specific build script allowances for electron.
 
+**Quick start**: Double-click `启动开发环境.bat` to launch the full Electron development environment.
+
 ## Development Commands
 
 ```bash
@@ -30,6 +32,11 @@ pnpm preview
 pnpm electron:build
 ```
 
+**Alternative**: Use the batch files in project root:
+- `启动开发环境.bat` - Full Electron development
+- `快速启动（仅前端）.bat` - Frontend only
+- `构建并运行.bat` - Build production version
+
 ## pnpm Configuration
 
 The project uses pnpm 11+. Critical configuration files:
@@ -45,12 +52,6 @@ The project uses pnpm 11+. Critical configuration files:
 1. Check `node_modules/electron/dist/electron.exe` and `path.txt` exist. If missing, run: `ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ node node_modules/electron/install.js`
 2. Check `env | grep ELECTRON_RUN_AS_NODE`. If `1`, unset it before running: `unset ELECTRON_RUN_AS_NODE`
 3. Only suspect code issues after both are verified.
-
-See `memory/electron-run-as-node-env-trap.md` for full details.
-
-## Memory Sync
-
-This CLAUDE.md is kept in sync with `memory/project-architecture.md`. When updating architectural documentation, update both files to maintain consistency.
 
 ## Architecture
 
@@ -86,24 +87,44 @@ HeroContext (outer)
 **HeroContext** (`src/contexts/HeroContext.tsx`):
 - State: `heroes`, `filteredHeroes`, `searchQuery`, `selectedTags`, `availableTags`
 - Actions: `setSearchQuery`, `setSelectedTags`, `getHeroById`, `refreshHeroes`
-- Data source: Data Dragon API via Electron IPC
+- Data source: Data Dragon API via Electron IPC (zh_CN locale, Chinese names)
 - Filtering logic: search by name/title + filter by tags (OR logic)
 
 **BPContext** (`src/contexts/BPContext.tsx`):
 - State: `currentPhase`, `blueTeam`, `redTeam`, `history`, `isComplete`
 - Actions: `banHero`, `pickHero`, `undo`, `reset`, `getCurrentPhase`
-- BP_PHASES constant: 20 steps total (10 bans → 10 picks)
-- **Note**: TODO.md records pending change to 6 bans (3 per side) → 10 picks
+- BP_PHASES constant: 20 steps total
 
 **DataContext** (`src/contexts/DataContext.tsx`):
 - State: `recommendations`, `synergyAnalysis`, `matchupAnalysis`, `loading`
 - Actions: `analyze`, `clear`
 - Note: Analysis logic is not yet implemented - this is a stub for future functionality
 
+### i18n Configuration
+
+The project uses i18next for internationalization:
+
+```
+src/i18n/
+├── locales/
+│   ├── zh-CN.json    # Simplified Chinese (default)
+│   ├── zh-TW.json    # Traditional Chinese
+│   └── en.json       # English
+├── types.ts          # TypeScript type definitions
+└── index.ts          # i18next configuration
+```
+
+Usage in components:
+```typescript
+import { useTranslation } from 'react-i18next'
+const { t } = useTranslation()
+// Use: t('bp.ban'), t('hero.tags.assassin'), etc.
+```
+
 ### Component Layout
 
 App.tsx three-panel layout:
-- **Left** (`w-80`): HeroGrid - searchable hero pool with tag filters
+- **Left** (`w-80`): HeroGrid - searchable hero pool with tag filters (3-column grid, 64px avatars)
 - **Center** (`flex-1`): BanPickArena - shows blue/red teams with ban/pick slots
 - **Right** (`w-96`): AnalysisPanel - recommendations and stats (stub)
 
@@ -115,17 +136,21 @@ The current action is always determined by `currentPhase` index into `BP_PHASES`
 
 ## BP Phase Order Reference
 
-```
-Ban Phase (steps 1-10):
-Blue → Red → Blue → Red → Blue → Red → Red → Blue → Red → Blue
+**Current rules** (A=Blue, B=Red):
 
-Pick Phase (steps 11-20):
-Blue → Red → Red → Blue → Blue → Red → Red → Blue → Blue → Red
 ```
+Step 1-6:   Ban Phase 1   (ABABAB) - fills first 3 ban slots per team
+Step 7-12:  Pick Phase 1  (ABBAAB)
+Step 13-16: Ban Phase 2   (BABA) - fills last 2 ban slots per team
+Step 17-20: Pick Phase 2  (BAAB)
+```
+
+Each team has 5 ban slots total (displayed in UI), filled in two phases:
+- **Team**: Blue | Red
+- **Ban 1**: Steps 1,3,5 | Steps 2,4,6
+- **Ban 2**: Steps 14,16 | Steps 13,15
 
 This is defined in `BPContext.tsx` `BP_PHASES` constant. Do not modify without verifying against actual League of Legends rules.
-
-**Pending change**: TODO.md records requirement to change from 5 bans per side to 3 bans per side.
 
 ## Type System
 
@@ -143,7 +168,7 @@ Extended theme in `tailwind.config.js`:
 
 The Electron main process (`electron/services/heroService.js`) implements a 6-hour cache for hero data to minimize API calls to Data Dragon. The cache is stored in a Map and cleared on app restart if expired.
 
-**Data Dragon locale**: Uses `zh_CN` endpoint, returning Chinese hero names and descriptions. This means hero data is already localized.
+**Data Dragon locale**: Uses `zh_CN` endpoint, returning Chinese hero names and descriptions.
 
 ### Context Provider Order
 

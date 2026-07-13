@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { HeroWithStats } from '../../types/hero'
 
 interface HeroCardProps {
@@ -10,6 +11,7 @@ interface HeroCardProps {
 }
 
 export default function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onClick }: HeroCardProps) {
+  const { t } = useTranslation()
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [imageError, setImageError] = useState(false)
 
@@ -60,13 +62,13 @@ export default function HeroCard({ hero, isDisabled, isCurrentPhase, actionType,
     if (actionType === 'ban') {
       return (
         <div className="absolute right-1 top-1 rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white shadow">
-          BAN
+          {t('bp.ban')}
         </div>
       )
     } else if (actionType === 'pick') {
       return (
         <div className="absolute right-1 top-1 rounded bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold text-white shadow">
-          PICK
+          {t('bp.pick')}
         </div>
       )
     }
@@ -84,19 +86,19 @@ export default function HeroCard({ hero, isDisabled, isCurrentPhase, actionType,
         <img
           src={imageUrl}
           alt={hero.name}
-          className="h-12 w-12 object-contain"
+          className="h-16 w-16 object-contain drop-shadow-md"
           onError={() => setImageError(true)}
         />
       ) : (
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-700 text-slate-500">
-          <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-700 text-slate-500">
+          <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
           </svg>
         </div>
       )}
 
       {/* 英雄名称 */}
-      <span className="mt-1 text-center text-xs font-medium text-slate-300 line-clamp-1">
+      <span className="mt-2 text-center text-xs font-medium text-slate-300 line-clamp-2 leading-tight">
         {hero.name}
       </span>
 

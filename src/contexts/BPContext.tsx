@@ -23,26 +23,30 @@ export interface BPPhase {
   action: ActionType
 }
 
-// BP 阶段顺序 (10Ban + 10Pick)
+// BP 阶段顺序
+// 规则: A=蓝方, B=红方
+// Ban: ABABAB (6) → Pick: ABBAAB (6) → Ban: BABA (4) → Pick: BAAB (4)
 const BP_PHASES: BPPhase[] = [
-  // Ban 阶段 (10个)
+  // 第一阶段 Ban (6个): ABABAB
   { step: 1, side: 'blue', action: 'ban' },
   { step: 2, side: 'red', action: 'ban' },
   { step: 3, side: 'blue', action: 'ban' },
   { step: 4, side: 'red', action: 'ban' },
   { step: 5, side: 'blue', action: 'ban' },
   { step: 6, side: 'red', action: 'ban' },
-  { step: 7, side: 'red', action: 'ban' },
-  { step: 8, side: 'blue', action: 'ban' },
-  { step: 9, side: 'red', action: 'ban' },
-  { step: 10, side: 'blue', action: 'ban' },
-  // Pick 阶段 (10个)
+  // 第一阶段 Pick (6个): ABBAAB
+  { step: 7, side: 'blue', action: 'pick' },
+  { step: 8, side: 'red', action: 'pick' },
+  { step: 9, side: 'red', action: 'pick' },
+  { step: 10, side: 'blue', action: 'pick' },
   { step: 11, side: 'blue', action: 'pick' },
   { step: 12, side: 'red', action: 'pick' },
-  { step: 13, side: 'red', action: 'pick' },
-  { step: 14, side: 'blue', action: 'pick' },
-  { step: 15, side: 'blue', action: 'pick' },
-  { step: 16, side: 'red', action: 'pick' },
+  // 第二阶段 Ban (4个): BABA
+  { step: 13, side: 'red', action: 'ban' },
+  { step: 14, side: 'blue', action: 'ban' },
+  { step: 15, side: 'red', action: 'ban' },
+  { step: 16, side: 'blue', action: 'ban' },
+  // 第二阶段 Pick (4个): BAAB
   { step: 17, side: 'red', action: 'pick' },
   { step: 18, side: 'blue', action: 'pick' },
   { step: 19, side: 'blue', action: 'pick' },

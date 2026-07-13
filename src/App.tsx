@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import BPContext from './contexts/BPContext'
 import HeroContext from './contexts/HeroContext'
 import DataContext from './contexts/DataContext'
@@ -7,6 +8,7 @@ import AnalysisPanel from './components/analysis/AnalysisPanel'
 import { useBP } from './contexts/BPContext'
 
 function AppContent() {
+  const { t } = useTranslation()
   const { undo, reset, currentPhase } = useBP()
 
   return (
@@ -15,10 +17,10 @@ function AppContent() {
       <header className="h-16 border-b border-slate-800 bg-slate-900/50">
         <div className="flex h-full items-center justify-between px-6">
           <h1 className="text-xl font-bold text-slate-100">
-            英雄联盟 BP 模拟器
+            {t('app.title')}
           </h1>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-slate-400">英雄数据模块完成</span>
+            <span className="text-sm text-slate-400">{t('app.status')}</span>
           </div>
         </div>
       </header>
@@ -50,21 +52,21 @@ function AppContent() {
               disabled={currentPhase === 0}
               className="rounded bg-slate-700 px-4 py-2 text-sm hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              撤销
+              {t('common.undo')}
             </button>
             <button
               onClick={reset}
               className="rounded bg-slate-700 px-4 py-2 text-sm hover:bg-slate-600"
             >
-              重置
+              {t('common.reset')}
             </button>
           </div>
           <div className="flex gap-2">
             <button className="rounded bg-blue-600 px-4 py-2 text-sm hover:bg-blue-700">
-              导出
+              {t('common.export')}
             </button>
             <button className="rounded bg-green-600 px-4 py-2 text-sm hover:bg-green-700">
-              导入
+              {t('common.import')}
             </button>
           </div>
         </div>

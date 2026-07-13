@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, useMemo, ReactNode } from 'react'
 import type { Hero, HeroStats } from '../types/hero'
 
 export interface HeroWithStats extends Hero {
@@ -9,13 +9,19 @@ interface HeroState {
   heroes: HeroWithStats[]
   loading: boolean
   error: string | null
-  filteredHeroes: HeroWithStats[]
   searchQuery: string
   selectedTags: string[]
   availableTags: string[]
 }
 
-interface HeroContextValue extends HeroState {
+interface HeroContextValue {
+  heroes: HeroWithStats[]
+  loading: boolean
+  error: string | null
+  filteredHeroes: HeroWithStats[]
+  searchQuery: string
+  selectedTags: string[]
+  availableTags: string[]
   setSearchQuery: (query: string) => void
   setSelectedTags: (tags: string[]) => void
   getHeroById: (id: string) => HeroWithStats | undefined
@@ -29,19 +35,18 @@ export function HeroProvider({ children }: { children: ReactNode }) {
     heroes: [],
     loading: true,
     error: null,
-    filteredHeroes: [],
     searchQuery: '',
     selectedTags: [],
     availableTags: [],
   })
 
-  // 过滤英雄 - 直接在setState中计算，避免依赖问题
-  const updateFilteredHeroes = useCallback((searchQuery: string, selectedTags: string[], heroes: HeroWithStats[]) => {
-    let filtered = [...heroes]
+  // 过滤英雄 - 使用 useMemo 优化性能
+  const filteredHeroes = useMemo(() => {
+    let filtered = [...state.heroes]
 
     // 搜索过滤
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase()
+    if (state.searchQuery) {
+      const query = state.searchQuery.toLowerCase()
       filtered = filtered.filter(
         hero =>
           hero.name.toLowerCase().includes(query) ||
@@ -49,34 +54,33 @@ export function HeroProvider({ children }: { children: ReactNode }) {
       )
     }
 
-    // 标签过滤 - 必须同时满足所有选中的标签（AND逻辑），还是满足任一标签（OR逻辑）？
-    // 这里使用OR逻辑，满足任一标签即可
-    if (selectedTags.length > 0) {
+    // 标签过滤 - OR 逻辑，满足任一标签即可
+    if (state.selectedTags.length > 0) {
       filtered = filtered.filter(hero =>
-        selectedTags.some(tag => hero.tags.includes(tag))
+        state.selectedTags.some(tag => hero.tags.includes(tag))
       )
     }
 
     return filtered
-  }, [])
+  }, [state.heroes, state.searchQuery, state.selectedTags])
 
   // 搜索查询
   const setSearchQuery = useCallback((query: string) => {
     setState(prev => ({
       ...prev,
       searchQuery: query,
-      filteredHeroes: updateFilteredHeroes(query, prev.selectedTags, prev.heroes)
+      // 只更新搜索查询，让 useMemo 处理过滤
     }))
-  }, [updateFilteredHeroes])
+  }, [])
 
   // 标签选择
   const setSelectedTags = useCallback((tags: string[]) => {
     setState(prev => ({
       ...prev,
       selectedTags: tags,
-      filteredHeroes: updateFilteredHeroes(prev.searchQuery, tags, prev.heroes)
+      // 只更新标签，让 useMemo 处理过滤
     }))
-  }, [updateFilteredHeroes])
+  }, [])
 
   // 获取英雄
   const getHeroById = useCallback(
@@ -104,31 +108,12 @@ export function HeroProvider({ children }: { children: ReactNode }) {
         })
         const availableTags = Array.from(tagsSet).sort()
 
-        setState(prev => {
-          // 计算过滤后的英雄列表
-          let filtered = [...heroes]
-          if (prev.searchQuery) {
-            const query = prev.searchQuery.toLowerCase()
-            filtered = filtered.filter(
-              hero =>
-                hero.name.toLowerCase().includes(query) ||
-                hero.title.toLowerCase().includes(query)
-            )
-          }
-          if (prev.selectedTags.length > 0) {
-            filtered = filtered.filter(hero =>
-              prev.selectedTags.some(tag => hero.tags.includes(tag))
-            )
-          }
-
-          return {
-            ...prev,
-            heroes,
-            filteredHeroes: filtered,
-            availableTags,
-            loading: false,
-          }
-        })
+        setState(prev => ({
+          ...prev,
+          heroes,
+          availableTags,
+          loading: false,
+        }))
       } else {
         // 请求失败，抛出错误
         const errorMessage = (result as { error?: string }).error || '获取英雄数据失败'
@@ -149,7 +134,13 @@ export function HeroProvider({ children }: { children: ReactNode }) {
   }, [refreshHeroes])
 
   const value: HeroContextValue = {
-    ...state,
+    heroes: state.heroes,
+    loading: state.loading,
+    error: state.error,
+    filteredHeroes,
+    searchQuery: state.searchQuery,
+    selectedTags: state.selectedTags,
+    availableTags: state.availableTags,
     setSearchQuery,
     setSelectedTags,
     getHeroById,

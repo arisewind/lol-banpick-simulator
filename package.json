@@ -13,8 +13,10 @@
     "electron:build": "pnpm build && electron-builder"
   },
   "dependencies": {
+    "i18next": "^26.3.6",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-i18next": "^17.0.9"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

@@ -1,10 +1,13 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const { registerHeroHandlers } = require('./ipc/heroHandler.js')
+const fs = require('fs')
 
 let mainWindow = null
 
-const isDev = process.env.NODE_ENV === 'development'
+// 更可靠的开发环境检测：检查 dist 目录是否存在
+const distPath = path.join(__dirname, '../dist')
+const isDev = !fs.existsSync(distPath) || process.env.NODE_ENV === 'development'
 
 function createWindow() {
   mainWindow = new BrowserWindow({
