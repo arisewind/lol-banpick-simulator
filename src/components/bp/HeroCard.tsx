@@ -84,9 +84,9 @@ export default function HeroCard({ hero, isDisabled, isCurrentPhase, actionType,
       return (
         <div className={cn(
           'absolute right-1 top-1 rounded px-2 py-1',
-          'bg-lol-red text-white text-[10px] font-bold shadow-red',
+          'bg-lol-red text-white text-[10px] font-bold',
           'border border-lol-red/50',
-          'animate-glow',
+          'animate-glow glow-red',
           'transition-all duration-150'
         )}>
           {t('bp.ban')}
@@ -96,9 +96,9 @@ export default function HeroCard({ hero, isDisabled, isCurrentPhase, actionType,
       return (
         <div className={cn(
           'absolute right-1 top-1 rounded px-2 py-1',
-          'bg-lol-blue text-white text-[10px] font-bold shadow-blue',
+          'bg-lol-blue text-white text-[10px] font-bold',
           'border border-lol-blue/50',
-          'animate-glow',
+          'animate-glow glow-blue',
           'transition-all duration-150'
         )}>
           {t('bp.pick')}

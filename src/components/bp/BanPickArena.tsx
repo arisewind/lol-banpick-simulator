@@ -94,7 +94,7 @@ function TeamSlot({ heroId, type, side, index }: TeamSlotProps) {
 
 export default function BanPickArena() {
   const { t } = useTranslation()
-  const { currentPhase, blueTeam, redTeam, getCurrentPhase } = useBP()
+  const { currentPhase, totalPhases, blueTeam, redTeam, getCurrentPhase } = useBP()
 
   const phase = getCurrentPhase()
 
@@ -108,11 +108,11 @@ export default function BanPickArena() {
             <div className="h-1.5 w-24 rounded-full bg-slate-800 overflow-hidden">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-lol-blue to-lol-blue-glow transition-all duration-300"
-                style={{ width: `${((currentPhase + 1) / 20) * 100}%` }}
+                style={{ width: `${(Math.min(currentPhase + 1, totalPhases) / totalPhases) * 100}%` }}
               />
             </div>
             <span className="text-sm text-slate-400 font-mono">
-              {currentPhase + 1}/20
+              {Math.min(currentPhase + 1, totalPhases)}/{totalPhases}
             </span>
           </div>
         </div>
@@ -121,26 +121,25 @@ export default function BanPickArena() {
           <div className="flex items-center gap-3">
             <div
               className={cn(
-                'rounded px-4 py-2 text-sm font-bold transition-all duration-200',
+                'relative rounded px-4 py-2 text-sm font-bold transition-all duration-200',
                 'shadow-lg animate-glow',
                 phase.side === 'blue'
-                  ? 'bg-lol-blue text-lol-darker shadow-blue'
-                  : 'bg-lol-red text-white shadow-red'
+                  ? 'bg-lol-blue text-lol-darker glow-blue'
+                  : 'bg-lol-red text-white glow-red'
               )}
             >
               {t(`bp.${phase.side}Team`)}
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-slate-200">{t(`bp.${phase.action}`)}</span>
-              <span className="text-sm text-slate-400">{t('bp.turn')}</span>
+              <span className="text-lg font-bold text-slate-200">{t(`bp.${phase.action}Hero`)}</span>
             </div>
             <div className="ml-auto text-xs text-slate-500 font-mono">
-              STEP {phase.step}
+              {t('common.step', { step: phase.step })}
             </div>
           </div>
         ) : (
           <div className="text-sm font-medium text-green-400 flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse shadow-green-500/50" />
+            <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse shadow shadow-green-500/50" />
             {t('bp.complete')}
           </div>
         )}
@@ -155,8 +154,8 @@ export default function BanPickArena() {
         )}>
           <div className="mb-6 flex items-center gap-3">
             <div className={cn(
-              'h-3 w-3 rounded-full shadow-lg',
-              'bg-lol-blue animate-glow shadow-blue-lg'
+              'relative h-3 w-3 rounded-full',
+              'bg-lol-blue animate-glow glow-blue'
             )} />
             <h3 className="text-base font-bold text-lol-blue">{t('bp.blueTeam')}</h3>
             <span className="ml-auto text-xs text-slate-500">
@@ -204,8 +203,8 @@ export default function BanPickArena() {
         )}>
           <div className="mb-6 flex items-center gap-3">
             <div className={cn(
-              'h-3 w-3 rounded-full shadow-lg',
-              'bg-lol-red animate-glow shadow-red-lg'
+              'relative h-3 w-3 rounded-full',
+              'bg-lol-red animate-glow glow-red'
             )} />
             <h3 className="text-base font-bold text-lol-red">{t('bp.redTeam')}</h3>
             <span className="ml-auto text-xs text-slate-500">

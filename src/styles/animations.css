@@ -2,12 +2,13 @@
 
 @layer utilities {
   /* === 发光脉冲动画 === */
+  /* 对伪元素 opacity 做动画（可 GPU 合成、不触发重绘）；队伍色由调用点的 --glow-color 决定 */
   @keyframes glow-pulse {
     0%, 100% {
-      box-shadow: 0 0 5px currentColor, 0 0 10px currentColor;
+      opacity: 0.45;
     }
     50% {
-      box-shadow: 0 0 15px currentColor, 0 0 25px currentColor, 0 0 35px currentColor;
+      opacity: 1;
     }
   }
 
@@ -125,8 +126,29 @@
   }
 
   /* === 应用动画的工具类 === */
-  .animate-glow {
+  /* 脉冲光晕：伪元素承载静态队伍色 box-shadow，仅对 opacity 动画（可 GPU 合成、不触发重绘）。
+     元素需已定位（absolute/relative），::after 才能锚定；队伍色由 .glow-blue/.glow-red/.glow-gold 设 --glow-color */
+  .animate-glow::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: 0 0 14px 2px var(--glow-color, currentColor);
+    opacity: 0.6;
     animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  .glow-blue {
+    --glow-color: rgba(10, 200, 185, 0.9);
+  }
+
+  .glow-red {
+    --glow-color: rgba(242, 56, 91, 0.9);
+  }
+
+  .glow-gold {
+    --glow-color: rgba(200, 170, 110, 0.9);
   }
 
   .animate-border {

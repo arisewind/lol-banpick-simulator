@@ -67,6 +67,7 @@ interface BPContextValue extends BPState {
   undo: () => void
   reset: () => void
   getCurrentPhase: () => BPPhase | null
+  totalPhases: number
 }
 
 const BPContext = createContext<BPContextValue | undefined>(undefined)
@@ -226,6 +227,7 @@ export function BPProvider({ children }: { children: ReactNode }) {
     undo,
     reset,
     getCurrentPhase,
+    totalPhases: BP_PHASES.length,
   }
 
   return <BPContext.Provider value={value}>{children}</BPContext.Provider>

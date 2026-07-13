@@ -1,10 +1,10 @@
+/* 导入设计系统和动画（必须在 @tailwind 之前，否则触发 Vite CSS "@import must precede all other statements" 警告） */
+@import './design-system.css';
+@import './animations.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* 导入设计系统和动画 */
-@import './design-system.css';
-@import './animations.css';
 
 /* 自定义滚动条 */
 ::-webkit-scrollbar {

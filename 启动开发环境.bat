@@ -15,7 +15,7 @@ set ELECTRON_RUN_AS_NODE=
 
 :: 检查并清理占用端口 5173 的进程
 echo [检查] 检测端口 5173 是否被占用...
-for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":5173" 2^>nul') do (
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr "LISTENING" ^| findstr /C:":5173 " 2^>nul') do (
     echo [发现] 端口 5173 被进程 %%a 占用，正在终止...
     taskkill /F /PID %%a >nul 2>&1
     if errorlevel 1 (

@@ -33,21 +33,12 @@ export default {
         'gold-lg': '0 0 30px rgba(200, 170, 110, 0.4)',
       },
       animation: {
-        'glow': 'glow-pulse 2s ease-in-out infinite',
         'border': 'border-flow 3s linear infinite',
         'fade-in': 'fade-in 0.3s ease-out',
         'slide-in-up': 'slide-in-up 0.3s ease-out',
         'scale-in': 'scale-in 0.2s ease-out',
       },
       keyframes: {
-        'glow-pulse': {
-          '0%, 100%': {
-            boxShadow: '0 0 5px currentColor, 0 0 10px currentColor',
-          },
-          '50%': {
-            boxShadow: '0 0 15px currentColor, 0 0 25px currentColor, 0 0 35px currentColor',
-          },
-        },
         'border-flow': {
           '0%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' },
