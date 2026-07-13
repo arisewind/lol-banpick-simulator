@@ -7,6 +7,10 @@ build/
 release/
 out/
 
+# Local files
+TODO.md
+*.bat
+
 # IDE
 .vscode/
 .idea/
