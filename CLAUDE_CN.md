@@ -195,9 +195,15 @@ App.tsx 三栏布局：
 
 - **颜色**：`lol-blue` / `-glow` / `-dark`，`lol-red` / `-glow` / `-dark`，`lol-gold` / `-glow`，以及 `lol-dark`、`lol-darker`。
 - **发光阴影档位**：`blue-sm` / `blue` / `blue-lg`，`red-*` 与 `gold-*` 同样有 `-sm` / `-lg` 档位。
-- **动画**：`glow`、`border`、`fade-in`、`slide-in-up`、`scale-in`（keyframes 与之同处一个配置）。
+- **动画**：`border`、`fade-in`、`slide-in-up`、`scale-in` 由配置驱动（keyframes 同处于 `tailwind.config.js`）；`glow` 位于 `src/styles/animations.css`（在 `::after` 上做 opacity 脉冲，队伍色由 `.glow-blue/red/gold` 类设定）。
 
 **自定义 `boxShadow` 键不支持 Tailwind 的透明度修饰符。** 写 `shadow-blue/40` 会被静默误解析为阴影*颜色*染色，根本不产生发光——该命名键被忽略。因此每一档强度都是独立的显式键（`blue-sm` / `blue` / `blue-lg`）：请直接使用这些命名档位，绝不要给它们加 `/N`。（标准颜色工具如 `border-lol-blue/30` 不受影响——此陷阱仅针对自定义 `boxShadow` 键。）
+
+**仅颜色的阴影工具类，缺少尺寸类时不产生阴影。** 单独写 `shadow-green-500/50`（或 `shadow-lol-blue/30`）只会设置 `--tw-shadow-color`；除非同时存在尺寸工具类（`shadow` / `shadow-md` / `shadow-lg`），否则 Tailwind 不会发出 `box-shadow`。请务必把颜色工具类与尺寸类配对使用，否则预期的发光会静默失效。（这是上面 `/N` 陷阱的姊妹坑。）
+
+**`@import` 语句必须位于 `@tailwind` 指令之前。** 在 `globals.css` 中，把所有 `@import` 行放在最顶部，在 `@tailwind base/components/utilities` 之前。否则 Vite 每次构建都会为每条 import 打印 `[vite:css] @import must precede all other statements` 警告，未来更严格的 Vite/PostCSS 版本可能静默丢弃被导入的 CSS（导致所有 `var(--lol-*)` token 与自定义类失效）。`@layer` 块无论 import 位置如何都能正确合并。
+
+**绝不要用字符串插值拼接 Tailwind 类名。** JIT 扫描器只为源码中以**完整字面量**出现的类名生成 CSS。`border-${color}`、`bg-${side}`、`shadow-${x}` 完全不产生 CSS——该类会静默从构建中消失，而且引入这种写法的重构会通过全部单测（单测不检查 CSS 生成）。合并颜色分支（ban/pick、红/蓝）时，使用**完整字面量的三元**（`isBan ? 'border-lol-red/40 hover:shadow-red' : 'border-lol-blue/40 hover:shadow-blue'`）或**字面量查表对象**。另外注意自定义 `boxShadow` 键是 `shadow-red` / `shadow-blue`（档位名），不是 `shadow-lol-red`。
 
 **修改 `tailwind.config.js` 后必须重启 Vite dev server。** HMR 不会重载 Tailwind 配置，所以配置驱动的样式改动在重启前会表现为"不生效"。
 

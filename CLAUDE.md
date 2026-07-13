@@ -195,9 +195,15 @@ Theme extensions live in `tailwind.config.js`:
 
 - **Colors**: `lol-blue` / `-glow` / `-dark`, `lol-red` / `-glow` / `-dark`, `lol-gold` / `-glow`, plus `lol-dark`, `lol-darker`.
 - **Glow shadow tiers**: `blue-sm` / `blue` / `blue-lg`, and matching `-sm` / `-lg` tiers for `red-*` and `gold-*`.
-- **Animations**: `glow`, `border`, `fade-in`, `slide-in-up`, `scale-in` (keyframes are co-located in the same config).
+- **Animations**: `border`, `fade-in`, `slide-in-up`, `scale-in` are config-driven (keyframes co-located in `tailwind.config.js`); `glow` lives in `src/styles/animations.css` (opacity pulse on `::after`, team color set by the `.glow-blue` / `.glow-red` / `.glow-gold` classes).
 
 **Custom `boxShadow` keys do NOT support Tailwind's opacity modifier.** Writing `shadow-blue/40` is silently reinterpreted as shadow-*color* tinting and emits no glow at all — the named key is ignored. That's why each intensity is its own explicit key (`blue-sm` / `blue` / `blue-lg`): use the named tiers directly and never append `/N` to them. (Standard color utilities like `border-lol-blue/30` are unaffected — this caveat is specific to the custom `boxShadow` keys.)
+
+**A color-only shadow utility emits no shadow without a size class.** `shadow-green-500/50` (or `shadow-lol-blue/30`) alone only sets `--tw-shadow-color`; Tailwind emits no `box-shadow` unless a size utility (`shadow` / `shadow-md` / `shadow-lg`) is also present. Always pair the color utility with a size class, or the intended glow silently fails to render. (This is the sibling gotcha to the `/N` caveat above.)
+
+**`@import` statements must precede `@tailwind` directives.** In `globals.css`, put all `@import` lines at the very top, before `@tailwind base/components/utilities`. Otherwise Vite emits a `[vite:css] @import must precede all other statements` warning per import on every build, and stricter future Vite/PostCSS versions may silently drop the imported CSS (breaking all `var(--lol-*)` tokens and custom classes). `@layer` blocks still merge correctly regardless of import position.
+
+**Never construct Tailwind class names by string interpolation.** The JIT scanner only emits CSS for class names that appear as **complete literals** in source. `border-${color}`, `bg-${side}`, `shadow-${x}` produce no CSS at all — the class is silently absent from the build, and a refactor that introduces this will pass all unit tests (tests don't check CSS generation). When consolidating color-varying branches (ban/pick, red/blue), use a **ternary of full literal strings** (`isBan ? 'border-lol-red/40 hover:shadow-red' : 'border-lol-blue/40 hover:shadow-blue'`) or a **lookup object with literal values**. Also note the custom `boxShadow` keys are `shadow-red` / `shadow-blue` (tier names), not `shadow-lol-red`.
 
 **Editing `tailwind.config.js` requires restarting the Vite dev server.** HMR does not reload the Tailwind config, so config-driven style changes silently appear to "not work" until the server is restarted.
 
