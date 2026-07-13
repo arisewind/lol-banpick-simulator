@@ -4,13 +4,13 @@ echo ========================================
 echo   LoL Ban/Pick Simulator - 开发模式
 echo ========================================
 echo.
-echo 正在启动开发环境...
+echo 正在启动开发环境（Vite + Electron）...
 echo.
 
 cd /d "%~dp0"
-setlocal enabledelayedexpansion
+setlocal
 
-:: 取消可能阻碍 Electron 的环境变量
+:: 取消可能阻碍 Electron 的环境变量（否则 electron 会退化为 node 解释器）
 set ELECTRON_RUN_AS_NODE=
 
 :: 检查并清理占用端口 5173 的进程
@@ -40,47 +40,15 @@ if not exist "node_modules\" (
     echo.
 )
 
-:: 启动开发环境 - 分步启动更可靠
-echo [启动] 正在启动 Vite 开发服务器...
-start /B cmd /c "pnpm dev" >nul 2>&1
-
-:: 等待 Vite 启动（最多等待 30 秒）
-echo [等待] 等待 Vite 服务器启动...
+:: 启动开发环境：electron:dev 用 concurrently 同时托管 Vite 与 Electron
+:: 脚本配置了 --kill-others，关闭 Electron 窗口会同时终止 Vite，不再有端口残留
+echo [启动] 启动 Vite + Electron（关闭 Electron 窗口即同时停止两者）...
 echo.
-
-set MAX_WAIT=30
-set WAIT_COUNT=0
-
-:wait_loop
-set /a WAIT_COUNT+=1
-set /a PERCENT=WAIT_COUNT*100/MAX_WAIT
-
-:: 检测 HTTP 响应
-curl -s http://localhost:5173 >nul 2>&1
-if errorlevel 1 (
-    if !WAIT_COUNT! lss %MAX_WAIT% (
-        <nul set /p "=正在启动... !PERCENT!%% (!WAIT_COUNT!/%MAX_WAIT% 秒)^r"
-        timeout /t 1 /nobreak >nul
-        goto wait_loop
-    ) else (
-        echo.
-        echo [错误] Vite 启动超时！
-        pause
-        exit /b 1
-    )
-)
+call pnpm electron:dev
 
 echo.
-echo [完成] Vite 服务器已就绪！
-echo.
-echo [启动] 正在启动 Electron 窗口...
-echo.
-
-:: 启动 Electron
-call npx electron .
-
-echo.
-echo 提示：关闭此窗口或按 Ctrl+C 可停止应用
+echo ========================================
+echo 应用已退出。
 echo ========================================
 echo.
 pause

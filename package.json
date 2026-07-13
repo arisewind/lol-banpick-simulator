@@ -9,7 +9,7 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx,js --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "electron:dev": "concurrently \"pnpm dev\" \"wait-on http://localhost:5173 && electron .\"",
+    "electron:dev": "concurrently --kill-others \"pnpm dev\" \"wait-on http://localhost:5173 && electron .\"",
     "electron:build": "pnpm build && electron-builder",
     "test": "vitest run",
     "test:watch": "vitest",
