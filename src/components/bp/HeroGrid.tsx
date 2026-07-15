@@ -43,25 +43,25 @@ export default function HeroGrid() {
   return (
     <div className="relative flex h-full flex-col">
       {/* 顶行：搜索 + 标签筛选 + 统计（单行横向） */}
-      <div className="mb-2 flex items-center gap-3">
+      <div className="mb-3 flex items-center gap-3">
         <input
           type="text"
           placeholder={t('hero.searchPlaceholder')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className={cn(
-            'input-game w-64 rounded px-4 py-2 text-sm text-slate-100 placeholder-slate-500',
-            'border-slate-700 bg-slate-900/80 backdrop-blur-sm',
-            'focus:ring-2 focus:ring-lol-blue/20',
+            'input-game w-64 rounded-lg px-4 py-2.5 text-sm text-lol-text-primary placeholder-lol-text-muted',
+            'border-lol-border bg-lol-bg-dark/90 backdrop-blur-sm',
+            'focus:border-lol-blue focus:shadow-blue',
           )}
         />
         <div className="relative">
           <button
             onClick={() => setShowTags(!showTags)}
             className={cn(
-              'flex items-center gap-1 rounded px-3 py-2 text-xs',
-              'border border-slate-700 bg-slate-900/60 text-slate-400 backdrop-blur-sm',
-              'transition-all duration-150 hover:border-slate-600 hover:bg-slate-800',
+              'flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium',
+              'border border-lol-border bg-lol-bg-dark/70 text-lol-text-secondary backdrop-blur-sm',
+              'transition-all duration-150 hover:border-lol-border/80 hover:bg-lol-bg-dark',
             )}
           >
             <span>{t('hero.tagFilter')} {selectedTags.length > 0 && `(${selectedTags.length})`}</span>
@@ -69,8 +69,8 @@ export default function HeroGrid() {
           </button>
           {showTags && (
             <div className={cn(
-              'absolute left-0 top-full z-20 mt-1 w-72 rounded p-3',
-              'border border-slate-700/50 bg-slate-900/95 shadow-lg backdrop-blur-sm',
+              'absolute left-0 top-full z-20 mt-1 w-72 rounded-lg p-3',
+              'border border-lol-border bg-lol-bg-dark/95 shadow-xl backdrop-blur-sm',
               'animate-slide-in-up',
             )}>
               <div className="flex flex-wrap gap-2">
@@ -87,10 +87,10 @@ export default function HeroGrid() {
                         }
                       }}
                       className={cn(
-                        'rounded px-3 py-1.5 text-xs font-medium transition-all duration-150 hover:scale-105',
+                        'rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-150 hover:scale-105',
                         isSelected
-                          ? 'border border-lol-blue/50 bg-lol-blue text-white shadow-blue'
-                          : 'border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-slate-300',
+                          ? 'border-2 border-lol-blue bg-lol-blue text-white shadow-blue'
+                          : 'border border-lol-border bg-lol-bg-black text-lol-text-secondary hover:border-lol-border/80 hover:text-lol-text-primary',
                       )}
                     >
                       {getTagLabel(tagEn, t)}
@@ -103,7 +103,7 @@ export default function HeroGrid() {
                   onClick={() => setSelectedTags([])}
                   className={cn(
                     'mt-2 rounded px-3 py-1.5 text-xs font-medium transition-all duration-150 hover:scale-105',
-                    'text-slate-500 hover:text-lol-gold',
+                    'text-lol-text-muted hover:text-lol-gold',
                   )}
                 >
                   {t('common.clear')}
@@ -112,32 +112,32 @@ export default function HeroGrid() {
             </div>
           )}
         </div>
-        <span className="ml-auto text-xs text-slate-500">
+        <span className="ml-auto text-xs text-lol-text-muted">
           {t('hero.totalHeroes', { count: filteredHeroes.length })}
         </span>
       </div>
 
-      {/* 当前操作提示 */}
+      {/* 当前操作提示 - 电竞风格 */}
       {phase && (
         <div className={cn(
-          'mb-2 rounded p-2 text-center border backdrop-blur-sm transition-all duration-200',
+          'mb-3 rounded-lg p-2.5 text-center border-2 backdrop-blur-sm transition-all duration-200',
           'animate-fade-in',
           phase.side === 'blue'
-            ? 'bg-lol-blue/10 border-lol-blue/30 text-lol-blue'
-            : 'bg-lol-red/10 border-lol-red/30 text-lol-red',
+            ? 'bg-lol-blue/20 border-lol-blue/50 text-lol-blue shadow-blue-sm'
+            : 'bg-lol-red/20 border-lol-red/50 text-lol-red shadow-red-sm',
         )}>
-          <span className="text-xs font-medium">
+          <span className="text-sm font-bold">
             {t(`bp.${phase.action}Hero`)} - {t(`bp.${phase.side}Team`)}{t('bp.turn')}
           </span>
         </div>
       )}
 
-      {/* 英雄网格（横向密集，限高滚动） */}
-      <div className="grid flex-1 grid-cols-8 gap-2 overflow-y-auto sm:grid-cols-10 lg:grid-cols-12">
+      {/* 英雄网格（横向密集，限高滚动） - 电竞风格增强间距 */}
+      <div className="grid flex-1 grid-cols-8 gap-4 overflow-y-auto sm:grid-cols-10 lg:grid-cols-12">
         {loading ? (
           <div className="col-span-12 flex items-center justify-center">
-            <div className="text-slate-400">
-              <div className="mb-2 mx-auto h-8 w-8 animate-spin rounded-full border-2 border-slate-600 border-t-transparent" />
+            <div className="text-lol-text-secondary">
+              <div className="mb-2 mx-auto h-8 w-8 animate-spin rounded-full border-2 border-lol-border border-t-transparent" />
               <span className="text-xs">{t('hero.loadingHeroes')}</span>
             </div>
           </div>
@@ -146,14 +146,14 @@ export default function HeroGrid() {
             <span className="text-sm text-lol-red">{error}</span>
             <button
               onClick={() => refreshHeroes()}
-              className="rounded bg-lol-blue px-4 py-1.5 text-xs font-medium text-lol-darker transition-colors hover:bg-lol-blue-glow"
+              className="rounded-lg bg-lol-blue px-4 py-1.5 text-xs font-bold text-white transition-all hover:bg-lol-blue-light hover:shadow-blue"
             >
               {t('common.retry')}
             </button>
           </div>
         ) : filteredHeroes.length === 0 ? (
           <div className="col-span-12 flex items-center justify-center">
-            <span className="text-slate-500">
+            <span className="text-lol-text-muted">
               {searchQuery ? t('hero.noHeroesFound') : t('hero.noHeroData')}
             </span>
           </div>

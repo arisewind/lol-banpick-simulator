@@ -1,14 +1,25 @@
-/* LoL Ban/Pick Simulator 动画系统 */
+/* LoL Ban/Pick Simulator 动画系统 - 电竞风格 */
 
 @layer utilities {
-  /* === 发光脉冲动画 === */
-  /* 对伪元素 opacity 做动画（可 GPU 合成、不触发重绘）；队伍色由调用点的 --glow-color 决定 */
+  /* === 发光脉冲动画 - 基础版 === */
   @keyframes glow-pulse {
     0%, 100% {
       opacity: 0.45;
     }
     50% {
       opacity: 1;
+    }
+  }
+
+  /* 电竞风格发光脉冲 - 更强烈 */
+  @keyframes glow-pulse-esports {
+    0%, 100% {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
     }
   }
 
@@ -25,16 +36,33 @@
     animation: glow-pulse 2s ease-in-out infinite;
   }
 
+  /* 电竞风格发光动画 - 更大的发光范围 */
+  .animate-glow-esports::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: 0 0 30px 4px var(--glow-color, currentColor);
+    opacity: 0.7;
+    animation: glow-pulse-esports 2s ease-in-out infinite;
+  }
+
+  /* === 队伍色发光类 - 电竞风格 === */
   .glow-blue {
-    --glow-color: rgba(10, 200, 185, 0.9);
+    --glow-color: rgba(0, 102, 204, 0.9);
   }
 
   .glow-red {
-    --glow-color: rgba(242, 56, 91, 0.9);
+    --glow-color: rgba(204, 0, 0, 0.9);
+  }
+
+  .glow-purple {
+    --glow-color: rgba(106, 13, 173, 0.9);
   }
 
   .glow-gold {
-    --glow-color: rgba(200, 170, 110, 0.9);
+    --glow-color: rgba(255, 215, 0, 0.9);
   }
 
   /* === 悬停缩放 === */
@@ -44,5 +72,35 @@
 
   .hover-scale:hover {
     transform: scale(1.05);
+  }
+
+  /* === 电竞风格悬停发光 === */
+  .hover-glow-blue:hover {
+    box-shadow: 0 0 25px rgba(0, 102, 204, 0.6);
+  }
+
+  .hover-glow-red:hover {
+    box-shadow: 0 0 25px rgba(204, 0, 0, 0.6);
+  }
+
+  .hover-gold-glow:hover {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  }
+
+  /* === 电竞风格渐变背景 === */
+  .bg-gradient-esports-blue {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.3) 0%, rgba(26, 26, 26, 0.95) 100%);
+  }
+
+  .bg-gradient-esports-red {
+    background: linear-gradient(135deg, rgba(204, 0, 0, 0.3) 0%, rgba(26, 26, 26, 0.95) 100%);
+  }
+
+  /* === 增强玻璃态 === */
+  .glass-esports {
+    background: rgba(26, 26, 26, 0.85);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(51, 51, 51, 0.3);
   }
 }

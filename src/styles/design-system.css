@@ -2,36 +2,39 @@
 
 @layer base {
   :root {
-    /* === LoL 游戏化配色 === */
-    /* 蓝方配色 */
-    --lol-blue-primary: #0ac8b9;
-    --lol-blue-glow: #00d4ff;
-    --lol-blue-dark: #08a094;
+    /* === LoL 电竞风格配色 === */
+    /* 蓝方配色 - 参考设计标准 */
+    --lol-blue-primary: #0066CC;
+    --lol-blue-dark: #1E3A8A;
+    --lol-blue-light: #3B82F6;
 
-    /* 红方配色 */
-    --lol-red-primary: #f2385b;
-    --lol-red-glow: #ff5c7c;
-    --lol-red-dark: #c92641;
+    /* 红方配色 - 参考设计标准 */
+    --lol-red-primary: #CC0000;
+    --lol-red-dark: #991B1B;
+    --lol-red-light: #EF4444;
+
+    /* 分隔色 */
+    --lol-purple: #6A0DAD;
 
     /* 金色装饰 */
-    --lol-gold: #c8aa6e;
-    --lol-gold-glow: #ffd700;
+    --lol-gold: #FFD700;
+    --lol-gold-light: #FFED4E;
 
     /* 背景色系 */
-    --bg-primary: #091428;
-    --bg-secondary: #0a152e;
-    --bg-card: #010a13;
-    --bg-glass: rgba(10, 21, 46, 0.85);
+    --bg-primary: #1A1A1A;
+    --bg-secondary: #1E1E1E;
+    --bg-card: rgba(26, 26, 26, 0.8);
+    --bg-glass: rgba(26, 26, 26, 0.85);
 
     /* 边框色系 */
-    --border-subtle: #1e293b;
-    --border-default: #334155;
-    --border-accent: #475569;
+    --border-subtle: #222222;
+    --border-default: #333333;
+    --border-accent: #444444;
 
     /* 文本色系 */
-    --text-primary: #e2e8f0;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
+    --text-primary: #FFFFFF;
+    --text-secondary: #CCCCCC;
+    --text-muted: #6B7280;
 
     /* === 间距系统（8px 基准） === */
     --space-1: 4px;

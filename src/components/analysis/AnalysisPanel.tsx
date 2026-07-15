@@ -16,25 +16,25 @@ export default function AnalysisPanel() {
 
   return (
     <div className="flex h-full flex-col">
-      {/* 标题 */}
+      {/* 标题 - 电竞风格 */}
       <div className={cn(
-        'mb-4 pb-3 border-b border-slate-800',
+        'mb-5 pb-4 border-b border-slate-700',
         'animate-fade-in'
       )}>
-        <h3 className="text-sm font-bold text-slate-100">{t('analysis.title')}</h3>
-        <p className="text-xs text-slate-500">{t('analysis.subtitle')}</p>
+        <h3 className="text-base font-bold text-lol-text-primary">{t('analysis.title')}</h3>
+        <p className="text-xs text-lol-text-secondary">{t('analysis.subtitle')}</p>
       </div>
 
-      {/* 分析按钮 */}
+      {/* 分析按钮 - 电竞风格 */}
       <button
         onClick={analyze}
         disabled={loading}
         className={cn(
-          'btn-game mb-4 rounded px-4 py-2.5 text-sm font-medium',
-          'bg-lol-blue text-white hover:bg-lol-blue-glow',
-          'shadow-blue hover:shadow-blue-lg',
+          'btn-game mb-5 rounded-lg px-5 py-3 text-sm font-bold',
+          'bg-lol-blue text-white',
+          'shadow-lg shadow-blue hover:shadow-blue-xl',
           'disabled:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50',
-          'transition-all duration-150',
+          'transition-all duration-200 hover:scale-105 active:scale-100',
           loading && 'animate-pulse'
         )}
       >
@@ -48,16 +48,16 @@ export default function AnalysisPanel() {
         )}
       </button>
 
-      {/* 推荐列表 */}
+      {/* 推荐列表 - 电竞风格 */}
       <div className="mb-6">
-        <h4 className="mb-3 text-xs font-medium text-slate-400 uppercase tracking-wider">
+        <h4 className="mb-3 text-xs font-bold text-lol-text-secondary uppercase tracking-wider">
           {t('analysis.recommendations')}
         </h4>
-        <div className="space-y-2">
+        <div className="space-y-3">
           {recommendations.length === 0 ? (
             <div className={cn(
-              'rounded p-4 text-center border border-dashed border-slate-700',
-              'bg-slate-900/30'
+              'rounded-lg p-4 text-center border border-dashed border-slate-600',
+              'bg-lol-bg-black/40'
             )}>
               <div className="flex flex-col items-center gap-2">
                 <svg className="h-8 w-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -71,9 +71,9 @@ export default function AnalysisPanel() {
               <div
                 key={rec.heroId}
                 className={cn(
-                  'rounded p-3 border transition-all duration-150',
-                  'hover-scale cursor-pointer',
-                  'bg-slate-900/60 border-slate-700/50 hover:border-slate-600',
+                  'rounded-lg p-3.5 border-2 border-slate-600 transition-all duration-150',
+                  'hover-scale cursor-pointer hover:border-lol-gold hover:shadow-gold',
+                  'bg-lol-bg-black/60',
                   'animate-slide-in-up'
                 )}
                 style={{ animationDelay: index > 0 ? '100ms' : undefined }}
@@ -84,12 +84,12 @@ export default function AnalysisPanel() {
                   </span>
                   <span
                     className={cn(
-                      'rounded px-2 py-0.5 text-xs font-medium',
+                      'rounded-md px-2.5 py-1 text-xs font-bold border-2',
                       rec.priority === 'high'
-                        ? 'bg-lol-red/20 text-lol-red border border-lol-red/30'
+                        ? 'bg-lol-red/20 text-lol-red border-lol-red/50 shadow-red-sm'
                         : rec.priority === 'medium'
-                        ? 'bg-lol-gold/20 text-lol-gold border border-lol-gold/30'
-                        : 'bg-lol-blue/20 text-lol-blue border border-lol-blue/30'
+                        ? 'bg-lol-gold/20 text-lol-gold border-lol-gold/50 shadow-gold-sm'
+                        : 'bg-lol-blue/20 text-lol-blue border-lol-blue/50 shadow-blue-sm'
                     )}
                   >
                     {getPriorityLabel(rec.priority)}
@@ -116,33 +116,33 @@ export default function AnalysisPanel() {
         </div>
       </div>
 
-      {/* 统计信息 */}
+      {/* 统计信息 - 电竞风格 */}
       <div className="mt-auto">
-        <h4 className="mb-3 text-xs font-medium text-slate-400 uppercase tracking-wider">
+        <h4 className="mb-3 text-xs font-bold text-lol-text-secondary uppercase tracking-wider">
           {t('analysis.quickStats')}
         </h4>
         <div className={cn(
-          'rounded p-4 border border-slate-700/50',
-          'bg-slate-900/40 backdrop-blur-sm'
+          'rounded-xl p-4 border border-slate-600',
+          'bg-lol-bg-dark/80 backdrop-blur-sm shadow-lg'
         )}>
           <div className="mb-3 flex justify-between text-xs">
-            <span className="text-slate-500">{t('stats.synergy')}</span>
-            <span className="text-lol-gold font-mono">
+            <span className="text-lol-text-muted">{t('stats.synergy')}</span>
+            <span className="text-lol-gold font-mono font-bold">
               {synergyAnalysis ? synergyAnalysis.score : t('common.calculating')}
             </span>
           </div>
           <div className="mb-3 flex justify-between text-xs">
-            <span className="text-slate-500">{t('stats.matchupAdvantage')}</span>
-            <span className="text-lol-blue font-mono">
+            <span className="text-lol-text-muted">{t('stats.matchupAdvantage')}</span>
+            <span className="text-lol-blue font-mono font-bold">
               {matchupAnalysis
                 ? `${matchupAnalysis.blueAdvantage}% : ${matchupAnalysis.redAdvantage}%`
                 : t('common.analyzing')}
             </span>
           </div>
           {matchupAnalysis && matchupAnalysis.keyFactors.length > 0 && (
-            <div className="mt-2 space-y-1 border-t border-slate-800 pt-2">
+            <div className="mt-2 space-y-1.5 border-t border-slate-700 pt-3">
               {matchupAnalysis.keyFactors.slice(0, 3).map((factor, i) => (
-                <div key={i} className="text-xs text-slate-500">• {factor}</div>
+                <div key={i} className="text-xs text-lol-text-secondary">• {factor}</div>
               ))}
             </div>
           )}

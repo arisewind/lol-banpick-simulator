@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LoL Ban/Pick Simulator - 混合布局原型</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #1A1A1A;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    /* === 原型标记 === */
+    .prototype-badge {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 0, 0, 0.8);
+      color: white;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 4px;
+      z-index: 9999;
+      text-transform: uppercase;
+    }
+
+    /* === Header (64px) === */
+    .header {
+      height: 64px;
+      background: rgba(26, 26, 26, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(51, 51, 51, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    .header-left h1 {
+      font-size: 20px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .lang-btn {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 6px;
+      background: rgba(0, 102, 204, 0.3);
+      color: #0066CC;
+      border: 1px solid rgba(0, 102, 204, 0.5);
+      cursor: pointer;
+    }
+
+    .header-btn {
+      padding: 8px 16px;
+      font-size: 12px;
+      border-radius: 6px;
+      background: rgba(0, 102, 204, 0.2);
+      color: #0066CC;
+      border: 1px solid rgba(0, 102, 204, 0.4);
+      cursor: pointer;
+    }
+
+    /* === Main Container === */
+    .main {
+      height: calc(100vh - 128px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* === 顶部 HeroGrid (32vh) === */
+    .hero-grid-section {
+      height: 32vh;
+      background: rgba(26, 26, 26, 0.6);
+      border-bottom: 1px solid rgba(51, 51, 51, 0.5);
+      padding: 16px 24px;
+      overflow-x: auto;
+    }
+
+    .hero-grid-toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    .search-input {
+      width: 200px;
+      padding: 8px 16px;
+      background: rgba(26, 26, 26, 0.8);
+      border: 1px solid rgba(51, 51, 51, 0.6);
+      border-radius: 8px;
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    .tag-btn {
+      padding: 6px 12px;
+      font-size: 11px;
+      border-radius: 6px;
+      background: rgba(26, 26, 26, 0.7);
+      border: 1px solid rgba(51, 51, 51, 0.6);
+      color: #9CA3AF;
+      cursor: pointer;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 100px);
+      gap: 16px;
+    }
+
+    /* 矩形英雄卡片 (100×150px) */
+    .hero-card {
+      width: 100px;
+      height: 150px;
+      aspect-ratio: 2/3;
+      background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(15, 15, 15, 0.95) 100%);
+      border: 2px solid rgba(51, 51, 51, 0.5);
+      border-radius: 8px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .hero-card:hover {
+      transform: scale(1.05);
+      border-color: rgba(0, 102, 204, 0.6);
+      box-shadow: 0 0 20px rgba(0, 102, 204, 0.3);
+    }
+
+    .hero-card-pick {
+      border-color: rgba(0, 102, 204, 0.5);
+      background: linear-gradient(135deg, rgba(0, 102, 204, 0.2) 0%, rgba(26, 26, 26, 0.9) 100%);
+    }
+
+    .hero-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .hero-name {
+      font-size: 11px;
+      color: #ccc;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .action-badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      padding: 2px 6px;
+      font-size: 9px;
+      font-weight: bold;
+      border-radius: 4px;
+      background: rgba(0, 102, 204, 0.9);
+      color: white;
+      border: 1px solid rgba(0, 102, 204, 0.5);
+    }
+
+    /* === 底部 BanPickArena === */
+    .bp-arena-section {
+      flex: 1;
+      background: #000;
+      display: grid;
+      grid-template-columns: 1fr 80px 1fr;
+      overflow: hidden;
+    }
+
+    /* 顶部阶段指示器 */
+    .phase-indicator {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.8);
+      border-bottom: 1px solid rgba(51, 51, 51, 0.5);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .phase-badge {
+      padding: 8px 24px;
+      background: #0066CC;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      border-radius: 6px;
+    }
+
+    .phase-text {
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .bp-content {
+      position: relative;
+      padding-top: 50px;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    /* 战队区域 */
+    .team-zone {
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .team-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid;
+      margin-bottom: 8px;
+    }
+
+    .team-header.blue {
+      border-color: rgba(0, 102, 204, 0.3);
+    }
+
+    .team-header.red {
+      border-color: rgba(204, 0, 0, 0.3);
+    }
+
+    .team-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .team-dot.blue {
+      background: #0066CC;
+      box-shadow: 0 0 20px rgba(0, 102, 204, 0.8);
+    }
+
+    .team-dot.red {
+      background: #CC0000;
+      box-shadow: 0 0 20px rgba(204, 0, 0, 0.8);
+    }
+
+    .team-name {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .team-name.blue {
+      color: #0066CC;
+    }
+
+    .team-name.red {
+      color: #CC0000;
+    }
+
+    /* Ban/Pick 区域 */
+    .bp-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .section-label.ban {
+      color: #9CA3AF;
+    }
+
+    .section-label.blue {
+      color: #0066CC;
+    }
+
+    .section-label.red {
+      color: #CC0000;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(51, 51, 51, 0.6);
+    }
+
+    .section-line.blue {
+      background: rgba(0, 102, 204, 0.4);
+    }
+
+    .section-line.red {
+      background: rgba(204, 0, 0, 0.4);
+    }
+
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+    }
+
+    /* TeamSlot 卡片 - 增强版 */
+    .team-slot {
+      aspect-ratio: 4/3;
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid rgba(51, 51, 51, 0.5);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .team-slot.empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slot-number {
+      font-size: 24px;
+      font-family: monospace;
+      color: rgba(107, 114, 128, 0.6);
+    }
+
+    .team-slot.ban {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .team-slot.pick.blue {
+      border-color: #0066CC;
+      box-shadow: 0 0 25px rgba(0, 102, 204, 0.5);
+    }
+
+    .team-slot.pick.red {
+      border-color: #CC0000;
+      box-shadow: 0 0 25px rgba(204, 0, 0, 0.5);
+    }
+
+    .slot-glow {
+      position: absolute;
+      inset: 0;
+      opacity: 0.6;
+      filter: blur(40px);
+    }
+
+    .slot-glow.blue {
+      background: #0066CC;
+    }
+
+    .slot-glow.red {
+      background: #CC0000;
+    }
+
+    .slot-image {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .slot-image.ban {
+      filter: grayscale(100%) brightness(0.7);
+    }
+
+    .slot-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 50%, transparent 100%);
+      padding: 8px;
+    }
+
+    .slot-name {
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    .slot-name.ban {
+      color: #6B7280;
+    }
+
+    .slot-name.blue {
+      color: #0066CC;
+    }
+
+    .slot-name.red {
+      color: #CC0000;
+    }
+
+    .slot-indicator {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .slot-indicator.blue {
+      background: #0066CC;
+      box-shadow: 0 0 15px rgba(0, 102, 204, 0.9);
+    }
+
+    .slot-indicator.red {
+      background: #CC0000;
+      box-shadow: 0 0 15px rgba(204, 0, 0, 0.9);
+    }
+
+    /* === 中央紫色分隔 === */
+    .center-divider {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .divider-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(102, 0, 255, 0.6), transparent);
+      box-shadow: 0 0 30px rgba(102, 0, 255, 0.6);
+    }
+
+    .divider-cross {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .divider-h-line {
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background: #6600FF;
+    }
+
+    .divider-v-line {
+      position: absolute;
+      height: 100%;
+      width: 1px;
+      background: #6600FF;
+    }
+
+    .divider-orb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #6600FF;
+      box-shadow: 0 0 35px rgba(102, 0, 255, 1);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* === Footer (64px) === */
+    .footer {
+      height: 64px;
+      background: rgba(26, 26, 26, 0.95);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(51, 51, 51, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    .footer-left {
+      display: flex;
+      gap: 8px;
+    }
+
+    .footer-btn {
+      padding: 8px 16px;
+      font-size: 14px;
+      border-radius: 8px;
+      background: #374151;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .footer-btn:hover {
+      background: #4B5563;
+    }
+
+    .footer-center {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-bar {
+      width: 160px;
+      height: 8px;
+      background: #1F2937;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0055FF, #3B82F6);
+      box-shadow: 0 0 15px rgba(0, 85, 255, 0.5);
+      border-radius: 999px;
+      width: 35%;
+      transition: width 0.3s;
+    }
+
+    .progress-text {
+      font-family: monospace;
+      font-size: 12px;
+      color: #9CA3AF;
+    }
+
+    .footer-right {
+      display: flex;
+      gap: 8px;
+    }
+
+    .footer-btn.blue {
+      background: #2563EB;
+    }
+
+    .footer-btn.green {
+      background: #16A34A;
+    }
+
+    /* === 动画 === */
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.1);
+      }
+    }
+
+    /* === 布局说明浮层 === */
+    .layout-notes {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      border: 1px solid rgba(102, 0, 255, 0.5);
+      border-radius: 12px;
+      padding: 16px 24px;
+      max-width: 400px;
+      font-size: 13px;
+      line-height: 1.6;
+      z-index: 9998;
+    }
+
+    .layout-notes h3 {
+      color: #6600FF;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .layout-notes ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .layout-notes li {
+      margin: 4px 0;
+      color: #ccc;
+    }
+
+    .layout-notes li:before {
+      content: "✓ ";
+      color: #22C55E;
+      margin-right: 8px;
+    }
+
+    .layout-notes .highlight {
+      color: #F59E0B;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <!-- 原型标记 -->
+  <div class="prototype-badge">🔧 原型 - 仅供设计参考</div>
+
+  <!-- Header (64px) -->
+  <header class="header">
+    <div class="header-left">
+      <h1>LoL Ban/Pick Simulator</h1>
+    </div>
+    <div class="header-right">
+      <button class="lang-btn">简中</button>
+      <button class="lang-btn">繁中</button>
+      <button class="lang-btn">EN</button>
+      <button class="header-btn">分析面板</button>
+      <span style="color: #9CA3AF; font-size: 14px;">就绪</span>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+    <!-- 顶部 HeroGrid (32vh) -->
+    <section class="hero-grid-section">
+      <div class="hero-grid-toolbar">
+        <input type="text" class="search-input" placeholder="搜索英雄..." />
+        <button class="tag-btn">标签筛选 ▼</button>
+        <span style="margin-left: auto; color: #6B7280; font-size: 12px;">
+          共 160 位英雄
+        </span>
+      </div>
+
+      <div class="hero-grid">
+        <!-- 矩形英雄卡片示例 -->
+        <div class="hero-card hero-card-pick">
+          <div class="action-badge">PICK</div>
+          <div class="hero-avatar">🎯</div>
+          <span class="hero-name">艾希</span>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-avatar">⚔️</div>
+          <span class="hero-name">盖伦</span>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-avatar">🔥</div>
+          <span class="hero-name">安妮</span>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-avatar">⚡</div>
+          <span class="hero-name">雷恩加尔</span>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-avatar">🛡️</div>
+          <span class="hero-name">墨菲特</span>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-avatar">🏹</div>
+          <span class="hero-name">薇恩</span>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-avatar">🎭</div>
+          <span class="hero-name">萨科</span>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-avatar">🐉</div>
+          <span class="hero-name">希瓦娜</span>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-avatar">🌸</div>
+          <span class="hero-name">阿狸</span>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-avatar">🎪</div>
+          <span class="hero-name">萨勒芬妮</span>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-avatar">🔮</div>
+          <span class="hero-name">拉克丝</span>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-avatar">⚔️</div>
+          <span class="hero-name">亚索</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 底部 BanPickArena -->
+    <section class="bp-arena-section">
+      <!-- 阶段指示器 -->
+      <div class="phase-indicator">
+        <div class="phase-badge">蓝队</div>
+        <span class="phase-text">选择英雄</span>
+        <span style="color: #9CA3AF; font-size: 14px;">步骤 7/20</span>
+      </div>
+
+      <!-- 蓝队区域 -->
+      <div class="bp-content">
+        <div class="team-zone">
+          <div class="team-header blue">
+            <div class="team-dot blue"></div>
+            <h2 class="team-name blue">蓝队</h2>
+          </div>
+
+          <!-- Ban 区 -->
+          <div class="bp-section">
+            <div class="section-header">
+              <span class="section-label ban">BAN</span>
+              <div class="section-line"></div>
+            </div>
+            <div class="slots-grid">
+              <div class="team-slot ban">
+                <div class="slot-image ban" style="background: #2A2A2A;"></div>
+                <div class="slot-overlay"><span class="slot-name ban">盲僧</span></div>
+              </div>
+              <div class="team-slot ban">
+                <div class="slot-image ban" style="background: #2A2A2A;"></div>
+                <div class="slot-overlay"><span class="slot-name ban">加里奥</span></div>
+              </div>
+              <div class="team-slot ban">
+                <div class="slot-image ban" style="background: #2A2A2A;"></div>
+                <div class="slot-overlay"><span class="slot-name ban">崔斯塔娜</span></div>
+              </div>
+              <div class="team-slot empty">
+                <span class="slot-number">4</span>
+              </div>
+              <div class="team-slot empty">
+                <span class="slot-number">5</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pick 区 -->
+          <div class="bp-section">
+            <div class="section-header">
+              <span class="section-label blue">PICK</span>
+              <div class="section-line blue"></div>
+            </div>
+            <div class="slots-grid">
+              <div class="team-slot pick blue">
+                <div class="slot-glow blue"></div>
+                <div class="slot-image" style="background: linear-gradient(135deg, #1E3A5F 0%, #0A1628 100%);"></div>
+                <div class="slot-overlay"><span class="slot-name blue">雷克顿</span></div>
+                <div class="slot-indicator blue"></div>
+              </div>
+              <div class="team-slot pick blue">
+                <div class="slot-glow blue"></div>
+                <div class="slot-image" style="background: linear-gradient(135deg, #1E3A5F 0%, #0A1628 100%);"></div>
+                <div class="slot-overlay"><span class="slot-name blue">李青</span></div>
+                <div class="slot-indicator blue"></div>
+              </div>
+              <div class="team-slot pick blue">
+                <div class="slot-glow blue"></div>
+                <div class="slot-image" style="background: linear-gradient(135deg, #1E3A5F 0%, #0A1628 100%);"></div>
+                <div class="slot-overlay"><span class="slot-name blue">辛吉德</span></div>
+                <div class="slot-indicator blue"></div>
+              </div>
+              <div class="team-slot empty">
+                <span class="slot-number">4</span>
+              </div>
+              <div class="team-slot empty">
+                <span class="slot-number">5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 中央紫色分隔 -->
+      <div class="center-divider">
+        <div class="divider-line"></div>
+        <div class="divider-cross">
+          <div class="divider-h-line"></div>
+          <div class="divider-v-line"></div>
+          <div class="divider-orb"></div>
+        </div>
+      </div>
+
+      <!-- 红队区域 -->
+      <div class="bp-content">
+        <div class="team-zone">
+          <div class="team-header red">
+            <div class="team-dot red"></div>
+            <h2 class="team-name red">红队</h2>
+          </div>
+
+          <!-- Ban 区 -->
+          <div class="bp-section">
+            <div class="section-header">
+              <span class="section-label ban">BAN</span>
+              <div class="section-line"></div>
+            </div>
+            <div class="slots-grid">
+              <div class="team-slot ban">
+                <div class="slot-image ban" style="background: #2A2A2A;"></div>
+                <div class="slot-overlay"><span class="slot-name ban">蔚</span></div>
+              </div>
+              <div class="team-slot ban">
+                <div class="slot-image ban" style="background: #2A2A2A;"></div>
+                <div class="slot-overlay"><span class="slot-name ban">悠米</span></div>
+              </div>
+              <div class="team-slot ban">
+                <div class="slot-image ban" style="background: #2A2A2A;"></div>
+                <div class="slot-overlay"><span class="slot-name ban">霞</span></div>
+              </div>
+              <div class="team-slot empty">
+                <span class="slot-number">4</span>
+              </div>
+              <div class="team-slot empty">
+                <span class="slot-number">5</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pick 区 -->
+          <div class="bp-section">
+            <div class="section-header">
+              <span class="section-label red">PICK</span>
+              <div class="section-line red"></div>
+            </div>
+            <div class="slots-grid">
+              <div class="team-slot pick red">
+                <div class="slot-glow red"></div>
+                <div class="slot-image" style="background: linear-gradient(135deg, #4A0F0F 0%, #280505 100%);"></div>
+                <div class="slot-overlay"><span class="slot-name red">卡蜜尔</span></div>
+                <div class="slot-indicator red"></div>
+              </div>
+              <div class="team-slot pick red">
+                <div class="slot-glow red"></div>
+                <div class="slot-image" style="background: linear-gradient(135deg, #4A0F0F 0%, #280505 100%);"></div>
+                <div class="slot-overlay"><span class="slot-name red">嘉文四世</span></div>
+                <div class="slot-indicator red"></div>
+              </div>
+              <div class="team-slot pick red">
+                <div class="slot-glow red"></div>
+                <div class="slot-image" style="background: linear-gradient(135deg, #4A0F0F 0%, #280505 100%);"></div>
+                <div class="slot-overlay"><span class="slot-name red">卢锡安</span></div>
+                <div class="slot-indicator red"></div>
+              </div>
+              <div class="team-slot empty">
+                <span class="slot-number">4</span>
+              </div>
+              <div class="team-slot empty">
+                <span class="slot-number">5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer (64px) -->
+  <footer class="footer">
+    <div class="footer-left">
+      <button class="footer-btn">撤销</button>
+      <button class="footer-btn">重置</button>
+    </div>
+    <div class="footer-center">
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+      <span class="progress-text">7/20</span>
+    </div>
+    <div class="footer-right">
+      <button class="footer-btn blue">导出</button>
+      <button class="footer-btn green">导入</button>
+    </div>
+  </footer>
+
+  <!-- 布局说明 -->
+  <div class="layout-notes">
+    <h3>🎨 混合布局原型说明</h3>
+    <ul>
+      <li>保持 <strong>上下分区</strong> 结构</li>
+      <li>顶部：<span class="highlight">HeroGrid (32vh)</span> - 矩形卡片 (100×150px)</li>
+      <li>底部：<span class="highlight">BanPickArena</span> - 左右对称布局</li>
+      <li>配色：深灰背景 (#1A1A1A) + 战队色 (#0066CC/#CC0000)</li>
+      <li>特效：发光边框、渐变背景、脉冲动画</li>
+      <li>间距：增强呼吸感 (gap: 16-20px)</li>
+    </ul>
+  </div>
+</body>
+</html>

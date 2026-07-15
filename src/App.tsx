@@ -38,7 +38,7 @@ function EnvironmentGuard({ children }: { children: React.ReactNode }) {
           </p>
           <div className="rounded-lg bg-lol-bg-black p-4">
             <p className="mb-2 text-sm font-bold text-lol-text-primary">正确的启动方式：</p>
-            <code className="block rounded bg-slate-800 p-2 text-sm text-lol-gold">
+            <code className="block rounded bg-lol-bg-dark p-2 text-sm text-lol-gold">
               pnpm electron:dev
             </code>
             <p className="mt-3 text-xs text-lol-text-muted">
@@ -99,7 +99,7 @@ function AppContent() {
   const progressPct = (Math.min(currentPhase + 1, totalPhases) / totalPhases) * 100
 
   return (
-    <div className="h-screen w-screen bg-lol-bg-black text-lol-text-primary">
+    <div className="h-screen w-screen bg-lol-bg-dark text-lol-text-primary">
       {notice && (
         <div className={`fixed left-1/2 top-20 z-50 -translate-x-1/2 rounded-lg px-4 py-2 text-sm text-white shadow-lg ${
           notice.type === 'success' ? 'bg-green-600' : 'bg-lol-red'
@@ -109,7 +109,7 @@ function AppContent() {
       )}
 
       {/* Header - 电竞风格 */}
-      <header className="flex h-16 items-center justify-between border-b border-slate-700/50 bg-lol-bg-dark/90 backdrop-blur-sm px-6">
+      <header className="flex h-16 items-center justify-between border-b border-lol-border glass-esports px-6">
         <h1 className="text-xl font-bold text-lol-text-primary">{t('app.title')}</h1>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1">
@@ -120,7 +120,7 @@ function AppContent() {
                 className={`rounded px-2 py-1 text-xs font-medium ${
                   i18n.language === lng
                     ? 'bg-lol-blue text-white'
-                    : 'text-slate-400 hover:text-slate-200'
+                    : 'text-lol-text-muted hover:text-lol-text-secondary'
                 }`}
               >
                 {lng === 'zh-CN' ? '简中' : lng === 'zh-TW' ? '繁中' : 'EN'}
@@ -133,13 +133,13 @@ function AppContent() {
           >
             {t('analysis.open')}
           </button>
-          <span className="text-sm text-slate-400">{t('app.status')}</span>
+          <span className="text-sm text-lol-text-secondary">{t('app.status')}</span>
         </div>
       </header>
 
       {/* Main: 上下分区（顶部英雄池 / 中部 ban+pick 竞技场） */}
       <main className="flex h-[calc(100vh-8rem)] flex-col">
-        <section className="h-[32vh] overflow-hidden border-b border-slate-800 bg-lol-bg-dark/60 px-6 py-3">
+        <section className="h-[32vh] overflow-hidden border-b border-lol-border bg-lol-bg-dark/60 px-6 py-3">
           <HeroGrid />
         </section>
         <section className="flex-1 overflow-hidden px-6 py-4">
@@ -148,24 +148,24 @@ function AppContent() {
       </main>
 
       {/* Footer - 电竞风格 */}
-      <footer className="flex h-16 items-center justify-between border-t border-slate-700/50 bg-lol-bg-dark/90 backdrop-blur-sm px-6">
+      <footer className="flex h-16 items-center justify-between border-t border-lol-border glass-esports px-6">
         <div className="flex gap-2">
           <button
             onClick={undo}
             disabled={currentPhase === 0}
-            className="rounded-lg bg-slate-700 px-4 py-2 text-sm hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-lg bg-lol-bg-dark px-4 py-2 text-sm hover:bg-lol-border disabled:cursor-not-allowed disabled:opacity-50"
           >
             {t('common.undo')}
           </button>
           <button
             onClick={reset}
-            className="rounded-lg bg-slate-700 px-4 py-2 text-sm hover:bg-slate-600"
+            className="rounded-lg bg-lol-bg-dark px-4 py-2 text-sm hover:bg-lol-border"
           >
             {t('common.reset')}
           </button>
         </div>
         <div className="flex items-center gap-3">
-          <div className="h-2 w-40 overflow-hidden rounded-full bg-slate-800">
+          <div className="h-2 w-40 overflow-hidden rounded-full bg-lol-bg-black">
             <div
               className="h-full rounded-full bg-gradient-to-r from-lol-blue to-lol-blue-light shadow-blue-sm transition-all duration-300"
               style={{ width: `${progressPct}%` }}

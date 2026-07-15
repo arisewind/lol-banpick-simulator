@@ -26,11 +26,11 @@
 
 /* 全局样式 */
 body {
-  @apply bg-slate-950 text-slate-100 antialiased;
+  @apply bg-lol-bg-dark text-lol-text-primary antialiased;
 }
 
 * {
-  @apply border-slate-800;
+  @apply border-lol-border;
 }
 
 /* 禁止文本选择 */

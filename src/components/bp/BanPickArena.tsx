@@ -22,9 +22,15 @@ function TeamSlot({ heroId, type, side, index }: TeamSlotProps) {
   // 电竞风格：更大的头像，戏剧性光照，增强边框和发光
   if (!hero) {
     return (
-      <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-black/40 border border-slate-800/50">
+      <div className={cn(
+        'relative overflow-hidden rounded-lg bg-black/40 border border-lol-border/50',
+        isBan ? 'aspect-square w-16 h-16' : 'aspect-[4/3]'
+      )}>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-2xl font-mono text-slate-700/60">{index + 1}</span>
+          <span className={cn(
+            'font-mono text-lol-text-muted/60',
+            isBan ? 'text-lg' : 'text-2xl'
+          )}>{index + 1}</span>
         </div>
       </div>
     )
@@ -33,10 +39,12 @@ function TeamSlot({ heroId, type, side, index }: TeamSlotProps) {
   return (
     <div
       className={cn(
-        'relative aspect-[4/3] overflow-hidden rounded-lg transition-all duration-300',
+        'relative overflow-hidden rounded-lg transition-all duration-300',
         'border-2',
-        isBan ? 'bg-black/60 border-slate-700' : 'bg-black/40',
-        !isBan && (isBlue ? 'border-lol-blue shadow-blue' : 'border-lol-red shadow-red'),
+        // Ban 位：更小的正方形
+        isBan ? 'aspect-square w-16 h-16 bg-black/60 border-lol-border' : 'aspect-[4/3] bg-black/40',
+        // Pick 位：战队色边框和发光
+        !isBan && (isBlue ? 'border-lol-blue shadow-blue-lg' : 'border-lol-red shadow-red-lg'),
       )}
       title={hero.name}
     >
@@ -46,6 +54,23 @@ function TeamSlot({ heroId, type, side, index }: TeamSlotProps) {
           'absolute inset-0 opacity-60 blur-3xl',
           isBlue ? 'bg-lol-blue' : 'bg-lol-red',
         )} />
+      )}
+
+      {/* 渐变背景 - Pick 位 */}
+      {!isBan && (
+        <div className={cn(
+          'absolute inset-0',
+          isBlue
+            ? 'bg-gradient-to-br from-blue-900/40 to-black'
+            : 'bg-gradient-to-br from-red-900/40 to-black'
+        )} />
+      )}
+
+      {/* Ban 位斜线标记 */}
+      {isBan && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="w-full h-px bg-white/80 rotate-45" />
+        </div>
       )}
 
       {/* 英雄头像 - 大尺寸 + 戏剧性光照 */}
@@ -62,19 +87,24 @@ function TeamSlot({ heroId, type, side, index }: TeamSlotProps) {
         />
       ) : (
         <div className="relative z-10 flex h-full w-full items-center justify-center">
-          <span className="text-xl text-slate-600">{hero.name.slice(0, 2)}</span>
+          <span className={cn(
+            'text-lol-text-muted',
+            isBan ? 'text-sm' : 'text-xl'
+          )}>{hero.name.slice(0, 2)}</span>
         </div>
       )}
 
       {/* 底部渐变遮罩 + 英雄名 */}
-      <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black via-black/80 to-transparent p-2">
-        <p className={cn(
-          'text-center text-sm font-bold tracking-wide',
-          isBan ? 'text-slate-500' : (isBlue ? 'text-lol-blue' : 'text-lol-red'),
-        )}>
-          {hero.name}
-        </p>
-      </div>
+      {!isBan && (
+        <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black via-black/80 to-transparent p-2">
+          <p className={cn(
+            'text-center text-sm font-bold tracking-wide',
+            isBlue ? 'text-lol-blue' : 'text-lol-red',
+          )}>
+            {hero.name}
+          </p>
+        </div>
+      )}
 
       {/* Pick 状态指示器 - 电竞风格增强 */}
       {!isBan && (
@@ -97,7 +127,7 @@ export default function BanPickArena() {
   return (
     <div className="flex h-full flex-col bg-black">
       {/* 顶部阶段指示器 - 电竞风格 */}
-      <div className="border-b border-slate-800/50 bg-black/80 px-6 py-4">
+      <div className="border-b border-lol-border/50 bg-black/80 px-6 py-4">
         {phase ? (
           <div className="flex items-center justify-center gap-6">
             <div
@@ -112,7 +142,7 @@ export default function BanPickArena() {
               {t(`bp.${phase.side}Team`)}
             </div>
             <span className="text-xl font-bold text-white">{t(`bp.${phase.action}Hero`)}</span>
-            <span className="font-mono text-sm text-slate-400">{t('common.step', { step: phase.step })}</span>
+            <span className="font-mono text-sm text-lol-text-secondary">{t('common.step', { step: phase.step })}</span>
           </div>
         ) : (
           <div className="flex items-center justify-center gap-2 text-sm font-medium text-green-400">
@@ -125,20 +155,20 @@ export default function BanPickArena() {
       {/* BP 主区域 - 电竞风格：水平布局 + 中央红色分隔 */}
       <div className="grid flex-1 grid-cols-[1fr_auto_1fr]">
         {/* 蓝方 */}
-        <div className="flex flex-col px-6 py-8">
+        <div className="flex flex-col px-8 py-10">
           {/* 队名区 - 电竞风格 */}
-          <div className="mb-10 flex items-center gap-4 border-b border-lol-blue/30 pb-6">
+          <div className="mb-12 flex items-center gap-4 border-b border-lol-blue/30 pb-6">
             <div className="relative h-5 w-5 rounded-full bg-lol-blue shadow-xl shadow-blue-lg animate-pulse" />
             <h2 className="text-4xl font-extrabold text-lol-blue tracking-wider">{t('bp.blueTeam')}</h2>
           </div>
 
           {/* Ban 区 */}
-          <div className="mb-10">
+          <div className="mb-12">
             <div className="mb-5 flex items-center gap-3">
               <span className="text-sm font-bold uppercase tracking-widest text-lol-text-secondary">{t('bp.ban')}</span>
-              <div className="flex-1 h-px bg-slate-700" />
+              <div className="flex-1 h-px bg-lol-border" />
             </div>
-            <div className="grid grid-cols-5 gap-5">
+            <div className="grid grid-cols-5 gap-6">
               {blueTeam.bans.map((ban, i) => (
                 <TeamSlot key={ban} heroId={ban} type="ban" side="blue" index={i} />
               ))}
@@ -154,7 +184,7 @@ export default function BanPickArena() {
               <span className="text-base font-bold uppercase tracking-widest text-lol-blue">{t('bp.pick')}</span>
               <div className="flex-1 h-px bg-lol-blue/40" />
             </div>
-            <div className="grid grid-cols-5 gap-5">
+            <div className="grid grid-cols-5 gap-6">
               {blueTeam.picks.map((pick, i) => (
                 <TeamSlot key={pick} heroId={pick} type="pick" side="blue" index={i} />
               ))}
@@ -176,20 +206,20 @@ export default function BanPickArena() {
         </div>
 
         {/* 红方 */}
-        <div className="flex flex-col px-6 py-8">
+        <div className="flex flex-col px-8 py-10">
           {/* 队名区 - 电竞风格 */}
-          <div className="mb-10 flex items-center gap-4 border-b border-lol-red/30 pb-6">
+          <div className="mb-12 flex items-center gap-4 border-b border-lol-red/30 pb-6">
             <div className="relative h-5 w-5 rounded-full bg-lol-red shadow-xl shadow-red-lg animate-pulse" />
             <h2 className="text-4xl font-extrabold text-lol-red tracking-wider">{t('bp.redTeam')}</h2>
           </div>
 
           {/* Ban 区 */}
-          <div className="mb-10">
+          <div className="mb-12">
             <div className="mb-5 flex items-center gap-3">
               <span className="text-sm font-bold uppercase tracking-widest text-lol-text-secondary">{t('bp.ban')}</span>
-              <div className="flex-1 h-px bg-slate-700" />
+              <div className="flex-1 h-px bg-lol-border" />
             </div>
-            <div className="grid grid-cols-5 gap-5">
+            <div className="grid grid-cols-5 gap-6">
               {redTeam.bans.map((ban, i) => (
                 <TeamSlot key={ban} heroId={ban} type="ban" side="red" index={i} />
               ))}
@@ -205,7 +235,7 @@ export default function BanPickArena() {
               <span className="text-base font-bold uppercase tracking-widest text-lol-red">{t('bp.pick')}</span>
               <div className="flex-1 h-px bg-lol-red/40" />
             </div>
-            <div className="grid grid-cols-5 gap-5">
+            <div className="grid grid-cols-5 gap-6">
               {redTeam.picks.map((pick, i) => (
                 <TeamSlot key={pick} heroId={pick} type="pick" side="red" index={i} />
               ))}
