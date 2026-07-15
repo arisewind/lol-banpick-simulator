@@ -17,6 +17,12 @@ export interface ElectronErrorResponse {
 
 export type ElectronResponse<T> = ElectronSuccessResponse<T> | ElectronErrorResponse
 
+// 用户取消文件对话框（非错误，无 error 字段）
+export interface ElectronCanceledResponse {
+  success: false
+  canceled: true
+}
+
 // Electron API 类型定义
 export interface ElectronAPI {
   // 英雄数据 API
@@ -24,9 +30,9 @@ export interface ElectronAPI {
   getHeroImageUrl: (heroId: string) => Promise<ElectronResponse<string>>
   getCurrentVersion: () => Promise<ElectronResponse<string>>
 
-  // 文件操作 API（待实现）
-  exportData: (data: unknown) => Promise<ElectronResponse<void>>
-  importData: () => Promise<ElectronResponse<unknown>>
+  // 文件操作 API
+  exportData: (data: unknown) => Promise<ElectronResponse<{ filePath: string }> | ElectronCanceledResponse>
+  importData: () => Promise<ElectronResponse<unknown> | ElectronCanceledResponse>
 
   // 平台信息
   platform: string

@@ -12,65 +12,6 @@
     }
   }
 
-  /* === 滑入动画 === */
-
-  @keyframes slide-in-down {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* === 闪烁动画 === */
-  @keyframes blink {
-    0%, 50%, 100% {
-      opacity: 1;
-    }
-    25%, 75% {
-      opacity: 0.5;
-    }
-  }
-
-  /* === 涟漪动画 === */
-  @keyframes ripple {
-    from {
-      transform: scale(0);
-      opacity: 0.5;
-    }
-    to {
-      transform: scale(2);
-      opacity: 0;
-    }
-  }
-
-  /* === 打字机效果 === */
-  @keyframes typewriter {
-    from {
-      width: 0;
-    }
-    to {
-      width: 100%;
-    }
-  }
-
-  /* === 抖动动画 === */
-  @keyframes shake {
-    0%, 100% {
-      transform: translateX(0);
-    }
-    10%, 30%, 50%, 70%, 90% {
-      transform: translateX(-2px);
-    }
-    20%, 40%, 60%, 80% {
-      transform: translateX(2px);
-    }
-  }
-
-  /* === 应用动画的工具类 === */
   /* 脉冲光晕：伪元素承载静态队伍色 box-shadow，仅对 opacity 动画（可 GPU 合成、不触发重绘）。
      元素需已定位（absolute/relative），::after 才能锚定；队伍色由 .glow-blue/.glow-red/.glow-gold 设 --glow-color */
   .animate-glow::after {
@@ -96,104 +37,12 @@
     --glow-color: rgba(200, 170, 110, 0.9);
   }
 
-  .animate-slide-in-down {
-    animation: slide-in-down 0.3s ease-out;
-  }
-
-  .animate-blink {
-    animation: blink 1.5s ease-in-out infinite;
-  }
-
-  .animate-shake {
-    animation: shake 0.5s ease-in-out;
-  }
-
-  /* === 过渡工具类 === */
-  .transition-fast {
-    transition-duration: 150ms;
-  }
-
-  .transition-base {
-    transition-duration: 250ms;
-  }
-
-  .transition-slow {
-    transition-duration: 350ms;
-  }
-
-  .ease-out {
-    transition-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
-  }
-
-  .ease-in-out {
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* === 悬停效果 === */
-  .hover-lift {
-    transition: transform var(--transition-fast) var(--ease-out),
-                box-shadow var(--transition-fast) var(--ease-out);
-  }
-
-  .hover-lift:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  }
-
+  /* === 悬停缩放 === */
   .hover-scale {
     transition: transform var(--transition-fast) var(--ease-out);
   }
 
   .hover-scale:hover {
     transform: scale(1.05);
-  }
-
-  /* === 蓝方悬停效果 === */
-  .hover-glow-blue {
-    transition: all var(--transition-base) var(--ease-out);
-  }
-
-  .hover-glow-blue:hover {
-    box-shadow: 0 0 20px rgba(10, 200, 185, 0.5),
-                inset 0 0 10px rgba(10, 200, 185, 0.1);
-    border-color: rgba(10, 200, 185, 0.6);
-  }
-
-  /* === 红方悬停效果 === */
-  .hover-glow-red {
-    transition: all var(--transition-base) var(--ease-out);
-  }
-
-  .hover-glow-red:hover {
-    box-shadow: 0 0 20px rgba(242, 56, 91, 0.5),
-                inset 0 0 10px rgba(242, 56, 91, 0.1);
-    border-color: rgba(242, 56, 91, 0.6);
-  }
-
-  /* === 焦点样式 === */
-  .focus-ring {
-    outline: none;
-  }
-
-  .focus-ring:focus-visible {
-    outline: 2px solid var(--lol-blue-primary);
-    outline-offset: 2px;
-  }
-
-  .focus-ring-inset:focus {
-    outline: none;
-    box-shadow: inset 0 0 0 2px var(--lol-blue-primary);
-  }
-}
-
-/* === 响应式隐藏 === */
-@layer utilities {
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
   }
 }

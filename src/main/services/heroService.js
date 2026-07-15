@@ -2,7 +2,8 @@
 
 const DATA_DRAGON_BASE_URL = 'https://ddragon.leagueoflegends.com'
 const DATA_DRAGON_CDN = 'https://ddragon.leagueoflegends.com/cdn'
-const currentVersion = '14.10.5'
+// 离线兜底版本（getCurrentVersion 网络失败时使用）。非"当前版本"——Data Dragon 仍服务旧版本，故离线可用。
+const BUILTIN_FALLBACK_VERSION = '14.10.5'
 
 /**
  * HeroService 类
@@ -31,7 +32,7 @@ class HeroService {
       return this.versionCache
     } catch (error) {
       console.error('Failed to fetch versions:', error)
-      return currentVersion
+      return BUILTIN_FALLBACK_VERSION
     }
   }
 
@@ -39,6 +40,10 @@ class HeroService {
    * 从 Data Dragon 获取英雄列表
    */
   async fetchHeroes(version) {
+    // 缓存有效且未显式指定版本时直接返回缓存，避免每次都请求网络（修复"缓存只写不读"缺陷）
+    if (!version && this.isCacheValid()) {
+      return Array.from(this.heroesCache.values())
+    }
     const v = version || await this.getCurrentVersion()
 
     try {
@@ -68,6 +73,7 @@ class HeroService {
       heroes.forEach((hero) => {
         this.heroesCache.set(hero.id, hero)
       })
+      this.lastFetch = Date.now()
 
       return heroes
     } catch (error) {
@@ -90,7 +96,7 @@ class HeroService {
    * 获取英雄加载 Sprite URL
    */
   getSpriteUrl(spriteName, version) {
-    const v = version || currentVersion
+    const v = version || BUILTIN_FALLBACK_VERSION
     return `${DATA_DRAGON_CDN}/${v}/img/sprite/${spriteName}`
   }
 

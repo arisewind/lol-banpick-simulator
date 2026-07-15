@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import type { ReactNode } from 'react'
-import { BPProvider, useBP } from '../BPContext'
+import { BPProvider, useBP, BP_PHASES, type BPSnapshot } from '../BPContext'
 
 // 组件/Hook 测试：模仿 LambChat 范式的 jsdom 环境
 const wrapper = ({ children }: { children: ReactNode }) => <BPProvider>{children}</BPProvider>
@@ -143,5 +143,109 @@ describe('BPContext 完整流程', () => {
     }
     act(() => result.current.banHero('Extra'))
     expect(result.current.currentPhase).toBe(20)
+  })
+})
+
+describe('BPContext undo 链', () => {
+  it('连续撤销多步，逐次回退阶段直到 0', () => {
+    const { result } = renderBP()
+    act(() => result.current.banHero('A'))
+    act(() => result.current.banHero('B'))
+    act(() => result.current.banHero('C'))
+    expect(result.current.currentPhase).toBe(3)
+    act(() => result.current.undo())
+    expect(result.current.currentPhase).toBe(2)
+    act(() => result.current.undo())
+    expect(result.current.currentPhase).toBe(1)
+    act(() => result.current.undo())
+    expect(result.current.currentPhase).toBe(0)
+    expect(result.current.history).toHaveLength(0)
+  })
+
+  it('撤销后英雄重新可用，可再次选择', () => {
+    const { result } = renderBP()
+    act(() => result.current.banHero('Ahri'))
+    expect(result.current.blueTeam.bans).toEqual(['Ahri'])
+    act(() => result.current.undo())
+    expect(result.current.blueTeam.bans).toHaveLength(0)
+    // Ahri 重新可用，回到 phase 0（蓝方 ban）可再次 ban
+    act(() => result.current.banHero('Ahri'))
+    expect(result.current.blueTeam.bans).toEqual(['Ahri'])
+    expect(result.current.currentPhase).toBe(1)
+  })
+})
+
+describe('BPContext BP_PHASES 顺序表', () => {
+  it('20 步顺序符合 ABABAB / ABBAAB / BABA / BAAB', () => {
+    expect(BP_PHASES).toHaveLength(20)
+    const sequence = BP_PHASES.map(p => `${p.side}:${p.action}`)
+    expect(sequence).toEqual([
+      'blue:ban', 'red:ban', 'blue:ban', 'red:ban', 'blue:ban', 'red:ban',
+      'blue:pick', 'red:pick', 'red:pick', 'blue:pick', 'blue:pick', 'red:pick',
+      'red:ban', 'blue:ban', 'red:ban', 'blue:ban',
+      'red:pick', 'blue:pick', 'blue:pick', 'red:pick',
+    ])
+  })
+})
+
+describe('BPContext 反向重复检测', () => {
+  it('已 pick 的英雄不能在后续 ban 阶段被 ban', () => {
+    const { result } = renderBP()
+    // step 1-6：ban 6 个
+    for (let i = 0; i < 6; i++) {
+      act(() => result.current.banHero(`B${i}`))
+    }
+    // step 7-12：pick 6 个
+    for (let i = 0; i < 6; i++) {
+      act(() => result.current.pickHero(`P${i}`))
+    }
+    // 现在到 step 13（红方 ban）。redTeam.bans 已含 step2/4/6 的 B1/B3/B5
+    expect(result.current.getCurrentPhase()?.action).toBe('ban')
+    const phaseBefore = result.current.currentPhase
+    const redBansBefore = result.current.redTeam.bans.length
+    // 尝试 ban 已 pick 的 P0 → 应被拒绝
+    act(() => result.current.banHero('P0'))
+    expect(result.current.currentPhase).toBe(phaseBefore)
+    expect(result.current.redTeam.bans).toHaveLength(redBansBefore)
+    expect(result.current.redTeam.bans).not.toContain('P0')
+  })
+})
+
+describe('BPContext loadSnapshot', () => {
+  const validSnapshot: BPSnapshot = {
+    currentPhase: 7,
+    blueTeam: { bans: ['B0'], picks: ['P0'] },
+    redTeam: { bans: ['B1'], picks: [] },
+    history: [{ step: 1, side: 'blue', action: 'ban', heroId: 'B0', timestamp: 0 }],
+    isComplete: false,
+  }
+
+  it('有效快照恢复 BP 状态并返回 true', () => {
+    const { result } = renderBP()
+    let ok = false
+    act(() => { ok = result.current.loadSnapshot(validSnapshot) })
+    expect(ok).toBe(true)
+    expect(result.current.currentPhase).toBe(7)
+    expect(result.current.blueTeam.picks).toEqual(['P0'])
+    expect(result.current.redTeam.bans).toEqual(['B1'])
+  })
+
+  it('缺少必需字段时拒绝、返回 false 且不改状态', () => {
+    const { result } = renderBP()
+    act(() => result.current.banHero('Original'))
+    const phaseBefore = result.current.currentPhase
+    let ok = true
+    act(() => { ok = result.current.loadSnapshot({ currentPhase: 5 } as unknown as BPSnapshot) })
+    expect(ok).toBe(false)
+    expect(result.current.currentPhase).toBe(phaseBefore)
+  })
+
+  it('字段类型错误时拒绝（currentPhase 非数字）', () => {
+    const { result } = renderBP()
+    let ok = true
+    act(() => {
+      ok = result.current.loadSnapshot({ ...validSnapshot, currentPhase: 'bad' } as unknown as BPSnapshot)
+    })
+    expect(ok).toBe(false)
   })
 })

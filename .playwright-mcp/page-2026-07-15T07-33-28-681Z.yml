@@ -1,0 +1,1669 @@
+- generic [ref=e1]:
+  - dialog "Cookie 同意横幅" [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: 为了改善您的体验，在您同意我们所有网站和应用的情况下，我们（和我们的合作伙伴）在您连接的终端上存储和/或访问您终端上的信息（cookie或对应信息）。
+      - paragraph [ref=e5]:
+        - text: 我们的网站可能会将这些cookie用于：
+        - list [ref=e6]:
+          - listitem [ref=e7]: 不通过资料收集而判定我们网站上广告的受众
+          - listitem [ref=e8]: 根据您的导航和个人资料展示个性化广告
+          - listitem [ref=e9]: 根据您的导航个性化我们的编辑内容
+          - listitem [ref=e10]: 允许您在我们网站上的社交网络或平台上分享内容
+          - listitem [ref=e11]: 根据您的位置向您发送广告
+      - link "隐私声明" [active] [ref=e12] [cursor=pointer]:
+        - /url: https://www.riotgames.com/en/privacy-notice
+    - generic [ref=e13]:
+      - button "设定偏好" [ref=e14] [cursor=pointer]
+      - button "全部接受" [ref=e15] [cursor=pointer]
+      - button "全部拒绝" [ref=e16] [cursor=pointer]
+  - main [ref=e17]:
+    - generic [ref=e20]:
+      - link [ref=e23] [cursor=pointer]:
+        - /url: /en-US
+        - generic [ref=e24]:
+          - img "mainLogoRiotFist21"
+        - generic [ref=e25]:
+          - img "mainMenuDownNonHover"
+      - generic [ref=e26]:
+        - link "HOME" [ref=e29] [cursor=pointer]:
+          - /url: /en-US
+        - generic [ref=e30]:
+          - link [ref=e32] [cursor=pointer]:
+            - /url: /en-US
+            - paragraph [ref=e33]: HOME
+          - button [ref=e35] [cursor=pointer]:
+            - paragraph [ref=e36]: Events & Standings
+          - link [ref=e38] [cursor=pointer]:
+            - /url: /en-US/gpr
+            - paragraph [ref=e39]: POWER RANKINGS
+          - link [ref=e41] [cursor=pointer]:
+            - /url: /en-US/pickems
+            - paragraph [ref=e42]: Pick'Ems
+          - link [ref=e44] [cursor=pointer]:
+            - /url: /rewards
+            - paragraph [ref=e45]: REWARDS
+          - link [ref=e47] [cursor=pointer]:
+            - /url: /en-US/news
+            - paragraph [ref=e48]: News
+          - link [ref=e50] [cursor=pointer]:
+            - /url: /tickets
+            - paragraph [ref=e51]: Tickets
+      - generic [ref=e52]:
+        - generic [ref=e55] [cursor=pointer]:
+          - img "globeIcon"
+        - generic [ref=e56]: LOGIN
+    - generic [ref=e60]:
+      - generic [ref=e61]:
+        - region "scrollable content" [ref=e67]:
+          - generic [ref=e70]:
+            - generic [ref=e73]:
+              - generic [ref=e74]: ALL REGIONS
+              - generic [ref=e75]: Regional Split
+              - generic [ref=e76]: Jan 12 - Mar 8
+            - generic [ref=e77]:
+              - generic [ref=e78]: INTERNATIONAL
+              - generic [ref=e79]: First Stand
+              - generic [ref=e80]: Mar 16 - Mar 22
+            - generic [ref=e81]:
+              - generic [ref=e82]: ALL REGIONS
+              - generic [ref=e83]: Regional Split
+              - generic [ref=e84]: Mar 30 - Jun 21
+            - generic [ref=e85]:
+              - generic [ref=e86]: INTERNATIONAL
+              - generic [ref=e87]: MSI
+              - generic [ref=e88]: Jun 28 - Jul 12
+            - generic [ref=e89]:
+              - generic [ref=e90]: ALL REGIONS
+              - generic [ref=e91]: Regional Split
+              - generic [ref=e92]: Jul - Oct
+            - generic [ref=e93]:
+              - generic [ref=e94]: INTERNATIONAL
+              - generic [ref=e95]: Worlds
+              - generic [ref=e96]: Oct 15 - Nov 14
+        - generic [ref=e97]:
+          - generic [ref=e101]:
+            - heading "Earlier Today" [level=1] [ref=e103]
+            - generic [ref=e105]:
+              - button "PREVIOUS DATE" [ref=e106]:
+                - img "PREVIOUS" [ref=e107]
+              - button "Today" [ref=e108]
+              - button "NEXT DATE" [ref=e110]:
+                - img "NEXT" [ref=e111]
+            - button "SETTINGS" [ref=e113] [cursor=pointer]
+            - button "All Leagues" [ref=e117]
+          - generic [ref=e120]:
+            - button "Load More" [ref=e122] [cursor=pointer]
+            - heading "Friday Jul 10" [level=4] [ref=e125]
+            - generic [ref=e127]:
+              - generic [ref=e128]:
+                - link "Watch E Wie Einfach E-Sports vs Eintracht Spandau" [ref=e130] [cursor=pointer]:
+                  - /url: /vod/116713163972559044/1
+                - generic [ref=e133]:
+                  - paragraph [ref=e134]:
+                    - text: EWI
+                    - img "E Wie Einfach E-Sports" [ref=e135]
+                  - generic [ref=e136]:
+                    - button "CLICK TO REVEAL" [ref=e137]
+                    - separator [ref=e141]
+                  - paragraph [ref=e142]:
+                    - img "Eintracht Spandau" [ref=e143]
+                    - text: EINS
+              - generic [ref=e145]:
+                - paragraph [ref=e147]:
+                  - text: Prime League
+                  - generic [ref=e148]: •
+                  - text: Week 2
+                - paragraph [ref=e149]: Bo1
+            - generic [ref=e151]:
+              - generic [ref=e152]:
+                - link "Watch Rossmann Centaurs vs VfB Stuttgart" [ref=e154] [cursor=pointer]:
+                  - /url: /vod/116713163972559062/1
+                - generic [ref=e157]:
+                  - paragraph [ref=e158]:
+                    - text: ROSS
+                    - img "Rossmann Centaurs" [ref=e159]
+                  - generic [ref=e160]:
+                    - button "CLICK TO REVEAL" [ref=e161]
+                    - separator [ref=e165]
+                  - paragraph [ref=e166]:
+                    - img "VfB Stuttgart" [ref=e167]
+                    - text: VFB
+              - generic [ref=e169]:
+                - paragraph [ref=e171]:
+                  - text: Prime League
+                  - generic [ref=e172]: •
+                  - text: Week 2
+                - paragraph [ref=e173]: Bo1
+            - generic [ref=e175]:
+              - generic [ref=e176]:
+                - link "Watch Berlin International Gaming vs TeamOrangeGaming" [ref=e178] [cursor=pointer]:
+                  - /url: /vod/116713163972558994/1
+                - generic [ref=e181]:
+                  - paragraph [ref=e182]:
+                    - text: BIG
+                    - img "Berlin International Gaming" [ref=e183]
+                  - generic [ref=e184]:
+                    - button "CLICK TO REVEAL" [ref=e185]
+                    - separator [ref=e189]
+                  - paragraph [ref=e190]:
+                    - img "TeamOrangeGaming" [ref=e191]
+                    - text: TOG
+              - generic [ref=e193]:
+                - paragraph [ref=e195]:
+                  - text: Prime League
+                  - generic [ref=e196]: •
+                  - text: Week 2
+                - paragraph [ref=e197]: Bo1
+            - generic [ref=e199]:
+              - generic [ref=e200]:
+                - link "Watch VfB Stuttgart vs Eintracht Frankfurt" [ref=e202] [cursor=pointer]:
+                  - /url: /vod/116713163972559076/1
+                - generic [ref=e205]:
+                  - paragraph [ref=e206]:
+                    - text: VFB
+                    - img "VfB Stuttgart" [ref=e207]
+                  - generic [ref=e208]:
+                    - button "CLICK TO REVEAL" [ref=e209]
+                    - separator [ref=e213]
+                  - paragraph [ref=e214]:
+                    - img "Eintracht Frankfurt" [ref=e215]
+                    - text: SGE
+              - generic [ref=e217]:
+                - paragraph [ref=e219]:
+                  - text: Prime League
+                  - generic [ref=e220]: •
+                  - text: Week 2
+                - paragraph [ref=e221]: Bo1
+            - generic [ref=e223]:
+              - generic [ref=e224]:
+                - link "Watch Volticons vs 9z Globant" [ref=e226] [cursor=pointer]:
+                  - /url: /vod/116520721101367242/1
+                - generic [ref=e229]:
+                  - paragraph [ref=e230]:
+                    - text: VTC
+                    - img "Volticons" [ref=e231]
+                  - generic [ref=e232]:
+                    - button "CLICK TO REVEAL" [ref=e233]
+                    - separator [ref=e237]
+                  - paragraph [ref=e238]:
+                    - img "9z Globant" [ref=e239]
+                    - text: 9ZG
+              - generic [ref=e241]:
+                - paragraph [ref=e243]:
+                  - text: LRS
+                  - generic [ref=e244]: •
+                  - text: Week 3
+                - paragraph [ref=e245]: Bo3
+            - generic [ref=e247]:
+              - generic [ref=e249]:
+                - paragraph [ref=e250]:
+                  - text: Z3N
+                  - img "ZEN" [ref=e251]
+                - generic [ref=e252]:
+                  - button "CLICK TO REVEAL" [ref=e253]
+                  - separator [ref=e257]
+                - paragraph [ref=e258]:
+                  - img "Maze Gaming" [ref=e259]
+                  - text: MAZ
+              - generic [ref=e261]:
+                - paragraph [ref=e263]:
+                  - text: LRS
+                  - generic [ref=e264]: •
+                  - text: Week 3
+                - paragraph [ref=e265]: Bo3
+            - generic [ref=e267]:
+              - generic [ref=e268]:
+                - link "Watch Golden Lions vs Seven Dark" [ref=e270] [cursor=pointer]:
+                  - /url: /vod/116520721101367206/1
+                - generic [ref=e273]:
+                  - paragraph [ref=e274]:
+                    - text: GLE
+                    - img "Golden Lions" [ref=e275]
+                  - generic [ref=e276]:
+                    - button "CLICK TO REVEAL" [ref=e277]
+                    - separator [ref=e281]
+                  - paragraph [ref=e282]:
+                    - img "Seven Dark" [ref=e283]
+                    - text: 7D
+              - generic [ref=e285]:
+                - paragraph [ref=e287]:
+                  - text: LRS
+                  - generic [ref=e288]: •
+                  - text: Week 3
+                - paragraph [ref=e289]: Bo3
+            - generic [ref=e291]:
+              - generic [ref=e293]:
+                - paragraph [ref=e294]:
+                  - text: DEC
+                  - img "Docta Esports Club" [ref=e295]
+                - generic [ref=e296]:
+                  - button "CLICK TO REVEAL" [ref=e297]
+                  - separator [ref=e301]
+                - paragraph [ref=e302]:
+                  - img "Malvinas Gaming" [ref=e303]
+                  - text: MVG
+              - generic [ref=e305]:
+                - paragraph [ref=e307]:
+                  - text: LRS
+                  - generic [ref=e308]: •
+                  - text: Week 3
+                - paragraph [ref=e309]: Bo3
+            - button [ref=e311]:
+              - generic [ref=e312]: CLICK TO REVEAL
+              - generic [ref=e318]:
+                - paragraph [ref=e320]:
+                  - text: MSI
+                  - generic [ref=e321]: •
+                  - text: Knockouts
+                - paragraph [ref=e322]: Bo5
+            - heading "Saturday Jul 11" [level=4] [ref=e325]
+            - generic [ref=e327]:
+              - generic [ref=e328]:
+                - link "Watch Malvinas Gaming vs Seven Dark" [ref=e330] [cursor=pointer]:
+                  - /url: /vod/116520721101367222/1
+                - generic [ref=e333]:
+                  - paragraph [ref=e334]:
+                    - text: MVG
+                    - img "Malvinas Gaming" [ref=e335]
+                  - generic [ref=e336]:
+                    - button "CLICK TO REVEAL" [ref=e337]
+                    - separator [ref=e341]
+                  - paragraph [ref=e342]:
+                    - img "Seven Dark" [ref=e343]
+                    - text: 7D
+              - generic [ref=e345]:
+                - paragraph [ref=e347]:
+                  - text: LRS
+                  - generic [ref=e348]: •
+                  - text: Week 4
+                - paragraph [ref=e349]: Bo3
+            - generic [ref=e351]:
+              - generic [ref=e352]:
+                - link "Watch Volticons vs Golden Lions" [ref=e354] [cursor=pointer]:
+                  - /url: /vod/116520721101367214/1
+                - generic [ref=e357]:
+                  - paragraph [ref=e358]:
+                    - text: VTC
+                    - img "Volticons" [ref=e359]
+                  - generic [ref=e360]:
+                    - button "CLICK TO REVEAL" [ref=e361]
+                    - separator [ref=e365]
+                  - paragraph [ref=e366]:
+                    - img "Golden Lions" [ref=e367]
+                    - text: GLE
+              - generic [ref=e369]:
+                - paragraph [ref=e371]:
+                  - text: LRS
+                  - generic [ref=e372]: •
+                  - text: Week 4
+                - paragraph [ref=e373]: Bo3
+            - generic [ref=e375]:
+              - generic [ref=e376]:
+                - link "Watch ZEN vs 9z Globant" [ref=e378] [cursor=pointer]:
+                  - /url: /vod/116520721101367182/1
+                - generic [ref=e381]:
+                  - paragraph [ref=e382]:
+                    - text: Z3N
+                    - img "ZEN" [ref=e383]
+                  - generic [ref=e384]:
+                    - button "CLICK TO REVEAL" [ref=e385]
+                    - separator [ref=e389]
+                  - paragraph [ref=e390]:
+                    - img "9z Globant" [ref=e391]
+                    - text: 9ZG
+              - generic [ref=e393]:
+                - paragraph [ref=e395]:
+                  - text: LRS
+                  - generic [ref=e396]: •
+                  - text: Week 4
+                - paragraph [ref=e397]: Bo3
+            - generic [ref=e399]:
+              - generic [ref=e400]:
+                - link "Watch Docta Esports Club vs Maze Gaming" [ref=e402] [cursor=pointer]:
+                  - /url: /vod/116520721101367138/1
+                - generic [ref=e405]:
+                  - paragraph [ref=e406]:
+                    - text: DEC
+                    - img "Docta Esports Club" [ref=e407]
+                  - generic [ref=e408]:
+                    - button "CLICK TO REVEAL" [ref=e409]
+                    - separator [ref=e413]
+                  - paragraph [ref=e414]:
+                    - img "Maze Gaming" [ref=e415]
+                    - text: MAZ
+              - generic [ref=e417]:
+                - paragraph [ref=e419]:
+                  - text: LRS
+                  - generic [ref=e420]: •
+                  - text: Week 4
+                - paragraph [ref=e421]: Bo3
+            - button [ref=e423]:
+              - generic [ref=e424]: CLICK TO REVEAL
+              - generic [ref=e430]:
+                - paragraph [ref=e432]:
+                  - text: MSI
+                  - generic [ref=e433]: •
+                  - text: Knockouts
+                - paragraph [ref=e434]: Bo5
+            - heading "Sunday Jul 12" [level=4] [ref=e437]
+            - generic [ref=e439]:
+              - generic [ref=e440]:
+                - link "Watch 3V TEAM vs SDM Tigres" [ref=e442] [cursor=pointer]:
+                  - /url: /vod/116520885021783312/1
+                - generic [ref=e445]:
+                  - paragraph [ref=e446]:
+                    - text: 3V
+                    - img "3V TEAM" [ref=e447]
+                  - generic [ref=e448]:
+                    - button "CLICK TO REVEAL" [ref=e449]
+                    - separator [ref=e453]
+                  - paragraph [ref=e454]:
+                    - img "SDM Tigres" [ref=e455]
+                    - text: SDM
+              - generic [ref=e457]:
+                - paragraph [ref=e459]:
+                  - text: LRN
+                  - generic [ref=e460]: •
+                  - text: Week 3
+                - paragraph [ref=e461]: Bo3
+            - generic [ref=e463]:
+              - generic [ref=e464]:
+                - link "Watch Polar Squad vs NCG Esports" [ref=e466] [cursor=pointer]:
+                  - /url: /vod/116520885021783332/1
+                - generic [ref=e469]:
+                  - paragraph [ref=e470]:
+                    - text: PLS
+                    - img "Polar Squad" [ref=e471]
+                  - generic [ref=e472]:
+                    - button "CLICK TO REVEAL" [ref=e473]
+                    - separator [ref=e477]
+                  - paragraph [ref=e478]:
+                    - img "NCG Esports" [ref=e479]
+                    - text: NCG
+              - generic [ref=e481]:
+                - paragraph [ref=e483]:
+                  - text: LRN
+                  - generic [ref=e484]: •
+                  - text: Week 3
+                - paragraph [ref=e485]: Bo3
+            - generic [ref=e487]:
+              - generic [ref=e488]:
+                - link "Watch Lyon Academy vs FUEGO" [ref=e490] [cursor=pointer]:
+                  - /url: /vod/116520885021717704/1
+                - generic [ref=e493]:
+                  - paragraph [ref=e494]:
+                    - text: LYON
+                    - img "Lyon Academy" [ref=e495]
+                  - generic [ref=e496]:
+                    - button "CLICK TO REVEAL" [ref=e497]
+                    - separator [ref=e501]
+                  - paragraph [ref=e502]:
+                    - img "FUEGO" [ref=e503]
+                    - text: FUE
+              - generic [ref=e505]:
+                - paragraph [ref=e507]:
+                  - text: LRN
+                  - generic [ref=e508]: •
+                  - text: Week 3
+                - paragraph [ref=e509]: Bo3
+            - generic [ref=e511]:
+              - generic [ref=e512]:
+                - link "Watch Zeu5 Esports vs Kits Esports" [ref=e514] [cursor=pointer]:
+                  - /url: /vod/116520885021783280/1
+                - generic [ref=e517]:
+                  - paragraph [ref=e518]:
+                    - text: Z5
+                    - img "Zeu5 Esports" [ref=e519]
+                  - generic [ref=e520]:
+                    - button "CLICK TO REVEAL" [ref=e521]
+                    - separator [ref=e525]
+                  - paragraph [ref=e526]:
+                    - img "Kits Esports" [ref=e527]
+                    - text: KITS
+              - generic [ref=e529]:
+                - paragraph [ref=e531]:
+                  - text: LRN
+                  - generic [ref=e532]: •
+                  - text: Week 3
+                - paragraph [ref=e533]: Bo3
+            - button [ref=e535]:
+              - generic [ref=e536]: CLICK TO REVEAL
+              - generic [ref=e542]:
+                - paragraph [ref=e544]:
+                  - text: MSI
+                  - generic [ref=e545]: •
+                  - text: Finals
+                - paragraph [ref=e546]: Bo5
+            - heading "Monday Jul 13" [level=4] [ref=e549]
+            - generic [ref=e551]:
+              - generic [ref=e552]:
+                - link "Watch Zeu5 Esports vs NCG Esports" [ref=e554] [cursor=pointer]:
+                  - /url: /vod/116520885021783272/1
+                - generic [ref=e557]:
+                  - paragraph [ref=e558]:
+                    - text: Z5
+                    - img "Zeu5 Esports" [ref=e559]
+                  - generic [ref=e560]:
+                    - button "CLICK TO REVEAL" [ref=e561]
+                    - separator [ref=e565]
+                  - paragraph [ref=e566]:
+                    - img "NCG Esports" [ref=e567]
+                    - text: NCG
+              - generic [ref=e569]:
+                - paragraph [ref=e571]:
+                  - text: LRN
+                  - generic [ref=e572]: •
+                  - text: Week 3
+                - paragraph [ref=e573]: Bo3
+            - generic [ref=e575]:
+              - generic [ref=e576]:
+                - link "Watch SDM Tigres vs FUEGO" [ref=e578] [cursor=pointer]:
+                  - /url: /vod/116520885021717708/1
+                - generic [ref=e581]:
+                  - paragraph [ref=e582]:
+                    - text: SDM
+                    - img "SDM Tigres" [ref=e583]
+                  - generic [ref=e584]:
+                    - button "CLICK TO REVEAL" [ref=e585]
+                    - separator [ref=e589]
+                  - paragraph [ref=e590]:
+                    - img "FUEGO" [ref=e591]
+                    - text: FUE
+              - generic [ref=e593]:
+                - paragraph [ref=e595]:
+                  - text: LRN
+                  - generic [ref=e596]: •
+                  - text: Week 3
+                - paragraph [ref=e597]: Bo3
+            - generic [ref=e599]:
+              - generic [ref=e600]:
+                - link "Watch 3V TEAM vs Kits Esports" [ref=e602] [cursor=pointer]:
+                  - /url: /vod/116520885021783336/1
+                - generic [ref=e605]:
+                  - paragraph [ref=e606]:
+                    - text: 3V
+                    - img "3V TEAM" [ref=e607]
+                  - generic [ref=e608]:
+                    - button "CLICK TO REVEAL" [ref=e609]
+                    - separator [ref=e613]
+                  - paragraph [ref=e614]:
+                    - img "Kits Esports" [ref=e615]
+                    - text: KITS
+              - generic [ref=e617]:
+                - paragraph [ref=e619]:
+                  - text: LRN
+                  - generic [ref=e620]: •
+                  - text: Week 3
+                - paragraph [ref=e621]: Bo3
+            - generic [ref=e623]:
+              - generic [ref=e624]:
+                - link "Watch Polar Squad vs Lyon Academy" [ref=e626] [cursor=pointer]:
+                  - /url: /vod/116520885021783304/1
+                - generic [ref=e629]:
+                  - paragraph [ref=e630]:
+                    - text: PLS
+                    - img "Polar Squad" [ref=e631]
+                  - generic [ref=e632]:
+                    - button "CLICK TO REVEAL" [ref=e633]
+                    - separator [ref=e637]
+                  - paragraph [ref=e638]:
+                    - img "Lyon Academy" [ref=e639]
+                    - text: LYON
+              - generic [ref=e641]:
+                - paragraph [ref=e643]:
+                  - text: LRN
+                  - generic [ref=e644]: •
+                  - text: Week 3
+                - paragraph [ref=e645]: Bo3
+            - generic [ref=e647]:
+              - generic [ref=e648]:
+                - link "Watch E Wie Einfach E-Sports vs Unicorns of Love Sexy Edition" [ref=e650] [cursor=pointer]:
+                  - /url: /vod/116713163972559028/1
+                - generic [ref=e653]:
+                  - paragraph [ref=e654]:
+                    - text: EWI
+                    - img "E Wie Einfach E-Sports" [ref=e655]
+                  - generic [ref=e656]:
+                    - button "CLICK TO REVEAL" [ref=e657]
+                    - separator [ref=e661]
+                  - paragraph [ref=e662]:
+                    - img "Unicorns of Love Sexy Edition" [ref=e663]
+                    - text: USE
+              - generic [ref=e665]:
+                - paragraph [ref=e667]:
+                  - text: Prime League
+                  - generic [ref=e668]: •
+                  - text: Week 3
+                - paragraph [ref=e669]: Bo1
+            - heading "Yesterday" [level=4] [ref=e672]
+            - generic [ref=e674]:
+              - generic [ref=e675]:
+                - link "Watch Eintracht Frankfurt vs Kaufland Hangry Knights" [ref=e677] [cursor=pointer]:
+                  - /url: /vod/116713163972559072/1
+                - generic [ref=e680]:
+                  - paragraph [ref=e681]:
+                    - text: SGE
+                    - img "Eintracht Frankfurt" [ref=e682]
+                  - generic [ref=e683]:
+                    - button "CLICK TO REVEAL" [ref=e684]
+                    - separator [ref=e688]
+                  - paragraph [ref=e689]:
+                    - img "Kaufland Hangry Knights" [ref=e690]
+                    - text: KHK
+              - generic [ref=e692]:
+                - paragraph [ref=e694]:
+                  - text: Prime League
+                  - generic [ref=e695]: •
+                  - text: Week 3
+                - paragraph [ref=e696]: Bo1
+            - generic [ref=e698]:
+              - generic [ref=e699]:
+                - link "Watch Rossmann Centaurs vs TeamOrangeGaming" [ref=e701] [cursor=pointer]:
+                  - /url: /vod/116713163972559016/1
+                - generic [ref=e704]:
+                  - paragraph [ref=e705]:
+                    - text: ROSS
+                    - img "Rossmann Centaurs" [ref=e706]
+                  - generic [ref=e707]:
+                    - button "CLICK TO REVEAL" [ref=e708]
+                    - separator [ref=e712]
+                  - paragraph [ref=e713]:
+                    - img "TeamOrangeGaming" [ref=e714]
+                    - text: TOG
+              - generic [ref=e716]:
+                - paragraph [ref=e718]:
+                  - text: Prime League
+                  - generic [ref=e719]: •
+                  - text: Week 3
+                - paragraph [ref=e720]: Bo1
+            - generic [ref=e722]:
+              - generic [ref=e723]:
+                - link "Watch E Wie Einfach E-Sports vs Eintracht Frankfurt" [ref=e725] [cursor=pointer]:
+                  - /url: /vod/116713163972559046/1
+                - generic [ref=e728]:
+                  - paragraph [ref=e729]:
+                    - text: EWI
+                    - img "E Wie Einfach E-Sports" [ref=e730]
+                  - generic [ref=e731]:
+                    - button "CLICK TO REVEAL" [ref=e732]
+                    - separator [ref=e736]
+                  - paragraph [ref=e737]:
+                    - img "Eintracht Frankfurt" [ref=e738]
+                    - text: SGE
+              - generic [ref=e740]:
+                - paragraph [ref=e742]:
+                  - text: Prime League
+                  - generic [ref=e743]: •
+                  - text: Week 3
+                - paragraph [ref=e744]: Bo1
+            - generic [ref=e746]:
+              - generic [ref=e747]:
+                - link "Watch VfB Stuttgart vs Berlin International Gaming" [ref=e749] [cursor=pointer]:
+                  - /url: /vod/116713163972559010/1
+                - generic [ref=e752]:
+                  - paragraph [ref=e753]:
+                    - text: VFB
+                    - img "VfB Stuttgart" [ref=e754]
+                  - generic [ref=e755]:
+                    - button "CLICK TO REVEAL" [ref=e756]
+                    - separator [ref=e760]
+                  - paragraph [ref=e761]:
+                    - img "Berlin International Gaming" [ref=e762]
+                    - text: BIG
+              - generic [ref=e764]:
+                - paragraph [ref=e766]:
+                  - text: Prime League
+                  - generic [ref=e767]: •
+                  - text: Week 3
+                - paragraph [ref=e768]: Bo1
+            - generic [ref=e770]:
+              - generic [ref=e771]:
+                - link "Watch 3V TEAM vs Zeu5 Esports" [ref=e773] [cursor=pointer]:
+                  - /url: /vod/116520885021783276/1
+                - generic [ref=e776]:
+                  - paragraph [ref=e777]:
+                    - text: 3V
+                    - img "3V TEAM" [ref=e778]
+                  - generic [ref=e779]:
+                    - button "CLICK TO REVEAL" [ref=e780]
+                    - separator [ref=e784]
+                  - paragraph [ref=e785]:
+                    - img "Zeu5 Esports" [ref=e786]
+                    - text: Z5
+              - generic [ref=e788]:
+                - paragraph [ref=e790]:
+                  - text: LRN
+                  - generic [ref=e791]: •
+                  - text: Week 4
+                - paragraph [ref=e792]: Bo3
+            - generic [ref=e794]:
+              - generic [ref=e795]:
+                - link "Watch Kits Esports vs Lyon Academy" [ref=e797] [cursor=pointer]:
+                  - /url: /vod/116520885021783300/1
+                - generic [ref=e800]:
+                  - paragraph [ref=e801]:
+                    - text: KITS
+                    - img "Kits Esports" [ref=e802]
+                  - generic [ref=e803]:
+                    - button "CLICK TO REVEAL" [ref=e804]
+                    - separator [ref=e808]
+                  - paragraph [ref=e809]:
+                    - img "Lyon Academy" [ref=e810]
+                    - text: LYON
+              - generic [ref=e812]:
+                - paragraph [ref=e814]:
+                  - text: LRN
+                  - generic [ref=e815]: •
+                  - text: Week 4
+                - paragraph [ref=e816]: Bo3
+            - generic [ref=e818]:
+              - generic [ref=e820]:
+                - paragraph [ref=e821]:
+                  - text: NCG
+                  - img "NCG Esports" [ref=e822]
+                - generic [ref=e823]:
+                  - button "CLICK TO REVEAL" [ref=e824]
+                  - separator [ref=e828]
+                - paragraph [ref=e829]:
+                  - img "FUEGO" [ref=e830]
+                  - text: FUE
+              - generic [ref=e832]:
+                - paragraph [ref=e834]:
+                  - text: LRN
+                  - generic [ref=e835]: •
+                  - text: Week 4
+                - paragraph [ref=e836]: Bo3
+            - generic [ref=e838]:
+              - generic [ref=e839]:
+                - link "Watch Polar Squad vs SDM Tigres" [ref=e841] [cursor=pointer]:
+                  - /url: /vod/116520885021783320/1
+                - generic [ref=e844]:
+                  - paragraph [ref=e845]:
+                    - text: PLS
+                    - img "Polar Squad" [ref=e846]
+                  - generic [ref=e847]:
+                    - button "CLICK TO REVEAL" [ref=e848]
+                    - separator [ref=e852]
+                  - paragraph [ref=e853]:
+                    - img "SDM Tigres" [ref=e854]
+                    - text: SDM
+              - generic [ref=e856]:
+                - paragraph [ref=e858]:
+                  - text: LRN
+                  - generic [ref=e859]: •
+                  - text: Week 4
+                - paragraph [ref=e860]: Bo3
+            - generic [ref=e862]:
+              - generic [ref=e863]:
+                - link "Watch FALKE ESPORTS vs LUA Gaming" [ref=e865] [cursor=pointer]:
+                  - /url: /vod/116833506932259271/1
+                - generic [ref=e868]:
+                  - paragraph [ref=e869]:
+                    - text: FLK
+                    - img "FALKE ESPORTS" [ref=e870]
+                  - generic [ref=e871]:
+                    - button "CLICK TO REVEAL" [ref=e872]
+                    - separator [ref=e876]
+                  - paragraph [ref=e877]:
+                    - img "LUA Gaming" [ref=e878]
+                    - text: LUA
+              - generic [ref=e880]:
+                - paragraph [ref=e882]:
+                  - text: LES
+                  - generic [ref=e883]: •
+                  - text: Week 1
+                - paragraph [ref=e884]: Bo3
+            - heading "Earlier Today" [level=4] [ref=e887]
+            - generic [ref=e889]:
+              - generic [ref=e890]:
+                - link "Watch Dynasty vs mCon Esports" [ref=e892] [cursor=pointer]:
+                  - /url: /vod/116793933805935744/1
+                - generic [ref=e895]:
+                  - paragraph [ref=e896]:
+                    - text: DYN
+                    - img "Dynasty" [ref=e897]
+                  - generic [ref=e898]:
+                    - button "CLICK TO REVEAL" [ref=e899]
+                    - separator [ref=e903]
+                  - paragraph [ref=e904]:
+                    - img "mCon Esports" [ref=e905]
+                    - text: MCON
+              - generic [ref=e907]:
+                - paragraph [ref=e909]:
+                  - text: Road of Legends
+                  - generic [ref=e910]: •
+                  - text: Week 1
+                - paragraph [ref=e911]: Bo3
+            - generic [ref=e913]:
+              - generic [ref=e914]:
+                - link "Watch UCAM Esports Club vs Heretics Academy" [ref=e916] [cursor=pointer]:
+                  - /url: /vod/116833506932128107/1
+                - generic [ref=e919]:
+                  - paragraph [ref=e920]:
+                    - text: UCAM
+                    - img "UCAM Esports Club" [ref=e921]
+                  - generic [ref=e922]:
+                    - button "CLICK TO REVEAL" [ref=e923]
+                    - separator [ref=e927]
+                  - paragraph [ref=e928]:
+                    - img "Heretics Academy" [ref=e929]
+                    - text: HRTS
+              - generic [ref=e931]:
+                - paragraph [ref=e933]:
+                  - text: LES
+                  - generic [ref=e934]: •
+                  - text: Week 1
+                - paragraph [ref=e935]: Bo3
+            - generic [ref=e937]:
+              - generic [ref=e939]:
+                - paragraph [ref=e940]:
+                  - text: SNSH
+                  - img "Senshi eSports" [ref=e941]
+                - generic [ref=e942]:
+                  - button "CLICK TO REVEAL" [ref=e943]
+                  - separator [ref=e947]
+                - paragraph [ref=e948]:
+                  - img "ZennIT" [ref=e949]
+                  - text: ZNT
+              - generic [ref=e951]:
+                - paragraph [ref=e953]:
+                  - text: Road of Legends
+                  - generic [ref=e954]: •
+                  - text: Week 1
+                - paragraph [ref=e955]: Bo3
+            - generic [ref=e957]:
+              - generic [ref=e958]:
+                - link "Watch ZEN vs Docta Esports Club" [ref=e960] [cursor=pointer]:
+                  - /url: /vod/116520721101367134/1
+                - generic [ref=e963]:
+                  - paragraph [ref=e964]:
+                    - text: Z3N
+                    - img "ZEN" [ref=e965]
+                  - generic [ref=e966]:
+                    - button "CLICK TO REVEAL" [ref=e967]
+                    - separator [ref=e971]
+                  - paragraph [ref=e972]:
+                    - img "Docta Esports Club" [ref=e973]
+                    - text: DEC
+              - generic [ref=e975]:
+                - paragraph [ref=e977]:
+                  - text: LRS
+                  - generic [ref=e978]: •
+                  - text: Week 5
+                - paragraph [ref=e979]: Bo3
+            - generic [ref=e981]:
+              - generic [ref=e982]:
+                - link "Watch Golden Lions vs Maze Gaming" [ref=e984] [cursor=pointer]:
+                  - /url: /vod/116520721101367186/1
+                - generic [ref=e987]:
+                  - paragraph [ref=e988]:
+                    - text: GLE
+                    - img "Golden Lions" [ref=e989]
+                  - generic [ref=e990]:
+                    - button "CLICK TO REVEAL" [ref=e991]
+                    - separator [ref=e995]
+                  - paragraph [ref=e996]:
+                    - img "Maze Gaming" [ref=e997]
+                    - text: MAZ
+              - generic [ref=e999]:
+                - paragraph [ref=e1001]:
+                  - text: LRS
+                  - generic [ref=e1002]: •
+                  - text: Week 5
+                - paragraph [ref=e1003]: Bo3
+            - generic [ref=e1005]:
+              - generic [ref=e1006]:
+                - link "Watch Seven Dark vs Volticons" [ref=e1008] [cursor=pointer]:
+                  - /url: /vod/116520721101367226/1
+                - generic [ref=e1011]:
+                  - paragraph [ref=e1012]:
+                    - text: 7D
+                    - img "Seven Dark" [ref=e1013]
+                  - generic [ref=e1014]:
+                    - button "CLICK TO REVEAL" [ref=e1015]
+                    - separator [ref=e1019]
+                  - paragraph [ref=e1020]:
+                    - img "Volticons" [ref=e1021]
+                    - text: VTC
+              - generic [ref=e1023]:
+                - paragraph [ref=e1025]:
+                  - text: LRS
+                  - generic [ref=e1026]: •
+                  - text: Week 5
+                - paragraph [ref=e1027]: Bo3
+            - generic [ref=e1029]:
+              - generic [ref=e1030]:
+                - link "Watch Malvinas Gaming vs 9z Globant" [ref=e1032] [cursor=pointer]:
+                  - /url: /vod/116520721101367238/1
+                - generic [ref=e1035]:
+                  - paragraph [ref=e1036]:
+                    - text: MVG
+                    - img "Malvinas Gaming" [ref=e1037]
+                  - generic [ref=e1038]:
+                    - button "CLICK TO REVEAL" [ref=e1039]
+                    - separator [ref=e1043]
+                  - paragraph [ref=e1044]:
+                    - img "9z Globant" [ref=e1045]
+                    - text: 9ZG
+              - generic [ref=e1047]:
+                - paragraph [ref=e1049]:
+                  - text: LRS
+                  - generic [ref=e1050]: •
+                  - text: Week 5
+                - paragraph [ref=e1051]: Bo3
+            - heading "Later Today" [level=4] [ref=e1054]
+            - generic [ref=e1056]:
+              - generic [ref=e1057]:
+                - time [ref=e1059]:
+                  - text: 5:00
+                  - generic [ref=e1060]: PM
+                - generic [ref=e1061]:
+                  - paragraph [ref=e1062]:
+                    - text: TS
+                    - img "Team Secret" [ref=e1063]
+                  - separator [ref=e1065]
+                  - paragraph [ref=e1066]:
+                    - img "Sentinels" [ref=e1067]
+                    - text: SEN
+              - generic [ref=e1069]:
+                - paragraph [ref=e1071]:
+                  - text: Esports World Cup
+                  - generic [ref=e1072]: •
+                  - text: Groups
+                - paragraph [ref=e1073]: Bo1
+            - generic [ref=e1075]:
+              - generic [ref=e1076]:
+                - time [ref=e1078]:
+                  - text: 5:00
+                  - generic [ref=e1079]: PM
+                - generic [ref=e1080]:
+                  - paragraph [ref=e1081]:
+                    - text: GEN
+                    - img "Gen.G Esports" [ref=e1082]
+                  - separator [ref=e1084]
+                  - paragraph [ref=e1085]:
+                    - img "Karmine Corp" [ref=e1086]
+                    - text: KC
+              - generic [ref=e1088]:
+                - paragraph [ref=e1090]:
+                  - text: Esports World Cup
+                  - generic [ref=e1091]: •
+                  - text: Groups
+                - paragraph [ref=e1092]: Bo1
+            - generic [ref=e1094]:
+              - generic [ref=e1095]:
+                - time [ref=e1097]:
+                  - text: 6:10
+                  - generic [ref=e1098]: PM
+                - generic [ref=e1099]:
+                  - paragraph [ref=e1100]:
+                    - text: BLG
+                    - img "BILIBILI GAMING" [ref=e1101]
+                  - separator [ref=e1103]
+                  - paragraph [ref=e1104]:
+                    - img "Movistar KOI" [ref=e1105]
+                    - text: MKOI
+              - generic [ref=e1107]:
+                - paragraph [ref=e1109]:
+                  - text: Esports World Cup
+                  - generic [ref=e1110]: •
+                  - text: Groups
+                - paragraph [ref=e1111]: Bo1
+            - generic [ref=e1113]:
+              - generic [ref=e1114]:
+                - time [ref=e1116]:
+                  - text: 6:10
+                  - generic [ref=e1117]: PM
+                - generic [ref=e1118]:
+                  - paragraph [ref=e1119]:
+                    - text: GAM
+                    - img "GAM Esports" [ref=e1120]
+                  - separator [ref=e1122]
+                  - paragraph [ref=e1123]:
+                    - img "T1" [ref=e1124]
+                    - text: T1
+              - generic [ref=e1126]:
+                - paragraph [ref=e1128]:
+                  - text: Esports World Cup
+                  - generic [ref=e1129]: •
+                  - text: Groups
+                - paragraph [ref=e1130]: Bo1
+            - generic [ref=e1132]:
+              - generic [ref=e1133]:
+                - time [ref=e1135]:
+                  - text: 7:20
+                  - generic [ref=e1136]: PM
+                - generic [ref=e1137]:
+                  - paragraph [ref=e1138]:
+                    - text: G2
+                    - img "G2 Esports" [ref=e1139]
+                  - separator [ref=e1141]
+                  - paragraph [ref=e1142]:
+                    - img "FURIA" [ref=e1143]
+                    - text: FUR
+              - generic [ref=e1145]:
+                - paragraph [ref=e1147]:
+                  - text: Esports World Cup
+                  - generic [ref=e1148]: •
+                  - text: Groups
+                - paragraph [ref=e1149]: Bo1
+            - generic [ref=e1151]:
+              - generic [ref=e1152]:
+                - time [ref=e1154]:
+                  - text: 7:20
+                  - generic [ref=e1155]: PM
+                - generic [ref=e1156]:
+                  - paragraph [ref=e1157]:
+                    - text: DK
+                    - img "Dplus KIA" [ref=e1158]
+                  - separator [ref=e1160]
+                  - paragraph [ref=e1161]:
+                    - img "AG.AL" [ref=e1162]
+                    - text: AGAL
+              - generic [ref=e1164]:
+                - paragraph [ref=e1166]:
+                  - text: Esports World Cup
+                  - generic [ref=e1167]: •
+                  - text: Groups
+                - paragraph [ref=e1168]: Bo1
+            - generic [ref=e1170]:
+              - generic [ref=e1171]:
+                - time [ref=e1173]:
+                  - text: 8:30
+                  - generic [ref=e1174]: PM
+                - generic [ref=e1175]:
+                  - paragraph [ref=e1176]:
+                    - text: HLE
+                    - img "Hanwha Life Esports" [ref=e1177]
+                  - separator [ref=e1179]
+                  - paragraph [ref=e1180]:
+                    - img "MIBR.LOS" [ref=e1181]
+                    - text: ML
+              - generic [ref=e1183]:
+                - paragraph [ref=e1185]:
+                  - text: Esports World Cup
+                  - generic [ref=e1186]: •
+                  - text: Groups
+                - paragraph [ref=e1187]: Bo1
+            - generic [ref=e1189]:
+              - generic [ref=e1190]:
+                - time [ref=e1192]:
+                  - text: 8:30
+                  - generic [ref=e1193]: PM
+                - generic [ref=e1194]:
+                  - paragraph [ref=e1195]:
+                    - text: JDG
+                    - img "Beijing JDG Esports" [ref=e1196]
+                  - separator [ref=e1198]
+                  - paragraph [ref=e1199]:
+                    - img "LYON" [ref=e1200]
+                    - text: LYON
+              - generic [ref=e1202]:
+                - paragraph [ref=e1204]:
+                  - text: Esports World Cup
+                  - generic [ref=e1205]: •
+                  - text: Groups
+                - paragraph [ref=e1206]: Bo1
+            - generic [ref=e1208]:
+              - generic [ref=e1209]:
+                - time [ref=e1211]:
+                  - text: 9:40
+                  - generic [ref=e1212]: PM
+                - generic [ref=e1213]:
+                  - paragraph [ref=e1214]:
+                    - text: TBD
+                    - img "TBD" [ref=e1215]
+                  - separator [ref=e1217]
+                  - paragraph [ref=e1218]:
+                    - img "TBD" [ref=e1219]
+                    - text: TBD
+              - generic [ref=e1221]:
+                - paragraph [ref=e1223]:
+                  - text: Esports World Cup
+                  - generic [ref=e1224]: •
+                  - text: Groups
+                - paragraph [ref=e1225]: Bo1
+            - generic [ref=e1227]:
+              - generic [ref=e1228]:
+                - time [ref=e1230]:
+                  - text: 9:40
+                  - generic [ref=e1231]: PM
+                - generic [ref=e1232]:
+                  - paragraph [ref=e1233]:
+                    - text: TBD
+                    - img "TBD" [ref=e1234]
+                  - separator [ref=e1236]
+                  - paragraph [ref=e1237]:
+                    - img "TBD" [ref=e1238]
+                    - text: TBD
+              - generic [ref=e1240]:
+                - paragraph [ref=e1242]:
+                  - text: Esports World Cup
+                  - generic [ref=e1243]: •
+                  - text: Groups
+                - paragraph [ref=e1244]: Bo3
+            - generic [ref=e1246]:
+              - generic [ref=e1247]:
+                - time [ref=e1249]:
+                  - text: 11:00
+                  - generic [ref=e1250]: PM
+                - generic [ref=e1251]:
+                  - paragraph [ref=e1252]:
+                    - text: UB
+                    - img "UB Alma Mater" [ref=e1253]
+                  - separator [ref=e1255]
+                  - paragraph [ref=e1256]:
+                    - img "GIANTX ITERO" [ref=e1257]
+                    - text: GX
+              - generic [ref=e1259]:
+                - paragraph [ref=e1261]:
+                  - text: LES
+                  - generic [ref=e1262]: •
+                  - text: Week 1
+                - paragraph [ref=e1263]: Bo3
+            - heading "Tomorrow" [level=4] [ref=e1266]
+            - generic [ref=e1268]:
+              - generic [ref=e1269]:
+                - time [ref=e1271]:
+                  - text: 12:00
+                  - generic [ref=e1272]: AM
+                - generic [ref=e1273]:
+                  - paragraph [ref=e1274]:
+                    - text: BAM
+                    - img "BAAM Esports" [ref=e1275]
+                  - separator [ref=e1277]
+                  - paragraph [ref=e1278]:
+                    - img "Anubis Gaming" [ref=e1279]
+                    - text: ANB
+              - generic [ref=e1281]:
+                - paragraph [ref=e1283]:
+                  - text: Arabian League
+                  - generic [ref=e1284]: •
+                  - text: Week 1
+                - paragraph [ref=e1285]: Bo3
+            - generic [ref=e1287]:
+              - generic [ref=e1288]:
+                - time [ref=e1290]:
+                  - text: 12:10
+                  - generic [ref=e1291]: AM
+                - generic [ref=e1292]:
+                  - paragraph [ref=e1293]:
+                    - text: TBD
+                    - img "TBD" [ref=e1294]
+                  - separator [ref=e1296]
+                  - paragraph [ref=e1297]:
+                    - img "TBD" [ref=e1298]
+                    - text: TBD
+              - generic [ref=e1300]:
+                - paragraph [ref=e1302]:
+                  - text: Esports World Cup
+                  - generic [ref=e1303]: •
+                  - text: Groups
+                - paragraph [ref=e1304]: Bo1
+            - generic [ref=e1306]:
+              - generic [ref=e1307]:
+                - time [ref=e1309]:
+                  - text: 12:10
+                  - generic [ref=e1310]: AM
+                - generic [ref=e1311]:
+                  - paragraph [ref=e1312]:
+                    - text: TBD
+                    - img "TBD" [ref=e1313]
+                  - separator [ref=e1315]
+                  - paragraph [ref=e1316]:
+                    - img "TBD" [ref=e1317]
+                    - text: TBD
+              - generic [ref=e1319]:
+                - paragraph [ref=e1321]:
+                  - text: Esports World Cup
+                  - generic [ref=e1322]: •
+                  - text: Groups
+                - paragraph [ref=e1323]: Bo3
+            - generic [ref=e1325]:
+              - generic [ref=e1326]:
+                - time [ref=e1328]:
+                  - text: 1:30
+                  - generic [ref=e1329]: AM
+                - generic [ref=e1330]:
+                  - paragraph [ref=e1331]:
+                    - text: MKF
+                    - img "Movistar KOI Fénix" [ref=e1332]
+                  - separator [ref=e1334]
+                  - paragraph [ref=e1335]:
+                    - img "Barça Esports" [ref=e1336]
+                    - text: BAR
+              - generic [ref=e1338]:
+                - paragraph [ref=e1340]:
+                  - text: LES
+                  - generic [ref=e1341]: •
+                  - text: Week 1
+                - paragraph [ref=e1342]: Bo3
+            - generic [ref=e1344]:
+              - generic [ref=e1345]:
+                - time [ref=e1347]:
+                  - text: 2:30
+                  - generic [ref=e1348]: AM
+                - generic [ref=e1349]:
+                  - paragraph [ref=e1350]:
+                    - text: JSK
+                    - img "JSK Gamefy" [ref=e1351]
+                  - separator [ref=e1353]
+                  - paragraph [ref=e1354]:
+                    - img "One More Esports" [ref=e1355]
+                    - text: 1M
+              - generic [ref=e1357]:
+                - paragraph [ref=e1359]:
+                  - text: Arabian League
+                  - generic [ref=e1360]: •
+                  - text: Week 1
+                - paragraph [ref=e1361]: Bo3
+            - generic [ref=e1363]:
+              - generic [ref=e1364]:
+                - time [ref=e1366]:
+                  - text: 5:00
+                  - generic [ref=e1367]: PM
+                - generic [ref=e1368]:
+                  - paragraph [ref=e1369]:
+                    - text: TBD
+                    - img "TBD" [ref=e1370]
+                  - separator [ref=e1372]
+                  - paragraph [ref=e1373]:
+                    - img "TBD" [ref=e1374]
+                    - text: TBD
+              - generic [ref=e1376]:
+                - paragraph [ref=e1378]:
+                  - text: Esports World Cup
+                  - generic [ref=e1379]: •
+                  - text: Groups
+                - paragraph [ref=e1380]: Bo1
+            - generic [ref=e1382]:
+              - generic [ref=e1383]:
+                - time [ref=e1385]:
+                  - text: 5:00
+                  - generic [ref=e1386]: PM
+                - generic [ref=e1387]:
+                  - paragraph [ref=e1388]:
+                    - text: TBD
+                    - img "TBD" [ref=e1389]
+                  - separator [ref=e1391]
+                  - paragraph [ref=e1392]:
+                    - img "TBD" [ref=e1393]
+                    - text: TBD
+              - generic [ref=e1395]:
+                - paragraph [ref=e1397]:
+                  - text: Esports World Cup
+                  - generic [ref=e1398]: •
+                  - text: Groups
+                - paragraph [ref=e1399]: Bo3
+            - generic [ref=e1401]:
+              - generic [ref=e1402]:
+                - time [ref=e1404]:
+                  - text: 6:10
+                  - generic [ref=e1405]: PM
+                - generic [ref=e1406]:
+                  - paragraph [ref=e1407]:
+                    - text: TBD
+                    - img "TBD" [ref=e1408]
+                  - separator [ref=e1410]
+                  - paragraph [ref=e1411]:
+                    - img "TBD" [ref=e1412]
+                    - text: TBD
+              - generic [ref=e1414]:
+                - paragraph [ref=e1416]:
+                  - text: Esports World Cup
+                  - generic [ref=e1417]: •
+                  - text: Groups
+                - paragraph [ref=e1418]: Bo1
+            - generic [ref=e1420]:
+              - generic [ref=e1421]:
+                - time [ref=e1423]:
+                  - text: 6:10
+                  - generic [ref=e1424]: PM
+                - generic [ref=e1425]:
+                  - paragraph [ref=e1426]:
+                    - text: TBD
+                    - img "TBD" [ref=e1427]
+                  - separator [ref=e1429]
+                  - paragraph [ref=e1430]:
+                    - img "TBD" [ref=e1431]
+                    - text: TBD
+              - generic [ref=e1433]:
+                - paragraph [ref=e1435]:
+                  - text: Esports World Cup
+                  - generic [ref=e1436]: •
+                  - text: Groups
+                - paragraph [ref=e1437]: Bo3
+            - generic [ref=e1439]:
+              - generic [ref=e1440]:
+                - time [ref=e1442]:
+                  - text: 7:20
+                  - generic [ref=e1443]: PM
+                - generic [ref=e1444]:
+                  - paragraph [ref=e1445]:
+                    - text: TBD
+                    - img "TBD" [ref=e1446]
+                  - separator [ref=e1448]
+                  - paragraph [ref=e1449]:
+                    - img "TBD" [ref=e1450]
+                    - text: TBD
+              - generic [ref=e1452]:
+                - paragraph [ref=e1454]:
+                  - text: Esports World Cup
+                  - generic [ref=e1455]: •
+                  - text: Groups
+                - paragraph [ref=e1456]: Bo3
+            - generic [ref=e1458]:
+              - generic [ref=e1459]:
+                - time [ref=e1461]:
+                  - text: 7:20
+                  - generic [ref=e1462]: PM
+                - generic [ref=e1463]:
+                  - paragraph [ref=e1464]:
+                    - text: TBD
+                    - img "TBD" [ref=e1465]
+                  - separator [ref=e1467]
+                  - paragraph [ref=e1468]:
+                    - img "TBD" [ref=e1469]
+                    - text: TBD
+              - generic [ref=e1471]:
+                - paragraph [ref=e1473]:
+                  - text: Esports World Cup
+                  - generic [ref=e1474]: •
+                  - text: Groups
+                - paragraph [ref=e1475]: Bo3
+            - generic [ref=e1477]:
+              - generic [ref=e1478]:
+                - time [ref=e1480]:
+                  - text: 9:00
+                  - generic [ref=e1481]: PM
+                - generic [ref=e1482]:
+                  - paragraph [ref=e1483]:
+                    - text: GSMC
+                    - img "Gamespace M.C." [ref=e1484]
+                  - separator [ref=e1486]
+                  - paragraph [ref=e1487]:
+                    - img "TheParadOx Invaders" [ref=e1488]
+                    - text: TPX
+              - generic [ref=e1490]:
+                - paragraph [ref=e1492]:
+                  - text: Hellenic Legends League
+                  - generic [ref=e1493]: •
+                  - text: Week 3
+                - paragraph [ref=e1494]: P2
+            - generic [ref=e1496]:
+              - generic [ref=e1497]:
+                - time [ref=e1499]:
+                  - text: 9:50
+                  - generic [ref=e1500]: PM
+                - generic [ref=e1501]:
+                  - paragraph [ref=e1502]:
+                    - text: TBD
+                    - img "TBD" [ref=e1503]
+                  - separator [ref=e1505]
+                  - paragraph [ref=e1506]:
+                    - img "TBD" [ref=e1507]
+                    - text: TBD
+              - generic [ref=e1509]:
+                - paragraph [ref=e1511]:
+                  - text: Esports World Cup
+                  - generic [ref=e1512]: •
+                  - text: Groups
+                - paragraph [ref=e1513]: Bo3
+            - generic [ref=e1515]:
+              - generic [ref=e1516]:
+                - time [ref=e1518]:
+                  - text: 9:50
+                  - generic [ref=e1519]: PM
+                - generic [ref=e1520]:
+                  - paragraph [ref=e1521]:
+                    - text: TBD
+                    - img "TBD" [ref=e1522]
+                  - separator [ref=e1524]
+                  - paragraph [ref=e1525]:
+                    - img "TBD" [ref=e1526]
+                    - text: TBD
+              - generic [ref=e1528]:
+                - paragraph [ref=e1530]:
+                  - text: Esports World Cup
+                  - generic [ref=e1531]: •
+                  - text: Groups
+                - paragraph [ref=e1532]: Bo3
+            - generic [ref=e1534]:
+              - generic [ref=e1535]:
+                - time [ref=e1537]:
+                  - text: 11:00
+                  - generic [ref=e1538]: PM
+                - generic [ref=e1539]:
+                  - paragraph [ref=e1540]:
+                    - text: FLK
+                    - img "FALKE ESPORTS" [ref=e1541]
+                  - separator [ref=e1543]
+                  - paragraph [ref=e1544]:
+                    - img "UCAM Esports Club" [ref=e1545]
+                    - text: UCAM
+              - generic [ref=e1547]:
+                - paragraph [ref=e1549]:
+                  - text: LES
+                  - generic [ref=e1550]: •
+                  - text: Week 1
+                - paragraph [ref=e1551]: Bo3
+            - generic [ref=e1553]:
+              - generic [ref=e1554]:
+                - time [ref=e1556]:
+                  - text: 11:00
+                  - generic [ref=e1557]: PM
+                - generic [ref=e1558]:
+                  - paragraph [ref=e1559]:
+                    - text: WLG
+                    - img "WLGaming" [ref=e1560]
+                  - separator [ref=e1562]
+                  - paragraph [ref=e1563]:
+                    - img "Team Phantasma" [ref=e1564]
+                    - text: TP
+              - generic [ref=e1566]:
+                - paragraph [ref=e1568]:
+                  - text: Hellenic Legends League
+                  - generic [ref=e1569]: •
+                  - text: Week 3
+                - paragraph [ref=e1570]: P2
+            - generic [ref=e1572]:
+              - generic [ref=e1573]:
+                - time [ref=e1575]:
+                  - text: 11:00
+                  - generic [ref=e1576]: PM
+                - generic [ref=e1577]:
+                  - paragraph [ref=e1578]:
+                    - text: KHK
+                    - img "Kaufland Hangry Knights" [ref=e1579]
+                  - separator [ref=e1581]
+                  - paragraph [ref=e1582]:
+                    - img "Rossmann Centaurs" [ref=e1583]
+                    - text: ROSS
+              - generic [ref=e1585]:
+                - paragraph [ref=e1587]:
+                  - text: Prime League
+                  - generic [ref=e1588]: •
+                  - text: Week 4
+                - paragraph [ref=e1589]: Bo1
+            - heading "Friday Jul 17" [level=4] [ref=e1592]
+            - generic [ref=e1594]:
+              - generic [ref=e1595]:
+                - time [ref=e1597]:
+                  - text: 12:00
+                  - generic [ref=e1598]: AM
+                - generic [ref=e1599]:
+                  - paragraph [ref=e1600]:
+                    - text: 3BL
+                    - img "3BL GALAXY ESPORTS" [ref=e1601]
+                  - separator [ref=e1603]
+                  - paragraph [ref=e1604]:
+                    - img "Disruptors" [ref=e1605]
+                    - text: DS
+              - generic [ref=e1607]:
+                - paragraph [ref=e1609]:
+                  - text: Arabian League
+                  - generic [ref=e1610]: •
+                  - text: Week 1
+                - paragraph [ref=e1611]: Bo3
+            - generic [ref=e1613]:
+              - generic [ref=e1614]:
+                - time [ref=e1616]:
+                  - text: 12:00
+                  - generic [ref=e1617]: AM
+                - generic [ref=e1618]:
+                  - paragraph [ref=e1619]:
+                    - text: G2N
+                    - img "G2 NORD" [ref=e1620]
+                  - separator [ref=e1622]
+                  - paragraph [ref=e1623]:
+                    - img "TeamOrangeGaming" [ref=e1624]
+                    - text: TOG
+              - generic [ref=e1626]:
+                - paragraph [ref=e1628]:
+                  - text: Prime League
+                  - generic [ref=e1629]: •
+                  - text: Week 4
+                - paragraph [ref=e1630]: Bo1
+            - generic [ref=e1632]:
+              - generic [ref=e1633]:
+                - time [ref=e1635]:
+                  - text: 1:00
+                  - generic [ref=e1636]: AM
+                - generic [ref=e1637]:
+                  - paragraph [ref=e1638]:
+                    - text: FEC
+                    - img "Frites Esports Club" [ref=e1639]
+                  - separator [ref=e1641]
+                  - paragraph [ref=e1642]:
+                    - img "The Bandits" [ref=e1643]
+                    - text: BAN
+              - generic [ref=e1645]:
+                - paragraph [ref=e1647]:
+                  - text: Road of Legends
+                  - generic [ref=e1648]: •
+                  - text: Week 1
+                - paragraph [ref=e1649]: Bo3
+            - generic [ref=e1651]:
+              - generic [ref=e1652]:
+                - time [ref=e1654]:
+                  - text: 1:00
+                  - generic [ref=e1655]: AM
+                - generic [ref=e1656]:
+                  - paragraph [ref=e1657]:
+                    - text: VFB
+                    - img "VfB Stuttgart" [ref=e1658]
+                  - separator [ref=e1660]
+                  - paragraph [ref=e1661]:
+                    - img "Kaufland Hangry Knights" [ref=e1662]
+                    - text: KHK
+              - generic [ref=e1664]:
+                - paragraph [ref=e1666]:
+                  - text: Prime League
+                  - generic [ref=e1667]: •
+                  - text: Week 4
+                - paragraph [ref=e1668]: Bo1
+            - generic [ref=e1670]:
+              - generic [ref=e1671]:
+                - time [ref=e1673]:
+                  - text: 1:30
+                  - generic [ref=e1674]: AM
+                - generic [ref=e1675]:
+                  - paragraph [ref=e1676]:
+                    - text: BAR
+                    - img "Barça Esports" [ref=e1677]
+                  - separator [ref=e1679]
+                  - paragraph [ref=e1680]:
+                    - img "Heretics Academy" [ref=e1681]
+                    - text: HRTS
+              - generic [ref=e1683]:
+                - paragraph [ref=e1685]:
+                  - text: LES
+                  - generic [ref=e1686]: •
+                  - text: Week 1
+                - paragraph [ref=e1687]: Bo3
+            - generic [ref=e1689]:
+              - generic [ref=e1690]:
+                - time [ref=e1692]:
+                  - text: 2:00
+                  - generic [ref=e1693]: AM
+                - generic [ref=e1694]:
+                  - paragraph [ref=e1695]:
+                    - text: OUAT
+                    - img "Once Upon a Team" [ref=e1696]
+                  - separator [ref=e1698]
+                  - paragraph [ref=e1699]:
+                    - img "Myth Esports" [ref=e1700]
+                    - text: MYTH
+              - generic [ref=e1702]:
+                - paragraph [ref=e1704]:
+                  - text: Road of Legends
+                  - generic [ref=e1705]: •
+                  - text: Week 1
+                - paragraph [ref=e1706]: Bo3
+            - generic [ref=e1708]:
+              - generic [ref=e1709]:
+                - time [ref=e1711]:
+                  - text: 2:00
+                  - generic [ref=e1712]: AM
+                - generic [ref=e1713]:
+                  - paragraph [ref=e1714]:
+                    - text: SGE
+                    - img "Eintracht Frankfurt" [ref=e1715]
+                  - separator [ref=e1717]
+                  - paragraph [ref=e1718]:
+                    - img "Eintracht Spandau" [ref=e1719]
+                    - text: EINS
+              - generic [ref=e1721]:
+                - paragraph [ref=e1723]:
+                  - text: Prime League
+                  - generic [ref=e1724]: •
+                  - text: Week 4
+                - paragraph [ref=e1725]: Bo1
+            - generic [ref=e1727]:
+              - generic [ref=e1728]:
+                - time [ref=e1730]:
+                  - text: 2:30
+                  - generic [ref=e1731]: AM
+                - generic [ref=e1732]:
+                  - paragraph [ref=e1733]:
+                    - text: GNG
+                    - img "GNG Amazigh" [ref=e1734]
+                  - separator [ref=e1736]
+                  - paragraph [ref=e1737]:
+                    - img "Pyramid IV Esports" [ref=e1738]
+                    - text: P4
+              - generic [ref=e1740]:
+                - paragraph [ref=e1742]:
+                  - text: Arabian League
+                  - generic [ref=e1743]: •
+                  - text: Week 1
+                - paragraph [ref=e1744]: Bo3
+            - generic [ref=e1746]:
+              - generic [ref=e1747]:
+                - time [ref=e1749]:
+                  - text: 3:00
+                  - generic [ref=e1750]: AM
+                - generic [ref=e1751]:
+                  - paragraph [ref=e1752]:
+                    - text: USE
+                    - img "Unicorns of Love Sexy Edition" [ref=e1753]
+                  - separator [ref=e1755]
+                  - paragraph [ref=e1756]:
+                    - img "TeamOrangeGaming" [ref=e1757]
+                    - text: TOG
+              - generic [ref=e1759]:
+                - paragraph [ref=e1761]:
+                  - text: Prime League
+                  - generic [ref=e1762]: •
+                  - text: Week 4
+                - paragraph [ref=e1763]: Bo1
+            - generic [ref=e1765]:
+              - generic [ref=e1766]:
+                - time [ref=e1768]:
+                  - text: 5:00
+                  - generic [ref=e1769]: AM
+                - generic [ref=e1770]:
+                  - paragraph [ref=e1771]:
+                    - text: CNV
+                    - img "Conviction" [ref=e1772]
+                  - separator [ref=e1774]
+                  - paragraph [ref=e1775]:
+                    - img "Cupid Esports" [ref=e1776]
+                    - text: CPD
+              - generic [ref=e1778]:
+                - paragraph [ref=e1780]:
+                  - text: NACL
+                  - generic [ref=e1781]: •
+                  - text: Week 1
+                - paragraph [ref=e1782]: Bo3
+            - generic [ref=e1784]:
+              - generic [ref=e1785]:
+                - time [ref=e1787]:
+                  - text: 8:00
+                  - generic [ref=e1788]: AM
+                - generic [ref=e1789]:
+                  - paragraph [ref=e1790]:
+                    - text: MU
+                    - img "Maryville University" [ref=e1791]
+                  - separator [ref=e1793]
+                  - paragraph [ref=e1794]:
+                    - img "Dorado Gaming" [ref=e1795]
+                    - text: DOG
+              - generic [ref=e1797]:
+                - paragraph [ref=e1799]:
+                  - text: NACL
+                  - generic [ref=e1800]: •
+                  - text: Week 1
+                - paragraph [ref=e1801]: Bo3
+            - generic [ref=e1803]:
+              - generic [ref=e1804]:
+                - time [ref=e1806]:
+                  - text: 7:00
+                  - generic [ref=e1807]: PM
+                - generic [ref=e1808]:
+                  - paragraph [ref=e1809]:
+                    - text: TBD
+                    - img "TBD" [ref=e1810]
+                  - separator [ref=e1812]
+                  - paragraph [ref=e1813]:
+                    - img "TBD" [ref=e1814]
+                    - text: TBD
+              - generic [ref=e1816]:
+                - paragraph [ref=e1818]:
+                  - text: Esports World Cup
+                  - generic [ref=e1819]: •
+                  - text: Quarterfinals
+                - paragraph [ref=e1820]: Bo3
+            - button "Load More" [ref=e1822] [cursor=pointer]
+        - region "scrollable content" [ref=e1828]:
+          - generic [ref=e1829]:
+            - generic [ref=e1830]:
+              - generic [ref=e1831]: Global Power Rankings
+              - generic [ref=e1839]:
+                - generic [ref=e1840]:
+                  - generic [ref=e1841]: "1"
+                  - generic [ref=e1842]: BLG
+                - generic [ref=e1845]:
+                  - generic [ref=e1846]: "2"
+                  - generic [ref=e1847]: HLE
+                - generic [ref=e1850]:
+                  - generic [ref=e1851]: "3"
+                  - generic [ref=e1852]: GEN
+              - link "View Full Rankings" [ref=e1856] [cursor=pointer]:
+                - /url: /en-US/gpr
+            - generic [ref=e1859]:
+              - generic [ref=e1860]: NEWS
+              - link "Greatest Plays - MSI Bracket Stage Week Two July 13, 2026" [ref=e1861] [cursor=pointer]:
+                - /url: https://www.youtube.com/watch?v=xWH7VvMwdIQ
+                - generic [ref=e1863]:
+                  - generic [ref=e1864]: Greatest Plays - MSI Bracket Stage Week Two
+                  - generic [ref=e1865]: July 13, 2026
+              - 'link "Announcing LCS CLASSIC: TSM vs. CLG July 12, 2026" [ref=e1866] [cursor=pointer]':
+                - /url: /news/announcing-lcs-classic-tsm-vs-clg
+                - generic [ref=e1868]:
+                  - generic [ref=e1869]: "Announcing LCS CLASSIC: TSM vs. CLG"
+                  - generic [ref=e1870]: July 12, 2026
+              - link "2026 NACL Summer Split Primer July 10, 2026" [ref=e1871] [cursor=pointer]:
+                - /url: /news/2026-nacl-summer-split-primer
+                - generic [ref=e1873]:
+                  - generic [ref=e1874]: 2026 NACL Summer Split Primer
+                  - generic [ref=e1875]: July 10, 2026
+      - generic [ref=e1877]:
+        - generic [ref=e1878]:
+          - link [ref=e1879] [cursor=pointer]:
+            - /url: https://www.riotgames.com
+            - img "Riot Games" [ref=e1880]
+          - link [ref=e1882] [cursor=pointer]:
+            - /url: https://leagueoflegends.com
+            - img "League of Legends" [ref=e1883]
+        - generic [ref=e1884]:
+          - paragraph [ref=e1885]: © 2026 Riot Games. All Rights Reserved.
+          - generic [ref=e1886]:
+            - link "Privacy Notice" [ref=e1887] [cursor=pointer]:
+              - /url: https://www.riotgames.com/en/privacy-notice
+            - link "Terms of Service" [ref=e1889] [cursor=pointer]:
+              - /url: https://www.riotgames.com/en/terms-of-service
+            - link "Accessibility" [ref=e1891] [cursor=pointer]:
+              - /url: https://www.riotgames.com/en/accessibility
+            - button "Cookie Preferences" [ref=e1893]
+  - alert [ref=e1895]

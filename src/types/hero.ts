@@ -31,12 +31,6 @@ export interface HeroWithStats extends Hero {
   stats?: HeroStats
 }
 
-export interface CounterInfo {
-  strongAgainst: string[] // hero IDs
-  weakAgainst: string[] // hero IDs
-  synergies: string[] // hero IDs
-}
-
 // Data Dragon API 响应类型
 export interface DataDragonResponse {
   type: string

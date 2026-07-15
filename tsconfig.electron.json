@@ -9,6 +9,7 @@
     "noImplicitAny": false,
     "strict": false,
     "esModuleInterop": true,
+    "allowJs": true,
     "forceConsistentCasingInFileNames": false,
     "outDir": "build/main",
     "rootDir": "src/main"

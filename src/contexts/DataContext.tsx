@@ -1,26 +1,13 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react'
 import { useBP } from './BPContext'
+import { useHeroes } from './HeroContext'
+import { calcSynergy } from '../analysis/rules/synergy'
+import { calcMatchup } from '../analysis/rules/matchup'
+import { recommendHeroes } from '../analysis/rules/recommend'
+import type { Recommendation, SynergyScore, MatchupAnalysis } from '../analysis/types'
 
-// 类型定义
-export interface Recommendation {
-  heroId: string
-  reason: string
-  priority: 'high' | 'medium' | 'low'
-  winRate?: number
-}
-
-export interface SynergyScore {
-  score: number
-  strongSynergies: string[]
-  weakSynergies: string[]
-}
-
-export interface MatchupAnalysis {
-  winner: 'blue' | 'red' | 'even'
-  blueAdvantage: number
-  redAdvantage: number
-  keyFactors: string[]
-}
+// 重新导出类型，保持向后兼容
+export type { Recommendation, SynergyScore, MatchupAnalysis }
 
 interface DataState {
   recommendations: Recommendation[]
@@ -38,6 +25,7 @@ const DataContext = createContext<DataContextValue | undefined>(undefined)
 
 export function DataProvider({ children }: { children: ReactNode }) {
   const bp = useBP()
+  const { heroes } = useHeroes()
 
   const [state, setState] = useState<DataState>({
     recommendations: [],
@@ -46,35 +34,38 @@ export function DataProvider({ children }: { children: ReactNode }) {
     loading: false,
   })
 
-  // 分析 BP 数据
+  // 分析 BP 数据（本地规则引擎：协同度 / 对阵优势 / 推荐）
   const analyze = useCallback(async () => {
     setState(prev => ({ ...prev, loading: true }))
 
     try {
-      // 获取当前阶段
       const currentPhase = bp.getCurrentPhase()
       if (!currentPhase) {
         setState(prev => ({ ...prev, loading: false }))
         return
       }
 
-      // TODO: 实际分析逻辑
-      const recommendations: Recommendation[] = []
+      // 按 id 从英雄池匹配完整英雄对象（含 tags）
+      const getHeroesByIds = (ids: string[]) =>
+        ids
+          .map(id => heroes.find(h => h.id === id))
+          .filter((h): h is NonNullable<typeof h> => h != null)
 
-      // TODO: 计算协同度
-      const synergyAnalysis: SynergyScore = {
-        score: 0,
-        strongSynergies: [],
-        weakSynergies: [],
-      }
+      const bluePicks = getHeroesByIds(bp.blueTeam.picks)
+      const redPicks = getHeroesByIds(bp.redTeam.picks)
 
-      // TODO: 计算对阵分析
-      const matchupAnalysis: MatchupAnalysis = {
-        winner: 'even',
-        blueAdvantage: 50,
-        redAdvantage: 50,
-        keyFactors: [],
-      }
+      // 当前选人方为"己方"，对方为"敌方"
+      const ownPicks = currentPhase.side === 'blue' ? bluePicks : redPicks
+      const enemyPicks = currentPhase.side === 'blue' ? redPicks : bluePicks
+
+      const excludedIds = [
+        ...bp.blueTeam.bans, ...bp.redTeam.bans,
+        ...bp.blueTeam.picks, ...bp.redTeam.picks,
+      ]
+
+      const recommendations = recommendHeroes(heroes, ownPicks, enemyPicks, excludedIds)
+      const synergyAnalysis = calcSynergy(ownPicks)
+      const matchupAnalysis = calcMatchup(bluePicks, redPicks)
 
       setState(prev => ({
         ...prev,
@@ -87,7 +78,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       console.error('Analysis error:', error)
       setState(prev => ({ ...prev, loading: false }))
     }
-  }, [bp])
+  }, [bp, heroes])
 
   // 清除分析数据
   const clear = useCallback(() => {
@@ -98,6 +89,11 @@ export function DataProvider({ children }: { children: ReactNode }) {
       loading: false,
     })
   }, [])
+
+  // BP 状态变化（ban/pick/undo/reset）时清除旧分析，避免残留过时推荐
+  useEffect(() => {
+    clear()
+  }, [bp.currentPhase, bp.history.length, clear])
 
   const value: DataContextValue = {
     ...state,

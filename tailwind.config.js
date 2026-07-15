@@ -33,17 +33,11 @@ export default {
         'gold-lg': '0 0 30px rgba(200, 170, 110, 0.4)',
       },
       animation: {
-        'border': 'border-flow 3s linear infinite',
         'fade-in': 'fade-in 0.3s ease-out',
         'slide-in-up': 'slide-in-up 0.3s ease-out',
         'scale-in': 'scale-in 0.2s ease-out',
       },
       keyframes: {
-        'border-flow': {
-          '0%': { backgroundPosition: '0% 50%' },
-          '50%': { backgroundPosition: '100% 50%' },
-          '100%': { backgroundPosition: '0% 50%' },
-        },
         'fade-in': {
           'from': { opacity: '0' },
           'to': { opacity: '1' },

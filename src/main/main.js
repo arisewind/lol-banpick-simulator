@@ -1,6 +1,7 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const { registerHeroHandlers } = require('./ipc/heroHandler.js')
+const { registerDataHandlers } = require('./ipc/dataHandler.js')
 const fs = require('fs')
 
 let mainWindow = null
@@ -44,6 +45,7 @@ function createWindow() {
 app.whenReady().then(() => {
   // 注册 IPC 处理器
   registerHeroHandlers()
+  registerDataHandlers()
 
   createWindow()
 

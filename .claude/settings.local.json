@@ -15,7 +15,8 @@
       "Bash(python3 -c \"import json, sys; json.load\\(sys.stdin\\)\")",
       "Bash(SETTINGS_FILE=/c/Users/11978/.claude/settings.json python3 -c ' *)",
       "Bash(pnpm create *)",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(python .claude/hooks/notify.py *)"
     ]
   }
 }

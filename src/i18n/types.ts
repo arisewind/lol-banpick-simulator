@@ -2,51 +2,16 @@
  * i18n 类型定义
  */
 
-// 支持的语言类型
-export type Language = 'zh-CN' | 'zh-TW' | 'en' | 'ko'
+import zhCN from './locales/zh-CN.json'
 
-// 翻译资源结构
-export interface TranslationResources {
-  common: {
-    confirm: string
-    cancel: string
-    save: string
-    undo: string
-    reset: string
-    export: string
-    import: string
-    search: string
-    loading: string
-    error: string
-  }
-  bp: {
-    ban: string
-    pick: string
-    blueTeam: string
-    redTeam: string
-    banPhase: string
-    pickPhase: string
-    phase: string
-    complete: string
-  }
-  hero: {
-    tags: {
-      assassin: string
-      fighter: string
-      mage: string
-      marksman: string
-      support: string
-      tank: string
-    }
-    selectToBan: string
-    selectToPick: string
-    alreadySelected: string
-  }
-  stats: {
-    totalHeroes: string
-    filteredHeroes: string
-  }
+// 支持的语言类型（与 locales/ 下的文件一一对应）
+export type Language = 'zh-CN' | 'zh-TW' | 'en'
+
+// 递归把对象类型所有叶子字符串节点放宽为 string（避免字面量类型精度问题）
+type StringValues<T> = {
+  [K in keyof T]: T[K] extends string ? string : StringValues<T[K]>
 }
 
-// 默认导出类型用于 i18next
-export default null
+// 翻译资源结构：从默认 locale（zh-CN）派生，key 与 json 自动同步，杜绝手写类型漂移。
+// 跨语言 key 一致性由 i18nKeys.test.ts 运行时校验，不靠 satisfies（会被字面量精度卡住）。
+export type TranslationResources = StringValues<typeof zhCN>

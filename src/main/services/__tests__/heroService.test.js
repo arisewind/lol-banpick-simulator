@@ -100,6 +100,18 @@ describe('HeroService - fetchHeroes', () => {
   beforeEach(() => { svc = new HeroService() })
   afterEach(() => { vi.restoreAllMocks() })
 
+  it('缓存有效且未显式指定版本时直接返回缓存，不请求网络', async () => {
+    svc.heroesCache.set('Ahri', { id: 'Ahri', name: '阿狸', tags: ['Mage'] })
+    svc.lastFetch = Date.now()
+
+    const spy = vi.spyOn(global, 'fetch')
+
+    const heroes = await svc.fetchHeroes()
+    expect(spy).not.toHaveBeenCalled()
+    expect(heroes).toHaveLength(1)
+    expect(heroes[0]).toMatchObject({ id: 'Ahri', name: '阿狸' })
+  })
+
   it('解析 Data Dragon 响应并把英雄写入缓存', async () => {
     const fakeData = {
       data: {

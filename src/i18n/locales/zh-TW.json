@@ -19,7 +19,11 @@
     "step": "第 {{step}} 步",
     "analyzing": "分析中...",
     "calculating": "計算中...",
-    "pending": "待驗證"
+    "pending": "待驗證",
+    "exportSuccess": "匯出成功",
+    "importSuccess": "匯入成功",
+    "importInvalid": "資料格式無效",
+    "retry": "重試"
   },
   "bp": {
     "ban": "禁用",
@@ -71,6 +75,9 @@
     "startAnalysis": "開始分析",
     "recommendations": "推薦 Ban/Pick",
     "noRecommendations": "暫無推薦數據",
-    "quickStats": "快速統計"
+    "quickStats": "快速統計",
+    "toggle": "切換分析面板",
+    "open": "展開分析",
+    "close": "收起分析"
   }
 }

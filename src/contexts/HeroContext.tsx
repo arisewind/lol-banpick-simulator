@@ -1,9 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect, useMemo, ReactNode } from 'react'
-import type { Hero, HeroStats } from '../types/hero'
-
-export interface HeroWithStats extends Hero {
-  stats?: HeroStats
-}
+import type { Hero, HeroWithStats } from '../types/hero'
 
 interface HeroState {
   heroes: HeroWithStats[]

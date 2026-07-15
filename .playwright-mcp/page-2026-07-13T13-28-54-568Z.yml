@@ -1,0 +1,98 @@
+- generic [ref=f4e3]:
+  - banner [ref=f4e4]:
+    - generic [ref=f4e5]:
+      - heading "英雄联盟 BP 模拟器" [level=1] [ref=f4e6]
+      - generic [ref=f4e7]: 英雄数据模块完成
+  - main [ref=f4e9]:
+    - generic [ref=f4e11]:
+      - textbox "搜索英雄..." [ref=f4e13]
+      - button "标签筛选 ▶" [ref=f4e15] [cursor=pointer]:
+        - generic [ref=f4e16]: 标签筛选
+        - generic [ref=f4e17]: ▶
+      - generic [ref=f4e18]: 禁用英雄 - 蓝方回合
+      - generic [ref=f4e20]: 暂无英雄数据
+      - generic [ref=f4e23]:
+        - generic [ref=f4e24]: 共 0 位英雄
+        - generic [ref=f4e25]:
+          - generic [ref=f4e26]: 禁用
+          - generic [ref=f4e29]: 选择
+    - generic [ref=f4e33]:
+      - generic [ref=f4e34]:
+        - generic [ref=f4e35]:
+          - generic [ref=f4e36]: 当前阶段
+          - generic [ref=f4e37]: 1/20
+        - generic [ref=f4e41]:
+          - generic [ref=f4e42]: 蓝方
+          - generic [ref=f4e43]:
+            - generic [ref=f4e44]: 禁用
+            - generic [ref=f4e45]: 回合
+          - generic [ref=f4e46]: STEP 1
+      - generic [ref=f4e47]:
+        - generic [ref=f4e48]:
+          - generic [ref=f4e49]:
+            - heading "蓝方" [level=3] [ref=f4e50]
+            - generic [ref=f4e51]: 0/5 已选择
+          - generic [ref=f4e52]:
+            - generic [ref=f4e53]: 禁用
+            - generic [ref=f4e56]:
+              - generic [ref=f4e57]: "1"
+              - generic [ref=f4e59]: "2"
+              - generic [ref=f4e61]: "3"
+              - generic [ref=f4e63]: "4"
+              - generic [ref=f4e65]: "5"
+          - generic [ref=f4e67]:
+            - generic [ref=f4e68]: 选择
+            - generic [ref=f4e71]:
+              - generic [ref=f4e72]: "1"
+              - generic [ref=f4e74]: "2"
+              - generic [ref=f4e76]: "3"
+              - generic [ref=f4e78]: "4"
+              - generic [ref=f4e80]: "5"
+        - generic [ref=f4e82]:
+          - generic [ref=f4e83]:
+            - heading "红方" [level=3] [ref=f4e84]
+            - generic [ref=f4e85]: 0/5 已选择
+          - generic [ref=f4e86]:
+            - generic [ref=f4e87]: 禁用
+            - generic [ref=f4e90]:
+              - generic [ref=f4e91]: "1"
+              - generic [ref=f4e93]: "2"
+              - generic [ref=f4e95]: "3"
+              - generic [ref=f4e97]: "4"
+              - generic [ref=f4e99]: "5"
+          - generic [ref=f4e101]:
+            - generic [ref=f4e102]: 选择
+            - generic [ref=f4e105]:
+              - generic [ref=f4e106]: "1"
+              - generic [ref=f4e108]: "2"
+              - generic [ref=f4e110]: "3"
+              - generic [ref=f4e112]: "4"
+              - generic [ref=f4e114]: "5"
+    - generic [ref=f4e117]:
+      - generic [ref=f4e118]:
+        - heading "数据分析" [level=3] [ref=f4e119]
+        - paragraph [ref=f4e120]: 实时 BP 分析与推荐
+      - button "开始分析" [ref=f4e121] [cursor=pointer]
+      - generic [ref=f4e122]:
+        - heading "推荐 Ban/Pick" [level=4] [ref=f4e123]
+        - generic [ref=f4e124]: 暂无推荐数据
+      - generic [ref=f4e130]:
+        - heading "快速统计" [level=4] [ref=f4e131]
+        - generic [ref=f4e132]:
+          - generic [ref=f4e133]:
+            - generic [ref=f4e134]: 阵容协同度
+            - generic [ref=f4e135]: 计算中...
+          - generic [ref=f4e136]:
+            - generic [ref=f4e137]: 对阵优势
+            - generic [ref=f4e138]: 分析中...
+          - generic [ref=f4e139]:
+            - generic [ref=f4e140]: 推荐准确度
+            - generic [ref=f4e141]: 待验证
+  - contentinfo [ref=f4e142]:
+    - generic [ref=f4e143]:
+      - generic [ref=f4e144]:
+        - button "撤销" [disabled] [ref=f4e145]
+        - button "重置" [ref=f4e146] [cursor=pointer]
+      - generic [ref=f4e147]:
+        - button "导出" [ref=f4e148] [cursor=pointer]
+        - button "导入" [ref=f4e149] [cursor=pointer]

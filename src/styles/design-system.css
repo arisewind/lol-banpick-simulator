@@ -46,8 +46,6 @@
     --shadow-base: 0 4px 6px rgba(0, 0, 0, 0.6);
     --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.7);
 
-    /* 游戏化光效 */
-
     /* === 动画参数 === */
     --transition-fast: 150ms;
     --transition-base: 250ms;
@@ -57,85 +55,8 @@
   }
 }
 
-/* === 游戏化边框类 === */
+/* === 游戏化组件类 === */
 @layer components {
-  /* 蓝方游戏化边框 */
-  .border-game-blue {
-    position: relative;
-    border: 1px solid rgba(10, 200, 185, 0.4);
-    box-shadow:
-      0 0 10px rgba(10, 200, 185, 0.2),
-      inset 0 0 20px rgba(10, 200, 185, 0.05);
-  }
-
-  .border-game-blue::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(
-      180deg,
-      rgba(10, 200, 185, 0.5) 0%,
-      transparent 50%,
-      rgba(10, 200, 185, 0.2) 100%
-    );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
-
-  /* 红方游戏化边框 */
-  .border-game-red {
-    position: relative;
-    border: 1px solid rgba(242, 56, 91, 0.4);
-    box-shadow:
-      0 0 10px rgba(242, 56, 91, 0.2),
-      inset 0 0 20px rgba(242, 56, 91, 0.05);
-  }
-
-  .border-game-red::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(
-      180deg,
-      rgba(242, 56, 91, 0.5) 0%,
-      transparent 50%,
-      rgba(242, 56, 91, 0.2) 100%
-    );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
-
-  /* 金色装饰边框 */
-  .border-game-gold {
-    border: 1px solid rgba(200, 170, 110, 0.5);
-    box-shadow:
-      0 0 15px rgba(200, 170, 110, 0.3),
-      inset 0 0 10px rgba(200, 170, 110, 0.1);
-  }
-
-  /* 玻璃态背景 */
-  .bg-glass {
-    background: var(--bg-glass);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-
-  /* 卡片基础样式 */
-  .card-base {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: 0.5rem;
-    box-shadow: var(--shadow-base);
-  }
-
   /* 输入框游戏化样式 */
   .input-game {
     background: rgba(15, 23, 42, 0.8);
@@ -175,40 +96,5 @@
 
   .btn-game:active {
     transform: scale(0.98);
-  }
-}
-
-/* === 槽位样式 === */
-@layer components {
-  /* 空槽位 */
-  .slot-empty {
-    background: rgba(15, 23, 42, 0.6);
-    border: 2px dashed var(--border-subtle);
-    transition: all var(--transition-base) var(--ease-out);
-  }
-
-  .slot-empty-blue {
-    border-color: rgba(10, 200, 185, 0.3);
-    box-shadow: inset 0 0 20px rgba(10, 200, 185, 0.05);
-  }
-
-  .slot-empty-red {
-    border-color: rgba(242, 56, 91, 0.3);
-    box-shadow: inset 0 0 20px rgba(242, 56, 91, 0.05);
-  }
-
-  /* 已填充槽位 */
-  .slot-filled-blue {
-    border: 2px solid rgba(10, 200, 185, 0.6);
-    box-shadow:
-      0 0 10px rgba(10, 200, 185, 0.3),
-      inset 0 0 15px rgba(10, 200, 185, 0.1);
-  }
-
-  .slot-filled-red {
-    border: 2px solid rgba(242, 56, 91, 0.6);
-    box-shadow:
-      0 0 10px rgba(242, 56, 91, 0.3),
-      inset 0 0 15px rgba(242, 56, 91, 0.1);
   }
 }

@@ -4,7 +4,7 @@ import { cn } from '../../utils/cn'
 
 export default function AnalysisPanel() {
   const { t } = useTranslation()
-  const { recommendations, loading, analyze } = useData()
+  const { recommendations, synergyAnalysis, matchupAnalysis, loading, analyze } = useData()
 
   // 优先级标签映射
   const getPriorityLabel = (priority: string): string => {
@@ -127,16 +127,25 @@ export default function AnalysisPanel() {
         )}>
           <div className="mb-3 flex justify-between text-xs">
             <span className="text-slate-500">{t('stats.synergy')}</span>
-            <span className="text-lol-gold font-mono">{t('common.calculating')}</span>
+            <span className="text-lol-gold font-mono">
+              {synergyAnalysis ? synergyAnalysis.score : t('common.calculating')}
+            </span>
           </div>
           <div className="mb-3 flex justify-between text-xs">
             <span className="text-slate-500">{t('stats.matchupAdvantage')}</span>
-            <span className="text-lol-blue font-mono">{t('common.analyzing')}</span>
+            <span className="text-lol-blue font-mono">
+              {matchupAnalysis
+                ? `${matchupAnalysis.blueAdvantage}% : ${matchupAnalysis.redAdvantage}%`
+                : t('common.analyzing')}
+            </span>
           </div>
-          <div className="flex justify-between text-xs">
-            <span className="text-slate-500">{t('stats.accuracy')}</span>
-            <span className="text-lol-blue font-mono">{t('common.pending')}</span>
-          </div>
+          {matchupAnalysis && matchupAnalysis.keyFactors.length > 0 && (
+            <div className="mt-2 space-y-1 border-t border-slate-800 pt-2">
+              {matchupAnalysis.keyFactors.slice(0, 3).map((factor, i) => (
+                <div key={i} className="text-xs text-slate-500">• {factor}</div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

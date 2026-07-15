@@ -19,7 +19,11 @@
     "step": "Step {{step}}",
     "analyzing": "Analyzing...",
     "calculating": "Calculating...",
-    "pending": "Pending"
+    "pending": "Pending",
+    "exportSuccess": "Exported",
+    "importSuccess": "Imported",
+    "importInvalid": "Invalid data format",
+    "retry": "Retry"
   },
   "bp": {
     "ban": "Ban",
@@ -71,6 +75,9 @@
     "startAnalysis": "Start Analysis",
     "recommendations": "Recommended Bans/Picks",
     "noRecommendations": "No recommendations available",
-    "quickStats": "Quick Stats"
+    "quickStats": "Quick Stats",
+    "toggle": "Toggle analysis panel",
+    "open": "Open analysis",
+    "close": "Close analysis"
   }
 }

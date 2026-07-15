@@ -13,7 +13,11 @@
     "electron:build": "pnpm build && electron-builder",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:ci": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "typecheck:electron": "tsc --noEmit -p tsconfig.electron.json",
+    "typecheck:all": "pnpm typecheck && pnpm typecheck:electron"
   },
   "dependencies": {
     "i18next": "^26.3.6",
