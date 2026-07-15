@@ -91,6 +91,11 @@ export function HeroProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, loading: true, error: null }))
 
     try {
+      // 检查是否在 Electron 环境中
+      if (!window.electronAPI) {
+        throw new Error('请在 Electron 窗口中打开此应用（运行 pnpm electron:dev），不要直接在浏览器中打开')
+      }
+
       // 通过 Electron API 获取英雄数据
       const result = await window.electronAPI.fetchHeroes()
 
@@ -154,4 +159,4 @@ export function useHeroes() {
   return context
 }
 
-export default HeroProvider
+// 已移除默认导出，统一使用命名导出

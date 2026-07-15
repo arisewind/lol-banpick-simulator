@@ -1,12 +1,57 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import BPContext from './contexts/BPContext'
-import HeroContext from './contexts/HeroContext'
-import DataContext from './contexts/DataContext'
+import { BPProvider as BPContext } from './contexts/BPContext'
+import { HeroProvider as HeroContext } from './contexts/HeroContext'
+import { DataProvider as DataContext } from './contexts/DataContext'
 import BanPickArena from './components/bp/BanPickArena'
 import HeroGrid from './components/bp/HeroGrid'
 import AnalysisDrawer from './components/analysis/AnalysisDrawer'
 import { useBP, type BPSnapshot } from './contexts/BPContext'
+
+// 环境检测组件
+function EnvironmentGuard({ children }: { children: React.ReactNode }) {
+  const [isElectron, setIsElectron] = useState(false)
+  const [checked, setChecked] = useState(false)
+
+  useEffect(() => {
+    // 检测是否在 Electron 环境中
+    const hasElectronAPI = typeof window !== 'undefined' && window.electronAPI
+    setIsElectron(!!hasElectronAPI)
+    setChecked(true)
+  }, [])
+
+  if (!checked) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-lol-bg-black">
+        <div className="text-lol-text-secondary">检测运行环境...</div>
+      </div>
+    )
+  }
+
+  if (!isElectron) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-lol-bg-black">
+        <div className="max-w-md rounded-lg border-2 border-lol-red bg-lol-bg-dark p-8 shadow-xl shadow-red-lg">
+          <h1 className="mb-4 text-2xl font-bold text-lol-red">⚠️ 运行环境错误</h1>
+          <p className="mb-4 text-lol-text-secondary">
+            此应用必须在 Electron 环境中运行，不能直接在浏览器中打开。
+          </p>
+          <div className="rounded-lg bg-lol-bg-black p-4">
+            <p className="mb-2 text-sm font-bold text-lol-text-primary">正确的启动方式：</p>
+            <code className="block rounded bg-slate-800 p-2 text-sm text-lol-gold">
+              pnpm electron:dev
+            </code>
+            <p className="mt-3 text-xs text-lol-text-muted">
+              或双击项目根目录下的 <span className="text-lol-blue">启动开发环境.bat</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return <>{children}</>
+}
 
 function AppContent() {
   const { t, i18n } = useTranslation()
@@ -54,27 +99,27 @@ function AppContent() {
   const progressPct = (Math.min(currentPhase + 1, totalPhases) / totalPhases) * 100
 
   return (
-    <div className="h-screen w-screen bg-slate-950 text-slate-100">
+    <div className="h-screen w-screen bg-lol-bg-black text-lol-text-primary">
       {notice && (
-        <div className={`fixed left-1/2 top-20 z-50 -translate-x-1/2 rounded px-4 py-2 text-sm text-white shadow-lg ${
-          notice.type === 'success' ? 'bg-green-600' : 'bg-red-600'
+        <div className={`fixed left-1/2 top-20 z-50 -translate-x-1/2 rounded-lg px-4 py-2 text-sm text-white shadow-lg ${
+          notice.type === 'success' ? 'bg-green-600' : 'bg-lol-red'
         }`}>
           {notice.text}
         </div>
       )}
 
-      {/* Header */}
-      <header className="flex h-16 items-center justify-between border-b border-slate-800 bg-slate-900/50 px-6">
-        <h1 className="text-xl font-bold text-slate-100">{t('app.title')}</h1>
+      {/* Header - 电竞风格 */}
+      <header className="flex h-16 items-center justify-between border-b border-slate-700/50 bg-lol-bg-dark/90 backdrop-blur-sm px-6">
+        <h1 className="text-xl font-bold text-lol-text-primary">{t('app.title')}</h1>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1">
             {(['zh-CN', 'zh-TW', 'en'] as const).map(lng => (
               <button
                 key={lng}
                 onClick={() => i18n.changeLanguage(lng)}
-                className={`rounded px-2 py-1 text-xs ${
+                className={`rounded px-2 py-1 text-xs font-medium ${
                   i18n.language === lng
-                    ? 'bg-lol-blue text-lol-darker font-medium'
+                    ? 'bg-lol-blue text-white'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
@@ -94,7 +139,7 @@ function AppContent() {
 
       {/* Main: 上下分区（顶部英雄池 / 中部 ban+pick 竞技场） */}
       <main className="flex h-[calc(100vh-8rem)] flex-col">
-        <section className="h-[32vh] overflow-hidden border-b border-slate-800 bg-slate-900/30 px-6 py-3">
+        <section className="h-[32vh] overflow-hidden border-b border-slate-800 bg-lol-bg-dark/60 px-6 py-3">
           <HeroGrid />
         </section>
         <section className="flex-1 overflow-hidden px-6 py-4">
@@ -102,44 +147,44 @@ function AppContent() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="flex h-16 items-center justify-between border-t border-slate-800 bg-slate-900/50 px-6">
+      {/* Footer - 电竞风格 */}
+      <footer className="flex h-16 items-center justify-between border-t border-slate-700/50 bg-lol-bg-dark/90 backdrop-blur-sm px-6">
         <div className="flex gap-2">
           <button
             onClick={undo}
             disabled={currentPhase === 0}
-            className="rounded bg-slate-700 px-4 py-2 text-sm hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-lg bg-slate-700 px-4 py-2 text-sm hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {t('common.undo')}
           </button>
           <button
             onClick={reset}
-            className="rounded bg-slate-700 px-4 py-2 text-sm hover:bg-slate-600"
+            className="rounded-lg bg-slate-700 px-4 py-2 text-sm hover:bg-slate-600"
           >
             {t('common.reset')}
           </button>
         </div>
         <div className="flex items-center gap-3">
-          <div className="h-1.5 w-40 overflow-hidden rounded-full bg-slate-800">
+          <div className="h-2 w-40 overflow-hidden rounded-full bg-slate-800">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-lol-blue to-lol-blue-glow transition-all duration-300"
+              className="h-full rounded-full bg-gradient-to-r from-lol-blue to-lol-blue-light shadow-blue-sm transition-all duration-300"
               style={{ width: `${progressPct}%` }}
             />
           </div>
-          <span className="font-mono text-xs text-slate-400">
+          <span className="font-mono text-xs text-lol-text-secondary">
             {Math.min(currentPhase + 1, totalPhases)}/{totalPhases}
           </span>
         </div>
         <div className="flex gap-2">
           <button
             onClick={handleExport}
-            className="rounded bg-blue-600 px-4 py-2 text-sm hover:bg-blue-700"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm hover:bg-blue-700"
           >
             {t('common.export')}
           </button>
           <button
             onClick={handleImport}
-            className="rounded bg-green-600 px-4 py-2 text-sm hover:bg-green-700"
+            className="rounded-lg bg-green-600 px-4 py-2 text-sm hover:bg-green-700"
           >
             {t('common.import')}
           </button>
@@ -154,13 +199,15 @@ function AppContent() {
 
 function App() {
   return (
-    <HeroContext>
-      <BPContext>
-        <DataContext>
-          <AppContent />
-        </DataContext>
-      </BPContext>
-    </HeroContext>
+    <EnvironmentGuard>
+      <HeroContext>
+        <BPContext>
+          <DataContext>
+            <AppContent />
+          </DataContext>
+        </BPContext>
+      </HeroContext>
+    </EnvironmentGuard>
   )
 }
 

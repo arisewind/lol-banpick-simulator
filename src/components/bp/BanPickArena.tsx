@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useBP, SLOTS_PER_TEAM } from '../../contexts/BPContext'
 import { useHeroes } from '../../contexts/HeroContext'
 import { cn } from '../../utils/cn'
+import { useHeroImage } from '../../hooks/useHeroImage'
 
 interface TeamSlotProps {
   heroId: string | null
@@ -13,41 +13,18 @@ interface TeamSlotProps {
 
 function TeamSlot({ heroId, type, side, index }: TeamSlotProps) {
   const { getHeroById } = useHeroes()
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
   const hero = heroId ? getHeroById(heroId) : null
-
-  useEffect(() => {
-    if (!hero) return
-
-    let mounted = true
-
-    const fetchImageUrl = async () => {
-      try {
-        const result = await window.electronAPI.getHeroImageUrl(hero.id)
-        if (mounted && result.success && result.data) {
-          setImageUrl(result.data)
-        }
-      } catch (error) {
-        // Ignore image loading errors
-      }
-    }
-
-    fetchImageUrl()
-
-    return () => {
-      mounted = false
-    }
-  }, [hero])
+  const { imageUrl } = useHeroImage(hero?.id)
 
   const isBan = type === 'ban'
   const isBlue = side === 'blue'
 
-  // 电竞风格：更大的头像，戏剧性光照
+  // 电竞风格：更大的头像，戏剧性光照，增强边框和发光
   if (!hero) {
     return (
-      <div className="relative aspect-[4/3] overflow-hidden rounded bg-black/40 border border-slate-800/50">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-black/40 border border-slate-800/50">
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-2xl font-mono text-slate-800/50">{index + 1}</span>
+          <span className="text-2xl font-mono text-slate-700/60">{index + 1}</span>
         </div>
       </div>
     )
@@ -56,17 +33,18 @@ function TeamSlot({ heroId, type, side, index }: TeamSlotProps) {
   return (
     <div
       className={cn(
-        'relative aspect-[4/3] overflow-hidden rounded transition-all duration-300',
-        isBan ? 'bg-black/60' : 'bg-black/40',
-        !isBan && (isBlue ? 'border border-lol-blue/30' : 'border border-lol-red/30'),
+        'relative aspect-[4/3] overflow-hidden rounded-lg transition-all duration-300',
+        'border-2',
+        isBan ? 'bg-black/60 border-slate-700' : 'bg-black/40',
+        !isBan && (isBlue ? 'border-lol-blue shadow-blue' : 'border-lol-red shadow-red'),
       )}
       title={hero.name}
     >
-      {/* 背景光晕 - 电竞风格 */}
+      {/* 背景光晕 - 电竞风格增强 */}
       {!isBan && (
         <div className={cn(
-          'absolute inset-0 opacity-40 blur-2xl',
-          isBlue ? 'bg-lol-blue/50' : 'bg-lol-red/50',
+          'absolute inset-0 opacity-60 blur-3xl',
+          isBlue ? 'bg-lol-blue' : 'bg-lol-red',
         )} />
       )}
 
@@ -98,12 +76,12 @@ function TeamSlot({ heroId, type, side, index }: TeamSlotProps) {
         </p>
       </div>
 
-      {/* Pick 状态指示器 */}
+      {/* Pick 状态指示器 - 电竞风格增强 */}
       {!isBan && (
         <div className={cn(
-          'absolute right-1 top-1 z-30 h-2 w-2 rounded-full',
+          'absolute right-2 top-2 z-30 h-2.5 w-2.5 rounded-full',
           'animate-pulse',
-          isBlue ? 'bg-lol-blue shadow shadow-blue-lg' : 'bg-lol-red shadow shadow-red-lg',
+          isBlue ? 'bg-lol-blue shadow-blue-lg' : 'bg-lol-red shadow-red-lg',
         )} />
       )}
     </div>
@@ -127,7 +105,7 @@ export default function BanPickArena() {
                 'rounded px-6 py-2 text-base font-bold',
                 'shadow-lg',
                 phase.side === 'blue'
-                  ? 'bg-lol-blue text-lol-darker'
+                  ? 'bg-lol-blue text-white'
                   : 'bg-lol-red text-white',
               )}
             >
@@ -148,19 +126,19 @@ export default function BanPickArena() {
       <div className="grid flex-1 grid-cols-[1fr_auto_1fr]">
         {/* 蓝方 */}
         <div className="flex flex-col px-6 py-8">
-          {/* 队名区 */}
-          <div className="mb-8 flex items-center gap-4 border-b border-lol-blue/20 pb-4">
-            <div className="relative h-4 w-4 rounded-full bg-lol-blue shadow-lg shadow-blue-lg" />
-            <h2 className="text-2xl font-bold text-lol-blue tracking-wider">{t('bp.blueTeam')}</h2>
+          {/* 队名区 - 电竞风格 */}
+          <div className="mb-10 flex items-center gap-4 border-b border-lol-blue/30 pb-6">
+            <div className="relative h-5 w-5 rounded-full bg-lol-blue shadow-xl shadow-blue-lg animate-pulse" />
+            <h2 className="text-4xl font-extrabold text-lol-blue tracking-wider">{t('bp.blueTeam')}</h2>
           </div>
 
           {/* Ban 区 */}
-          <div className="mb-8">
-            <div className="mb-4 flex items-center gap-3">
-              <span className="text-sm font-bold uppercase tracking-widest text-slate-500">{t('bp.ban')}</span>
-              <div className="flex-1 h-px bg-slate-800" />
+          <div className="mb-10">
+            <div className="mb-5 flex items-center gap-3">
+              <span className="text-sm font-bold uppercase tracking-widest text-lol-text-secondary">{t('bp.ban')}</span>
+              <div className="flex-1 h-px bg-slate-700" />
             </div>
-            <div className="grid grid-cols-5 gap-4">
+            <div className="grid grid-cols-5 gap-5">
               {blueTeam.bans.map((ban, i) => (
                 <TeamSlot key={ban} heroId={ban} type="ban" side="blue" index={i} />
               ))}
@@ -172,11 +150,11 @@ export default function BanPickArena() {
 
           {/* Pick 区 */}
           <div>
-            <div className="mb-4 flex items-center gap-3">
-              <span className="text-sm font-bold uppercase tracking-widest text-lol-blue">{t('bp.pick')}</span>
-              <div className="flex-1 h-px bg-lol-blue/30" />
+            <div className="mb-5 flex items-center gap-3">
+              <span className="text-base font-bold uppercase tracking-widest text-lol-blue">{t('bp.pick')}</span>
+              <div className="flex-1 h-px bg-lol-blue/40" />
             </div>
-            <div className="grid grid-cols-5 gap-4">
+            <div className="grid grid-cols-5 gap-5">
               {blueTeam.picks.map((pick, i) => (
                 <TeamSlot key={pick} heroId={pick} type="pick" side="blue" index={i} />
               ))}
@@ -187,31 +165,31 @@ export default function BanPickArena() {
           </div>
         </div>
 
-        {/* 中央红色分隔 - 电竞风格 */}
-        <div className="relative flex w-16 flex-col items-center justify-center">
-          <div className="absolute inset-y-0 w-px bg-gradient-to-b from-transparent via-red-600 to-transparent opacity-80" />
-          <div className="relative z-10 flex h-16 w-16 items-center justify-center">
-            <div className="absolute h-full w-px bg-red-600" />
-            <div className="absolute h-px w-full bg-red-600" />
-            <div className="h-3 w-3 rounded-full bg-red-600 shadow-lg shadow-red-600/50" />
+        {/* 中央紫色分隔 - 电竞风格 */}
+        <div className="relative flex w-20 flex-col items-center justify-center">
+          <div className="absolute inset-y-0 w-px bg-gradient-to-b from-transparent via-lol-purple to-transparent shadow-purple-lg" />
+          <div className="relative z-10 flex h-20 w-20 items-center justify-center">
+            <div className="absolute h-full w-px bg-lol-purple" />
+            <div className="absolute h-px w-full bg-lol-purple" />
+            <div className="h-4 w-4 rounded-full bg-lol-purple shadow-xl shadow-purple-lg animate-pulse" />
           </div>
         </div>
 
         {/* 红方 */}
         <div className="flex flex-col px-6 py-8">
-          {/* 队名区 */}
-          <div className="mb-8 flex items-center gap-4 border-b border-lol-red/20 pb-4">
-            <div className="relative h-4 w-4 rounded-full bg-lol-red shadow-lg shadow-red-lg" />
-            <h2 className="text-2xl font-bold text-lol-red tracking-wider">{t('bp.redTeam')}</h2>
+          {/* 队名区 - 电竞风格 */}
+          <div className="mb-10 flex items-center gap-4 border-b border-lol-red/30 pb-6">
+            <div className="relative h-5 w-5 rounded-full bg-lol-red shadow-xl shadow-red-lg animate-pulse" />
+            <h2 className="text-4xl font-extrabold text-lol-red tracking-wider">{t('bp.redTeam')}</h2>
           </div>
 
           {/* Ban 区 */}
-          <div className="mb-8">
-            <div className="mb-4 flex items-center gap-3">
-              <span className="text-sm font-bold uppercase tracking-widest text-slate-500">{t('bp.ban')}</span>
-              <div className="flex-1 h-px bg-slate-800" />
+          <div className="mb-10">
+            <div className="mb-5 flex items-center gap-3">
+              <span className="text-sm font-bold uppercase tracking-widest text-lol-text-secondary">{t('bp.ban')}</span>
+              <div className="flex-1 h-px bg-slate-700" />
             </div>
-            <div className="grid grid-cols-5 gap-4">
+            <div className="grid grid-cols-5 gap-5">
               {redTeam.bans.map((ban, i) => (
                 <TeamSlot key={ban} heroId={ban} type="ban" side="red" index={i} />
               ))}
@@ -223,11 +201,11 @@ export default function BanPickArena() {
 
           {/* Pick 区 */}
           <div>
-            <div className="mb-4 flex items-center gap-3">
-              <span className="text-sm font-bold uppercase tracking-widest text-lol-red">{t('bp.pick')}</span>
-              <div className="flex-1 h-px bg-lol-red/30" />
+            <div className="mb-5 flex items-center gap-3">
+              <span className="text-base font-bold uppercase tracking-widest text-lol-red">{t('bp.pick')}</span>
+              <div className="flex-1 h-px bg-lol-red/40" />
             </div>
-            <div className="grid grid-cols-5 gap-4">
+            <div className="grid grid-cols-5 gap-5">
               {redTeam.picks.map((pick, i) => (
                 <TeamSlot key={pick} heroId={pick} type="pick" side="red" index={i} />
               ))}

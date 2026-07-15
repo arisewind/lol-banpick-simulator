@@ -243,4 +243,4 @@ export function useBP() {
   return context
 }
 
-export default BPProvider
+// 已移除默认导出，统一使用命名导出

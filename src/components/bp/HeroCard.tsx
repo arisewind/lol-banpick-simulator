@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { HeroWithStats } from '../../types/hero'
 import { cn } from '../../utils/cn'
+import { useHeroImage } from '../../hooks/useHeroImage'
 
 interface HeroCardProps {
   hero: HeroWithStats
@@ -13,31 +13,7 @@ interface HeroCardProps {
 
 export default function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onClick }: HeroCardProps) {
   const { t } = useTranslation()
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
-  const [imageError, setImageError] = useState(false)
-
-  useEffect(() => {
-    let mounted = true
-
-    const fetchImageUrl = async () => {
-      try {
-        const result = await window.electronAPI.getHeroImageUrl(hero.id)
-        if (mounted && result.success && result.data) {
-          setImageUrl(result.data)
-        }
-      } catch (error) {
-        if (mounted) {
-          setImageError(true)
-        }
-      }
-    }
-
-    fetchImageUrl()
-
-    return () => {
-      mounted = false
-    }
-  }, [hero.id])
+  const { imageUrl, imageError } = useHeroImage(hero.id)
 
   const getCardStyle = () => {
     if (isDisabled) {
@@ -102,7 +78,7 @@ export default function HeroCard({ hero, isDisabled, isCurrentPhase, actionType,
           src={imageUrl}
           alt={hero.name}
           className="h-16 w-16 object-contain drop-shadow-md"
-          onError={() => setImageError(true)}
+          onError={() => {/* 错误状态由 Hook 管理 */}}
         />
       ) : (
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-700 text-slate-500">
