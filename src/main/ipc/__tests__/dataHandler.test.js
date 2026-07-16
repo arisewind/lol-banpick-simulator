@@ -12,7 +12,11 @@ describe('dataHandler - registerDataHandlers', () => {
     handlers = {}
     mockIpcMain = { handle: vi.fn((channel, fn) => { handlers[channel] = fn }) }
     mockDialog = { showSaveDialog: vi.fn(), showOpenDialog: vi.fn() }
-    mockFs = { writeFileSync: vi.fn(), readFileSync: vi.fn() }
+    mockFs = {
+      writeFileSync: vi.fn(),
+      readFileSync: vi.fn(),
+      statSync: vi.fn(() => ({ size: 100 })) // 模拟正常大小的文件（100字节 < 5MB）
+    }
     registerDataHandlers({ ipcMain: mockIpcMain, dialog: mockDialog, fs: mockFs })
   })
 
@@ -54,10 +58,25 @@ describe('dataHandler - registerDataHandlers', () => {
   describe('import-data', () => {
     it('读取并解析 JSON 返回 data', async () => {
       mockDialog.showOpenDialog.mockResolvedValue({ canceled: false, filePaths: ['/tmp/bp.json'] })
-      mockFs.readFileSync.mockReturnValue('{"version":1,"currentPhase":7}')
+      // 完整的 BP 快照数据（包含所有必需字段）
+      mockFs.readFileSync.mockReturnValue(JSON.stringify({
+        version: 1,
+        currentPhase: 7,
+        blueTeam: { bans: [], picks: [] },
+        redTeam: { bans: [], picks: [] },
+        history: [],
+        isComplete: false
+      }))
       const result = await handlers['import-data']()
       expect(result.success).toBe(true)
-      expect(result.data).toEqual({ version: 1, currentPhase: 7 })
+      expect(result.data).toEqual({
+        version: 1,
+        currentPhase: 7,
+        blueTeam: { bans: [], picks: [] },
+        redTeam: { bans: [], picks: [] },
+        history: [],
+        isComplete: false
+      })
     })
 
     it('用户取消时返回 canceled', async () => {
@@ -74,6 +93,23 @@ describe('dataHandler - registerDataHandlers', () => {
       expect(result.success).toBe(false)
       expect(result.error).toBeTruthy()
       errSpy.mockRestore()
+    })
+
+    it('文件过大时返回 error（安全限制）', async () => {
+      mockDialog.showOpenDialog.mockResolvedValue({ canceled: false, filePaths: ['/tmp/bp.json'] })
+      mockFs.statSync.mockReturnValue({ size: 6 * 1024 * 1024 }) // 6MB，超过 5MB 限制
+      const result = await handlers['import-data']()
+      expect(result.success).toBe(false)
+      expect(result.error).toContain('File too large')
+    })
+
+    it('无效的数据格式时返回 error（schema 验证）', async () => {
+      mockDialog.showOpenDialog.mockResolvedValue({ canceled: false, filePaths: ['/tmp/bp.json'] })
+      // 缺少必需字段的无效数据
+      mockFs.readFileSync.mockReturnValue('{"version":999,"currentPhase":7}')
+      const result = await handlers['import-data']()
+      expect(result.success).toBe(false)
+      expect(result.error).toContain('Invalid data format')
     })
   })
 })

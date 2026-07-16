@@ -6,7 +6,8 @@ import { DataProvider as DataContext } from './contexts/DataContext'
 import BanPickArena from './components/bp/BanPickArena'
 import HeroGrid from './components/bp/HeroGrid'
 import AnalysisDrawer from './components/analysis/AnalysisDrawer'
-import { useBP, type BPSnapshot } from './contexts/BPContext'
+import { useBP } from './contexts/BPContext'
+import { isValidBPSnapshotRenderer } from './utils/typeGuards'
 
 // 环境检测组件
 function EnvironmentGuard({ children }: { children: React.ReactNode }) {
@@ -85,7 +86,12 @@ function AppContent() {
   const handleImport = async () => {
     const result = await window.electronAPI.importData()
     if (result.success && result.data) {
-      const ok = loadSnapshot(result.data as BPSnapshot)
+      // 运行时类型检查：确保数据格式正确
+      if (!isValidBPSnapshotRenderer(result.data)) {
+        setNotice({ text: t('common.importInvalid'), type: 'error' })
+        return
+      }
+      const ok = loadSnapshot(result.data)
       setNotice(
         ok
           ? { text: t('common.importSuccess'), type: 'success' }

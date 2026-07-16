@@ -1,5 +1,6 @@
 const { ipcMain } = require('electron')
 const { heroService } = require('../services/heroService.js')
+const { logger } = require('../utils/logger.js')
 
 /**
  * 注册英雄相关的 IPC 处理器
@@ -11,7 +12,7 @@ function registerHeroHandlers() {
       const heroes = await heroService.fetchHeroes()
       return { success: true, data: heroes }
     } catch (error) {
-      console.error('Fetch heroes error:', error)
+      logger.error('Fetch heroes error:', error)
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -45,7 +46,7 @@ function registerHeroHandlers() {
     }
   })
 
-  console.log('Hero handlers registered')
+  logger.info('Hero handlers registered')
 }
 
 module.exports = { registerHeroHandlers }

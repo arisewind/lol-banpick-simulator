@@ -1,0 +1,74 @@
+LoL Ban/Pick Simulator 功能完整性评估报告
+一、核心功能状态
+1. BP 逻辑 (src/contexts/BPContext.tsx) - 完整
+20 步 BP 阶段完全实现：
+第一阶段 Ban (6步): ABABAB
+第一阶段 Pick (6步): ABBAAB
+第二阶段 Ban (4步): BABA
+第二阶段 Pick (4步): BAAB
+完整功能：banHero, pickHero, undo, reset, loadSnapshot
+重复检测：已选英雄（双方 bans + picks）不可重复选择
+BP 完成状态检测 (isComplete)
+2. 英雄数据管理 (src/contexts/HeroContext.tsx) - 完整
+Data Dragon API 集成（带 6 小时缓存）
+搜索功能（英雄名/称号）
+标签过滤（支持多选 OR 逻辑）
+错误状态 UI（显示错误 + 重试按钮）
+refreshHeroes 刷新功能
+3. 分析功能 (src/contexts/DataContext.tsx) - MVP 完整
+实际功能实现（非 stub）：
+calcSynergy - 阵容协同度计算（标签多样性 + 协同组合加分）
+calcMatchup - 双方对阵优势计算（tag 克制规则）
+recommendHeroes - 英雄推荐（补齐己方缺位/克制对方核心）
+自动清理机制：BP 状态变化时清除旧分析
+二、用户交互功能
+1. 撤销/重置功能 - 完整
+undo - 撤销上一步操作（含历史管理）
+reset - 完全重置 BP 状态
+状态联动：reset/undo 会自动触发分析数据清理
+2. 导入/导出功能 - 完整
+导出：window.electronAPI.exportData() - JSON 文件保存
+导入：window.electronAPI.importData() - 文件读取 + schema 校验
+UI 反馈：成功/失败 notice 提示（3 秒自动消失）
+数据格式版本化 { version: 1, ... }
+3. 多语言支持 - 完整
+支持 3 种语言：简体中文 (默认)、繁体中文、英文
+语言切换按钮在 header
+完整翻译覆盖：app、common、bp、hero、stats、analysis
+三、缺失功能分析
+1. 键盘快捷键 - 部分缺失
+已实现：Esc 键关闭分析抽屉 (AnalysisDrawer.tsx)
+缺失：
+撤销快捷键 (Ctrl+Z)
+重置快捷键
+分析面板开关快捷键
+导入/导出快捷键
+英雄搜索框快速聚焦
+2. 其他潜在增强功能（未在需求中，但可考虑）
+无重做 (Redo) 功能
+无历史记录面板可视化
+无 BP 流程暂停/恢复功能
+无多人协作模式
+四、技术债务（非功能缺失，但需注意）
+数据分析规则局限：
+
+当前使用 tag 级规则（如 Assassin 克制 Marksman）
+缺少具体英雄级 synergy/counter 数据表
+需领域知识扩充（见 DEVELOPMENT.md 注释）
+可重构项（功能完整但有重复代码）：
+
+BPContext 的 banHero/pickHero 已合并为 applyAction（已完成）
+getSelectedHeroIds 可提取为纯函数（仍有重复）
+TeamPanel 可抽为子组件（红蓝代码镜像）
+useHeroImage hook 可提取（HeroCard 与 TeamSlot 重复）
+五、功能清单总结
+功能模块	状态	完成度
+BP 20 步流程	完整	100%
+英雄数据管理	完整	100%
+搜索与筛选	完整	100%
+撤销/重置	完整	100%
+导入/导出	完整	100%
+多语言 (3 种)	完整	100%
+数据分析 MVP	完整	~80% (tag 级规则)
+键盘快捷键	部分	~10% (仅 Esc)
+总体评价：核心功能完整，数据分析 MVP 已落地，导入/导出、i18n、撤销/重置全部可用。主要缺项是键盘快捷键支持不够全面，以及数据分析规则为 tag 级 MVP，若需更高精度需扩充英雄级数据表。

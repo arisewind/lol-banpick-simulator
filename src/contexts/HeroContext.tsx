@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect, useMemo, ReactNode } from 'react'
-import type { Hero, HeroWithStats } from '../types/hero'
+import type { HeroWithStats } from '../types/hero'
+import { isHeroArray } from '../utils/typeGuards'
 
 interface HeroState {
   heroes: HeroWithStats[]
@@ -100,7 +101,11 @@ export function HeroProvider({ children }: { children: ReactNode }) {
       const result = await window.electronAPI.fetchHeroes()
 
       if (result.success && result.data) {
-        const heroes = result.data as Hero[]
+        // 运行时类型检查：确保数据格式正确
+        if (!isHeroArray(result.data)) {
+          throw new Error('英雄数据格式无效')
+        }
+        const heroes = result.data
 
         // 提取所有标签
         const tagsSet = new Set<string>()

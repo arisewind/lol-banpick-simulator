@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { HeroWithStats } from '../../types/hero'
 import { cn } from '../../utils/cn'
@@ -8,10 +9,10 @@ interface HeroCardProps {
   isDisabled: boolean
   isCurrentPhase: boolean
   actionType: 'ban' | 'pick' | null
-  onClick: () => void
+  onSelect: (heroId: string) => void
 }
 
-export default function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onClick }: HeroCardProps) {
+function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onSelect }: HeroCardProps) {
   const { t } = useTranslation()
   const { imageUrl, imageError } = useHeroImage(hero.id)
 
@@ -68,7 +69,7 @@ export default function HeroCard({ hero, isDisabled, isCurrentPhase, actionType,
 
   return (
     <div
-      onClick={onClick}
+      onClick={() => onSelect(hero.id)}
       className={`relative flex aspect-[2/3] flex-col items-center justify-center overflow-hidden rounded-lg border p-2 min-w-[100px] max-w-[120px] ${getCardStyle()}`}
       title={`${hero.name} - ${hero.title}`}
     >
@@ -103,3 +104,7 @@ export default function HeroCard({ hero, isDisabled, isCurrentPhase, actionType,
     </div>
   )
 }
+
+// memo 优化：props 浅比较。hero 对象引用稳定（来自 useMemo filteredHeroes），
+// onSelect 由 HeroGrid 用 useCallback 稳定 → 搜索/标签变化时未变卡片可跳过重渲染
+export default memo(HeroCard)

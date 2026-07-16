@@ -37,7 +37,7 @@ const renderCard = (overrides: Partial<React.ComponentProps<typeof HeroCard>> = 
       isDisabled={false}
       isCurrentPhase
       actionType="ban"
-      onClick={() => {}}
+      onSelect={() => {}}
       {...overrides}
     />,
   )
@@ -85,11 +85,12 @@ describe('HeroCard - 状态分支（getCardStyle）', () => {
 })
 
 describe('HeroCard - 交互', () => {
-  it('点击触发 onClick', () => {
-    const onClick = vi.fn()
-    const { container } = renderCard({ onClick })
+  it('点击触发 onSelect 并传入 heroId', () => {
+    const onSelect = vi.fn()
+    const { container } = renderCard({ onSelect })
     fireEvent.click(container.firstChild as HTMLElement)
-    expect(onClick).toHaveBeenCalledTimes(1)
+    expect(onSelect).toHaveBeenCalledTimes(1)
+    expect(onSelect).toHaveBeenCalledWith('Ahri')
   })
 })
 

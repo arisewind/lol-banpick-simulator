@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useBP } from '../../contexts/BPContext'
 import { useHeroes } from '../../contexts/HeroContext'
@@ -16,21 +16,19 @@ export default function HeroGrid() {
   const { getCurrentPhase, banHero, pickHero, blueTeam, redTeam } = useBP()
   const [showTags, setShowTags] = useState(false)
 
-  // 获取所有已选择的英雄 ID
-  const getSelectedHeroIds = () => {
+  // 获取所有已选择的英雄 ID（useMemo 稳定引用，避免每次渲染新建 Set 导致 HeroCard memo 失效）
+  const selectedIds = useMemo(() => {
     const selected = new Set<string>()
     blueTeam.bans.forEach(id => selected.add(id))
     redTeam.bans.forEach(id => selected.add(id))
     blueTeam.picks.forEach(id => selected.add(id))
     redTeam.picks.forEach(id => selected.add(id))
     return selected
-  }
-
-  const selectedIds = getSelectedHeroIds()
+  }, [blueTeam, redTeam])
   const phase = getCurrentPhase()
 
-  // 处理英雄点击
-  const handleHeroClick = (heroId: string) => {
+  // 处理英雄点击（useCallback 稳定引用，作为 onSelect 传给 memo 化的 HeroCard）
+  const handleHeroClick = useCallback((heroId: string) => {
     if (!phase) return
     if (selectedIds.has(heroId)) return
     if (phase.action === 'ban') {
@@ -38,7 +36,7 @@ export default function HeroGrid() {
     } else {
       pickHero(heroId)
     }
-  }
+  }, [phase, selectedIds, banHero, pickHero])
 
   return (
     <div className="relative flex h-full flex-col">
@@ -165,7 +163,7 @@ export default function HeroGrid() {
               isDisabled={selectedIds.has(hero.id)}
               isCurrentPhase={!!phase}
               actionType={phase?.action || null}
-              onClick={() => handleHeroClick(hero.id)}
+              onSelect={handleHeroClick}
             />
           ))
         )}
