@@ -151,10 +151,8 @@ function AppContent() {
           {t('app.title')}
         </h1>
 
-        {/* 中:当前阶段信息 + 进度计数 + 诊断版本标记 */}
+        {/* 中:当前阶段信息 + 进度计数 */}
         <div className="flex min-w-0 flex-1 items-center justify-center gap-3">
-          {/* 诊断标记:确认是否跑新代码。看到 [v3] 说明新代码已生效,否则需重启 Electron */}
-          <span className="rounded bg-lol-gold/20 px-1.5 py-0.5 font-mono text-[10px] font-bold text-lol-gold">[v3]</span>
           <span className="font-mono text-xs text-lol-text-secondary">
             {Math.min(currentPhase + 1, totalPhases)}/{totalPhases}
           </span>

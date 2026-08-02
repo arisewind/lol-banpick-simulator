@@ -75,27 +75,29 @@ function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onSelect }: He
   return (
     <div
       onClick={() => onSelect(hero.id)}
-      className={`relative flex w-full flex-col items-center justify-start overflow-hidden rounded border px-2 py-2.5 ${getCardStyle()}`}
+      className={`relative flex w-full flex-col items-center overflow-hidden rounded border aspect-[3/4] ${getCardStyle()}`}
       title={`${hero.name} - ${hero.title}`}
     >
-      {/* 英雄头像 —— 完全撑满卡片(无黑边/无 padding),方形头像直接 cover 填满 */}
-      {imageUrl && !imageError ? (
-        <img
-          src={imageUrl}
-          alt={hero.name}
-          className="aspect-square w-full object-cover"
-          onError={() => {/* 错误状态由 Hook 管理 */}}
-        />
-      ) : (
-        <div className="flex aspect-square w-full items-center justify-center bg-lol-bg-secondary text-lol-text-muted">
-          <svg className="h-10 w-10" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-          </svg>
-        </div>
-      )}
+      {/* 英雄头像 —— 完全撑满卡片上半部分(无黑边/无 padding),方形头像 cover 填满 */}
+      <div className="w-full flex-1 overflow-hidden">
+        {imageUrl && !imageError ? (
+          <img
+            src={imageUrl}
+            alt={hero.name}
+            className="h-full w-full object-cover"
+            onError={() => {/* 错误状态由 Hook 管理 */}}
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-lol-bg-secondary text-lol-text-muted">
+            <svg className="h-10 w-10" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+            </svg>
+          </div>
+        )}
+      </div>
 
-      {/* 英雄名称 */}
-      <span className="mt-1.5 line-clamp-1 w-full text-center text-xs font-medium text-lol-text-secondary leading-tight">
+      {/* 英雄名称 —— 底部固定高度区域 */}
+      <span className="line-clamp-1 w-full shrink-0 bg-lol-bg-secondary px-1 py-1 text-center text-xs font-medium text-lol-text-secondary leading-tight">
         {hero.name}
       </span>
 

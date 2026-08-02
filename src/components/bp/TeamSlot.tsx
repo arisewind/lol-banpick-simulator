@@ -37,8 +37,8 @@ function TeamSlot({ heroId, type, side, index, mirrored = false }: TeamSlotProps
     return (
       <div className={cn(
         'relative overflow-hidden rounded border flex items-center justify-center',
-        // ban 空槽:固定 w-16 h-16 正方形(测试契约);pick 空槽:撑满父格
-        isBan ? 'aspect-square w-16 h-16 bg-lol-black border-lol-border' : 'h-full w-full bg-lol-bg-black border-lol-border',
+        // ban 空槽:正方形填满 ban-row 格子(aspect-square w-full);pick 空槽:撑满父格
+        isBan ? 'aspect-square w-full bg-lol-black border-lol-border' : 'h-full w-full bg-lol-bg-black border-lol-border',
         // pick 空槽:蓝方镜像
         !isBan && mirrored && 'scale-x-[-1]',
       )}>
@@ -60,8 +60,8 @@ function TeamSlot({ heroId, type, side, index, mirrored = false }: TeamSlotProps
       className={cn(
         'relative overflow-hidden rounded transition-all duration-300',
         'border-2',
-        // Ban 位:更小的正方形(w-16 h-16 测试契约),通用边框
-        isBan ? 'aspect-square w-16 h-16 bg-lol-black border-lol-border' : 'h-full w-full bg-lol-bg-black',
+        // Ban 位:正方形填满 ban-row 格子(aspect-square w-full),通用边框
+        isBan ? 'aspect-square w-full bg-lol-black border-lol-border' : 'h-full w-full bg-lol-bg-black',
         // Pick 位:队伍色边框 + 硬偏移阴影(无发光)
         !isBan && (isBlue ? 'border-lol-blue shadow-blue-lg' : 'border-lol-red shadow-red-lg'),
         // 蓝方 pick 槽:整体水平镜像(英雄原画朝中心对峙)
