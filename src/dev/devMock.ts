@@ -88,10 +88,8 @@ export async function setupDevMock(): Promise<void> {
     },
 
     getHeroImageUrl: async (heroId: string) => {
-      // 优先用缓存里的 version,否则拉最新
-      const hero = heroCache.get(heroId)
-      const v = hero?.version || (await getCurrentVersion())
-      return { success: true as const, data: `${DATA_DRAGON_CDN}/${v}/img/champion/${hero?.image.full || `${heroId}.png`}` }
+      // tiles 源:精致方形头像(正式服当前形象),路径不含版本段
+      return { success: true as const, data: `${DATA_DRAGON_CDN}/img/champion/tiles/${heroId}_0.jpg` }
     },
 
     getHeroSplashUrl: async (heroId: string, type: 'loading' | 'splash' | 'centered' = 'loading') => {

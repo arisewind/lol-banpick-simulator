@@ -11,18 +11,15 @@ describe('HeroService - getHeroImageUrl', () => {
   let svc
   beforeEach(() => { svc = new HeroService() })
 
-  it('对缓存中的英雄返回正确的图片 CDN URL', () => {
-    svc.heroesCache.set('Ahri', { id: 'Ahri', version: BUILTIN_VERSION, image: { full: 'Ahri.png' } })
-    expect(svc.getHeroImageUrl('Ahri')).toBe(`${CDN}/${BUILTIN_VERSION}/img/champion/Ahri.png`)
+  it('返回 tiles 精致方形头像 URL(正式服当前形象)', () => {
+    // tiles 源:从原画裁切的精致方形头像,路径不含版本段,恒为最新形象
+    expect(svc.getHeroImageUrl('Ahri')).toBe(`${CDN}/img/champion/tiles/Ahri_0.jpg`)
   })
 
-  it('对未缓存英雄返回空字符串', () => {
-    expect(svc.getHeroImageUrl('Unknown')).toBe('')
-  })
-
-  it('显式传入版本时使用该版本', () => {
-    svc.heroesCache.set('Ahri', { id: 'Ahri', version: BUILTIN_VERSION, image: { full: 'Ahri.png' } })
-    expect(svc.getHeroImageUrl('Ahri', '15.1.1')).toBe(`${CDN}/15.1.1/img/champion/Ahri.png`)
+  it('空 heroId 返回空字符串', () => {
+    expect(svc.getHeroImageUrl('')).toBe('')
+    expect(svc.getHeroImageUrl(null)).toBe('')
+    expect(svc.getHeroImageUrl(undefined)).toBe('')
   })
 })
 

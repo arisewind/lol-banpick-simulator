@@ -49,12 +49,12 @@ describe('TeamSlot - 空槽位', () => {
     expect(screen.getByText('3')).toBeTruthy()
   })
 
-  it('ban 空槽位使用正方形比例填满 ban-row', () => {
+  it('ban 空槽位使用正方形比例,受 ban-row 高度约束', () => {
     const { container } = render(<TeamSlot heroId={null} type="ban" side="blue" index={0} />)
     const slot = container.firstChild as HTMLElement
-    // ban 槽用 aspect-square w-full(正方形 + 填满 ban-row 格子),非固定像素
+    // ban 槽:aspect-square + h-full(受 ban-row 高度约束,不按宽度撑高度导致溢出)
     expect(slot.className).toContain('aspect-square')
-    expect(slot.className).toContain('w-full')
+    expect(slot.className).toContain('h-full')
   })
 })
 
