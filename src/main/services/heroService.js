@@ -88,12 +88,21 @@ class HeroService {
    * 获取英雄头像 URL(方形头像,网格/列表用)
    *
    * 资源源选择(关键):
-   * - tiles/X_0.jpg:从原画裁切的精致方形头像,画风 = 正式服当前形象(玩家熟悉)
-   * - img/champion/X.png:LOL 早期游戏内小图标画风,视觉偏旧(曾被误认为"怀旧服")
-   * 故统一用 tiles 源。tiles 路径不含版本段,Data Dragon 恒返回最新形象。
+   * - tiles/X_0.jpg:从原画裁切的精致方形头像,画风 = 正式服当前形象(玩家熟悉),首选
+   * - img/champion/X.png:LOL 早期游戏内小图标画风,视觉偏旧,仅作 tiles 缺失时的回退
+   *
+   * tiles 源覆盖绝大多数英雄(实测 172/173),仅 Fiddlesticks(远古恐惧)缺失(403)。
+   * 对已知缺失的英雄回退到 img/champion 源(虽画风旧但至少能显示,避免头像消失)。
    */
-  getHeroImageUrl(heroId) {
+  getHeroImageUrl(heroId, version) {
     if (!heroId) return ''
+    // tiles 源缺失的英雄(实测 Fiddlesticks 返回 403),回退到 img/champion 方形头像
+    const TILES_MISSING = new Set(['Fiddlesticks'])
+    if (TILES_MISSING.has(heroId)) {
+      const hero = this.heroesCache.get(heroId)
+      const v = version || hero?.version || BUILTIN_FALLBACK_VERSION
+      return `${DATA_DRAGON_CDN}/${v}/img/champion/${hero?.image.full || `${heroId}.png`}`
+    }
     return `${DATA_DRAGON_CDN}/img/champion/tiles/${heroId}_0.jpg`
   }
 

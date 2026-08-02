@@ -16,6 +16,14 @@ describe('HeroService - getHeroImageUrl', () => {
     expect(svc.getHeroImageUrl('Ahri')).toBe(`${CDN}/img/champion/tiles/Ahri_0.jpg`)
   })
 
+  it('tiles 缺失的英雄(Fiddlesticks)回退到 img/champion 源', () => {
+    // Fiddlesticks 在 tiles 源返回 403,回退到 img/champion 方形头像(虽画风旧但能显示)
+    svc.heroesCache.set('Fiddlesticks', { id: 'Fiddlesticks', version: BUILTIN_VERSION, image: { full: 'Fiddlesticks.png' } })
+    const url = svc.getHeroImageUrl('Fiddlesticks')
+    expect(url).toContain('/img/champion/Fiddlesticks.png')
+    expect(url).not.toContain('/tiles/')
+  })
+
   it('空 heroId 返回空字符串', () => {
     expect(svc.getHeroImageUrl('')).toBe('')
     expect(svc.getHeroImageUrl(null)).toBe('')

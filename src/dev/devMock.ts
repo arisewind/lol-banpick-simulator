@@ -88,7 +88,12 @@ export async function setupDevMock(): Promise<void> {
     },
 
     getHeroImageUrl: async (heroId: string) => {
-      // tiles 源:精致方形头像(正式服当前形象),路径不含版本段
+      // tiles 源:精致方形头像(正式服当前形象),Fiddlesticks 等缺失英雄回退 img/champion
+      const TILES_MISSING = new Set(['Fiddlesticks'])
+      if (TILES_MISSING.has(heroId)) {
+        const v = await getCurrentVersion()
+        return { success: true as const, data: `${DATA_DRAGON_CDN}/${v}/img/champion/${heroId}.png` }
+      }
       return { success: true as const, data: `${DATA_DRAGON_CDN}/img/champion/tiles/${heroId}_0.jpg` }
     },
 
