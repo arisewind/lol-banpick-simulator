@@ -61,11 +61,11 @@ function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onSelect }: He
     return (
       <div className={cn(
         'absolute right-1 top-1 rounded-sm px-1.5 py-0.5 text-white text-[10px] font-bold border',
+        'opacity-0 group-hover:opacity-100',
         isBan
           ? 'bg-lol-red border-lol-red/50'
           : 'bg-lol-blue border-lol-blue/50',
-        'animate-glow',
-        'transition-all duration-150'
+        'transition-opacity duration-150'
       )}>
         {t(isBan ? 'bp.ban' : 'bp.pick')}
       </div>
@@ -75,7 +75,7 @@ function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onSelect }: He
   return (
     <div
       onClick={() => onSelect(hero.id)}
-      className={`relative flex w-full flex-col items-center overflow-hidden rounded border aspect-[3/4] ${getCardStyle()}`}
+      className={`group relative flex w-full flex-col items-center overflow-hidden rounded border aspect-[3/4] ${getCardStyle()}`}
       title={`${hero.name} - ${hero.title}`}
     >
       {/* 英雄头像 —— 完全撑满卡片上半部分(无黑边/无 padding),方形头像 cover 填满 */}
@@ -101,7 +101,7 @@ function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onSelect }: He
         {hero.name}
       </span>
 
-      {/* 操作标签 */}
+      {/* 操作标签:hover 时才显示(对齐 pickban.pro,避免常驻角标造成视觉杂乱) */}
       {getActionBadge()}
 
       {/* 已选择标记 */}
