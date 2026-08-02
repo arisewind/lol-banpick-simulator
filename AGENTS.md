@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
+This file provides guidance to ZCode (and other AI coding agents) when working with code in this repository.
 
 ## Project Overview
 
@@ -25,8 +25,10 @@ pnpm build
 # Lint (ESLint, config in .eslintrc.cjs)
 pnpm lint
 
-# Type-check without emitting (primary static check)
-pnpm tsc --noEmit
+# Type-check (dedicated scripts — preferred over raw `tsc`)
+pnpm typecheck          # frontend only (tsconfig.json)
+pnpm typecheck:electron # Electron main process (tsconfig.electron.json)
+pnpm typecheck:all      # both — run this as the static gate
 
 # Run tests once (Vitest)
 pnpm test
@@ -46,7 +48,7 @@ pnpm preview
 pnpm electron:build
 ```
 
-> **Lint config**: [.eslintrc.cjs](.eslintrc.cjs) — eslint 8 + `@typescript-eslint` + react-hooks/react-refresh, standard baseline + single-quote / no-semicolon style. Two overrides: `src/main/*.js` (CommonJS) uses `espree` + node env; `src/contexts/**` turns off `react-refresh/only-export-components` (provider + hook + default export coexist intentionally). Verification gate: `pnpm lint` + `pnpm tsc --noEmit` + `pnpm test`.
+> **Lint config**: [.eslintrc.cjs](.eslintrc.cjs) — eslint 8 + `@typescript-eslint` + react-hooks/react-refresh, standard baseline + single-quote / no-semicolon style. Two overrides: `src/main/*.js` (CommonJS) uses `espree` + node env; `src/contexts/**` turns off `react-refresh/only-export-components` (provider + hook + default export coexist intentionally). Verification gate: `pnpm lint` + `pnpm typecheck:all` + `pnpm test` (run before declaring a task done).
 
 **Alternative**: Use the batch files in project root:
 - `启动开发环境.bat` - Full Electron development
@@ -71,7 +73,7 @@ The project uses pnpm 11+. Critical configuration files:
 
 ## Testing
 
-The suite (Vitest + @testing-library/react + jsdom) follows the layered conventions defined in [`AGENTS-Subject of Imitation.md`](AGENTS-Subject%20of%20Imitation.md) (the LambChat dev guide) — that file is the canonical reference for test style in this repo.
+The suite (Vitest + @testing-library/react + jsdom) follows a layered convention by test **environment**. (This repo previously referenced an external LambChat dev guide for test style; that doc has been removed — the conventions below are the authoritative summary.)
 
 - **Config**: `vitest.config.ts` (default environment `node`); global setup `vitest.setup.ts`.
 - **Location**: `src/**/__tests__/**/*.test.{ts,tsx,js}`, co-located with the code under test.
@@ -89,22 +91,29 @@ There is no separate backend service: the "backend" here is the Electron main pr
 
 ```
 src/main/
-├── main.js                    # Main process entry, window creation
-├── preload.js                 # IPC bridge via contextBridge
+├── main.js                    # Main process entry, window creation, registers all IPC handlers
+├── preload.js                 # IPC bridge via contextBridge → window.electronAPI
 ├── ipc/
-│   └── heroHandler.js         # IPC handlers for hero data
-└── services/
-    └── heroService.js         # Hero data service with caching
+│   ├── heroHandler.js         # fetchHeroes / getHeroImageUrl / getCurrentVersion
+│   └── dataHandler.js         # exportData / importData (file save/open dialogs + validation)
+├── services/
+│   └── heroService.js         # Hero data service with caching
+└── utils/
+    └── logger.js              # Dev-only info/debug, always-on warn/error
 ```
 
-**IPC Pattern**: Main process handlers register in `src/main/ipc/heroHandler.js`. Preload exposes via `contextBridge` as `window.electronAPI`. Renderer invokes with `await window.electronAPI.handlerName()`.
+**IPC Pattern**: Each handler module exports a `registerXxxHandlers()` function; `main.js` calls both in `app.whenReady().then(...)`. Preload exposes via `contextBridge` as `window.electronAPI`. Renderer invokes with `await window.electronAPI.handlerName()`.
 
 Available IPC methods:
 - `fetchHeroes()` - Fetch all champions from Data Dragon API
 - `getHeroImageUrl(heroId)` - Get champion avatar URL
 - `getCurrentVersion()` - Get current game version
-- `exportData(data)` - Export BP data (to be implemented)
-- `importData()` - Import BP data (to be implemented)
+- `exportData(data)` - Save BP snapshot to a JSON file via native dialog. Main process wraps data as `{ version: 1, ...data }`; timestamp (`exportedAt`) is passed in by the renderer.
+- `importData()` - Open + read a JSON file, run server-side validation (`isValidBPSnapshot`: version + field types + TeamState shape), enforce a 5MB size cap. Renderer re-validates via `isValidBPSnapshotRenderer` before calling `loadSnapshot`.
+
+**Security boundary**: imported data is untrusted. It is validated three times — file-size cap + basic schema in `dataHandler.js`, then runtime type guard (`isValidBPSnapshotRenderer` in `src/utils/typeGuards.ts`), then `BPContext.loadSnapshot` does its own field whitelist check. Do not weaken any layer; treat the JSON as hostile input.
+
+**Logging rule**: main-process code uses `src/main/utils/logger.js` (`logger.info/debug/warn/error`), NOT bare `console.*`. `info`/`debug` are dev-only; `warn`/`error` always print. This keeps production logs clean.
 
 ### State Management (React Context)
 
@@ -124,13 +133,31 @@ HeroContext (outer)
 
 **BPContext** (`src/contexts/BPContext.tsx`):
 - State: `currentPhase`, `blueTeam`, `redTeam`, `history`, `isComplete`
-- Actions: `banHero`, `pickHero`, `undo`, `reset`, `getCurrentPhase`
-- BP_PHASES constant: 20 steps total
+- Actions: `banHero`, `pickHero`, `undo`, `reset`, `getCurrentPhase`, `loadSnapshot(snap)`, plus `totalPhases` (read-only = `BP_PHASES.length`)
+- `banHero`/`pickHero` are thin wrappers over a shared `applyAction` core (validates phase action type + duplicate detection across both teams). Do not bypass it.
+- `loadSnapshot` takes a `BPSnapshot` (the serializable subset of `BPState`), re-validates and field-whitelists it, returns a boolean success. Used by import.
+- Exports `BP_PHASES` constant: 20 steps total. Also exports `SLOTS_PER_TEAM = 5` and the `HeroAction` / `TeamState` / `BPSnapshot` types.
 
 **DataContext** (`src/contexts/DataContext.tsx`):
 - State: `recommendations`, `synergyAnalysis`, `matchupAnalysis`, `loading`
-- Actions: `analyze`, `clear`
-- Note: Analysis logic is not yet implemented - this is a stub for future functionality
+- Actions: `analyze()` (async), `clear()`
+- Backed by the local analysis engine in `src/analysis/rules/` (see below) — **fully implemented, not a stub**. Auto-`clear`s whenever `bp.currentPhase` or `bp.history.length` changes (stale-analysis guard).
+
+### Analysis Engine (`src/analysis/`)
+
+Local rule-based hero analysis — no external API, runs entirely in the renderer:
+
+```
+src/analysis/
+├── types.ts              # Recommendation, SynergyScore, MatchupAnalysis
+└── rules/
+    ├── constants.ts      # tag weights, thresholds, tunable knobs
+    ├── synergy.ts        # calcSynergy(ownPicks) → SynergyScore
+    ├── matchup.ts        # calcMatchup(bluePicks, redPicks) → MatchupAnalysis
+    └── recommend.ts      # recommendHeroes(pool, own, enemy, excluded) → Recommendation[]
+```
+
+The "own" vs "enemy" split is derived from `getCurrentPhase().side` (the side to move is "own"). When touching analysis logic, keep the rules pure functions (they're tested under node env) and consume them only through `DataContext.analyze`.
 
 ### i18n Configuration
 
@@ -155,16 +182,21 @@ const { t } = useTranslation()
 
 ### Component Layout
 
-App.tsx three-panel layout:
-- **Left** (`w-80`): HeroGrid - searchable hero pool with tag filters (3-column grid, 64px avatars)
-- **Center** (`flex-1`): BanPickArena - shows blue/red teams with ban/pick slots
-- **Right** (`w-96`): AnalysisPanel - recommendations and stats (stub)
+`App.tsx` wraps everything in `EnvironmentGuard` (refuses to render outside Electron — shows a "run via `pnpm electron:dev`" error otherwise), then renders the three nested providers. The main layout is header + two stacked sections + footer:
+
+- **Header**: title, language switcher (zh-CN / zh-TW / en), "分析" button, status.
+- **Top section** (`h-[32vh]`): `HeroGrid` — searchable hero pool with tag filters.
+- **Center section** (`flex-1`): `BanPickArena` — blue/red teams with ban/pick slots.
+- **Footer**: undo / reset buttons, BP progress bar (`currentPhase/totalPhases`), export / import buttons.
+- **Overlay**: `AnalysisDrawer` — a slide-in drawer (collapsed by default; opened from the header "分析" button), containing `AnalysisPanel`.
+
+Components live under `src/components/{bp,analysis}/`. The BP sub-components (`BanPickArena`, `HeroGrid`, `TeamSection`, `TeamSlot`, `HeroCard`, `PhaseIndicator`) compose the arena.
 
 ### BP Flow Invariant
 
 The current action is always determined by `currentPhase` index into `BP_PHASES`. Components should not track "whose turn is it" separately — always read from `useBP().getCurrentPhase()`.
 
-**Important**: `banHero()` and `pickHero()` include duplicate detection - they will not add a hero that's already been banned or picked by either team.
+**Important**: `banHero()` and `pickHero()` include duplicate detection — they will not add a hero that's already been banned or picked by either team. They also silently no-op if the phase's action type doesn't match (e.g. calling `pickHero` during a ban step).
 
 ## BP Phase Order Reference
 
@@ -188,6 +220,13 @@ This is defined in `BPContext.tsx` `BP_PHASES` constant. Do not modify without v
 
 - `src/types/hero.ts` - Hero, HeroStats, CounterInfo, DataDragonResponse types
 - `src/types/global.d.ts` - ElectronResponse<T>, ElectronAPI interface, window.electronAPI
+- `src/utils/typeGuards.ts` - runtime type guards for imported BP snapshots (`isValidBPSnapshotRenderer`)
+
+## Import / Path Conventions
+
+- **Use relative imports, not the `@` alias.** `tsconfig.json` and `vite.config.ts` both define an `@ → src/` alias, but it is currently unused across the codebase (0 occurrences). All imports are relative (`./`, `../`). Keep doing that for consistency; do not introduce a mix.
+- Context hooks are named exports consumed as `useBP` / `useHeroes` / `useData` — there is no default export (the provider + hook deliberately coexist, which is why `react-refresh/only-export-components` is turned off under `src/contexts/**`).
+- One custom hook lives in `src/hooks/useHeroImage.ts` (hero avatar URL resolution via IPC).
 
 ## TailwindCSS & Styling
 

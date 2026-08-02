@@ -13,10 +13,10 @@ setlocal
 :: 取消可能阻碍 Electron 的环境变量（否则 electron 会退化为 node 解释器）
 set ELECTRON_RUN_AS_NODE=
 
-:: 检查并清理占用端口 5173 的进程
-echo [检查] 检测端口 5173 是否被占用...
-for /f "tokens=5" %%a in ('netstat -ano ^| findstr "LISTENING" ^| findstr /C:":5173 " 2^>nul') do (
-    echo [发现] 端口 5173 被进程 %%a 占用，正在终止...
+:: 检查并清理占用端口 5273 的进程
+echo [检查] 检测端口 5273 是否被占用...
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr "LISTENING" ^| findstr /C:":5273 " 2^>nul') do (
+    echo [发现] 端口 5273 被进程 %%a 占用，正在终止...
     taskkill /F /PID %%a >nul 2>&1
     if errorlevel 1 (
         echo [警告] 无法终止进程 %%a，可能需要手动处理

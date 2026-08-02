@@ -11,6 +11,9 @@ coverage/
 # Local files
 TODO.md
 
+# Personal study notes (extracted Feishu doc, not project code)
+bigmodel/
+
 # IDE
 .vscode/
 .idea/
@@ -46,3 +49,6 @@ pnpm-debug.log*
 .agents/
 .claude/skills/
 skills-lock.json
+
+# ZCode agent runtime (local plans/sessions, not for repo)
+.zcode/
