@@ -33,9 +33,10 @@ function TeamSection({ side, team }: TeamSectionProps) {
   const pickPhase2 = [team.picks[3], team.picks[4]]                     // 2 个 pick(第二阶段)
 
   // C 风格核心:两侧品牌色渐变铺底(蓝方蓝→黑,红方红→黑)
+  // 用 Tailwind token + 透明度修饰符,避免硬编码 rgba 与 tailwind.config 色值漂移
   const panelBg = isBlue
-    ? 'bg-[linear-gradient(135deg,rgba(21,101,192,0.28),rgba(21,101,192,0.05)_60%,transparent)]'
-    : 'bg-[linear-gradient(225deg,rgba(198,40,40,0.28),rgba(198,40,40,0.05)_60%,transparent)]'
+    ? 'bg-gradient-to-br from-lol-blue/30 via-lol-blue/5 to-transparent'
+    : 'bg-gradient-to-bl from-lol-red/30 via-lol-red/5 to-transparent'
 
   return (
     <div className={cn('flex h-full min-h-0 flex-col gap-2 px-4 py-3', panelBg)}>

@@ -89,6 +89,14 @@ function AppContent() {
   const { undo, reset, currentPhase, totalPhases, blueTeam, redTeam, history, isComplete, loadSnapshot } = useBP()
   const [notice, setNotice] = useState<{ text: string; type: 'success' | 'error' } | null>(null)
   const [analysisOpen, setAnalysisOpen] = useState(false)
+  // 游戏版本号(从 Data Dragon 拉取,用于 Header PATCH 标签;拉取失败留空)
+  const [gameVersion, setGameVersion] = useState<string>('')
+
+  useEffect(() => {
+    window.electronAPI.getCurrentVersion().then((res) => {
+      if (res.success && res.data) setGameVersion(res.data)
+    }).catch(() => { /* 拉取失败留空,PATCH 标签不显示 */ })
+  }, [])
 
   // notice 自动 3 秒后消失
   useEffect(() => {
@@ -146,11 +154,15 @@ function AppContent() {
 
       {/* Header - C 风格:简洁(原型 A 样式),标题/进度用 display 字体,金色强调 */}
       <header className="relative flex h-16 shrink-0 items-center gap-4 border-b border-lol-border bg-lol-bg-secondary px-4">
-        {/* 左:标题(display 字体) + 版本号 */}
+        {/* 左:标题(display 字体) + 版本号(从 Data Dragon 拉取) */}
         <h1 className="shrink-0 font-display text-lg font-bold uppercase tracking-wider text-lol-text-primary">
           {t('app.title')}
         </h1>
-        <span className="shrink-0 font-body text-[10px] font-medium tracking-wider text-lol-text-muted">PATCH 26.15</span>
+        {gameVersion && (
+          <span className="shrink-0 font-body text-[10px] font-medium tracking-wider text-lol-text-muted">
+            PATCH {gameVersion}
+          </span>
+        )}
 
         {/* 中:当前阶段信息 + 进度计数 */}
         <div className="flex min-w-0 flex-1 items-center justify-center gap-3">

@@ -41,8 +41,8 @@ export default {
         // 注意:自定义 boxShadow 不支持 Tailwind 的透明度修饰符
         // (shadow-blue/40 会被误解析为阴影颜色染色),故为每档单独定义 key。
         //
-        // pickban.pro 风格:偏移硬阴影(offset hard shadow),非柔光发光。
-        // 原有 key 名保留(组件层 class 无需改),值统一改为纯黑偏移阴影。
+        // 偏移硬阴影(offset hard shadow),非柔光发光。
+        // key 名保留(blue/red/gold/purple 各档),组件层 class 无需改动。
         // 强度递增体现在偏移量与模糊半径,而非彩色发光。
         'blue-sm': '1px 1px 3px 0 #000',
         'blue': '2px 2px 5px 0 #000',
