@@ -13,10 +13,13 @@ interface HeroCardProps {
 }
 
 /**
- * 英雄卡 —— pickban.pro 风格
- * - 透明背景按钮,方形黑底头像;hover 时背景变浅灰、整体提亮(非放大)
- * - 禁用(已 ban/pick):灰度 + 浅灰底,视觉上"被锁住"
- * - 当前可操作:ban=品红描边 / pick=金色描边;角标为实心标签,无外发光
+ * 英雄卡 —— pickban.pro 规范(从其 CSS bundle 反向还原)
+ *
+ * 核心特征(与「撑满格子」的做法相反):
+ * - 固定宽度透明按钮(110px),居中放进网格格子;背景透明,融入主背景
+ * - 内部是 grid:80px 黑底方形头像(居中) + 下方一行名字
+ * - hover:背景变浅灰 + 提亮(非放大)
+ * - 禁用(已 ban/pick):grayscale + #1c1c1c 灰底,名字变灰 —— 「被锁住」的视觉
  */
 function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onSelect }: HeroCardProps) {
   const { t } = useTranslation()
@@ -32,16 +35,15 @@ function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onSelect }: He
 
     if (!isCurrentPhase) {
       return cn(
-        'opacity-50 cursor-not-allowed bg-lol-bg-black/60 border-2 border-lol-border',
+        'opacity-50 cursor-not-allowed bg-transparent border-2 border-transparent',
         'transition-all duration-150 ease-out'
       )
     }
 
-    // 可交互状态:ban/pick 仅颜色 token 不同。必须用完整字面量三元,禁止 `${color}` 拼接——
-    // Tailwind JIT 只扫描字面量,动态拼接的类名不会被生成。
+    // 可交互:透明背景,hover 变浅灰 + 提亮。ban/pick 仅边框色不同(字面量三元)
     const accent = actionType === 'ban'
-      ? 'border-lol-red hover:bg-[#1c1c1c]'
-      : 'border-lol-blue hover:bg-[#1c1c1c]'
+      ? 'border-lol-red/60 hover:border-lol-red hover:bg-[#1c1c1c]'
+      : 'border-lol-blue/60 hover:border-lol-blue hover:bg-[#1c1c1c]'
 
     return cn(
       'cursor-pointer bg-transparent border-2',
@@ -54,8 +56,6 @@ function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onSelect }: He
 
   const getActionBadge = () => {
     if (!isCurrentPhase || isDisabled || !actionType) return null
-
-    // ban/pick 仅颜色 token 与文案不同;同样用字面量三元,不可拼接
     const isBan = actionType === 'ban'
 
     return (
@@ -75,33 +75,32 @@ function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onSelect }: He
   return (
     <div
       onClick={() => onSelect(hero.id)}
-      className={`group relative flex w-full flex-col items-center overflow-hidden rounded border aspect-[3/4] ${getCardStyle()}`}
+      // 固定 110px 宽透明按钮(grid 布局),居中放进网格格子 —— 对齐 pickban 规范
+      className={`group relative grid w-[110px] mx-auto border-2 px-[5px] pt-[15px] pb-[10px] ${getCardStyle()}`}
       title={`${hero.name} - ${hero.title}`}
     >
-      {/* 英雄头像 —— 完全撑满卡片上半部分(无黑边/无 padding),方形头像 cover 填满 */}
-      <div className="w-full flex-1 overflow-hidden">
-        {imageUrl && !imageError ? (
-          <img
-            src={imageUrl}
-            alt={hero.name}
-            className="h-full w-full object-cover"
-            onError={() => {/* 错误状态由 Hook 管理 */}}
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-lol-bg-secondary text-lol-text-muted">
-            <svg className="h-10 w-10" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-            </svg>
-          </div>
-        )}
-      </div>
+      {/* 英雄头像:80px 方形黑底,居中(pickban 规范:图片底色纯黑) */}
+      {imageUrl && !imageError ? (
+        <img
+          src={imageUrl}
+          alt={hero.name}
+          className="mx-auto h-[80px] w-[80px] bg-black object-contain p-[3px]"
+          onError={() => {/* 错误状态由 Hook 管理 */}}
+        />
+      ) : (
+        <div className="mx-auto flex h-[80px] w-[80px] items-center justify-center bg-black text-lol-text-muted">
+          <svg className="h-10 w-10" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+          </svg>
+        </div>
+      )}
 
-      {/* 英雄名称 —— 底部固定高度区域 */}
-      <span className="line-clamp-1 w-full shrink-0 bg-lol-bg-secondary px-1 py-1 text-center text-xs font-medium text-lol-text-secondary leading-tight">
+      {/* 英雄名字:头像下方,居中,小字号(pickban: font-size .9rem) */}
+      <span className="mt-[5px] w-full text-center text-xs leading-tight text-lol-text-secondary line-clamp-1">
         {hero.name}
       </span>
 
-      {/* 操作标签:hover 时才显示(对齐 pickban.pro,避免常驻角标造成视觉杂乱) */}
+      {/* 操作标签:hover 显示 */}
       {getActionBadge()}
 
       {/* 已选择标记 */}

@@ -118,18 +118,19 @@ export default function HeroGrid() {
         </span>
       </div>
 
-      {/* 第 2 行:英雄网格(宽松布局,限高滚动)- min-h-0 让 grid 行可收缩
-          3 列 + justify-items-center,每张卡片有充足宽度展示黑底方形头像(pickban.pro 风格) */}
-      <div className="grid min-h-0 flex-1 grid-cols-[repeat(3,1fr)] justify-items-center gap-3 overflow-y-auto overflow-x-hidden px-2">
+      {/* 第 2 行:英雄网格(pickban.pro 规范:110px 卡片 + 10px gap,限高滚动)
+          中列约 600px 宽,5 列 × 110px + 4 × 10px = 590px 正好放下;
+          min-h-0 让 grid 行可收缩;卡片固定宽自动居中 */}
+      <div className="grid min-h-0 flex-1 grid-cols-[repeat(5,1fr)] gap-x-[10px] gap-y-1 overflow-y-auto overflow-x-hidden px-3">
         {loading ? (
-          <div className="col-span-3 flex items-center justify-center">
+          <div className="col-span-5 flex items-center justify-center">
             <div className="text-lol-text-secondary">
               <div className="mb-2 mx-auto h-8 w-8 animate-spin rounded-full border-2 border-lol-border border-t-transparent" />
               <span className="text-xs">{t('hero.loadingHeroes')}</span>
             </div>
           </div>
         ) : error ? (
-          <div className="col-span-3 flex flex-col items-center justify-center gap-3">
+          <div className="col-span-5 flex flex-col items-center justify-center gap-3">
             <span className="text-sm text-lol-red">{error}</span>
             <button
               onClick={() => refreshHeroes()}
@@ -139,7 +140,7 @@ export default function HeroGrid() {
             </button>
           </div>
         ) : filteredHeroes.length === 0 ? (
-          <div className="col-span-3 flex items-center justify-center">
+          <div className="col-span-5 flex items-center justify-center">
             <span className="text-lol-text-muted">
               {searchQuery ? t('hero.noHeroesFound') : t('hero.noHeroData')}
             </span>
