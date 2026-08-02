@@ -41,9 +41,9 @@ function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onSelect }: He
       )
     }
 
-    // C 风格:透明背景,hover 金色边框 + 金色底晕(ban/pick 统一金色,不再分队伍色)
+    // C 风格:默认队伍色淡边框(标识当前 ban/pick),hover 变金色边框 + 金色底晕
     return cn(
-      'cursor-pointer bg-black/30 border-2 border-transparent',
+      'cursor-pointer bg-black/30 border-2',
       'transition-all duration-150 ease-out',
       'hover:border-lol-gold hover:bg-lol-gold/10 hover:brightness-110',
       actionType === 'ban'

@@ -88,7 +88,9 @@ export async function setupDevMock(): Promise<void> {
     },
 
     getHeroImageUrl: async (heroId: string) => {
-      // tiles 源:精致方形头像(正式服当前形象),Fiddlesticks 等缺失英雄回退 img/champion
+      // tiles 源:精致方形头像(正式服当前形象),tiles 缺失的英雄回退 img/champion
+      // 注意:TILES_MISSING 必须与 src/main/services/heroService.js 的 TILES_MISSING 保持同步
+      // (实测仅 Fiddlesticks 缺失,两端各定义一份;主进程是 CJS 无法被渲染进程直接 import)
       const TILES_MISSING = new Set(['Fiddlesticks'])
       if (TILES_MISSING.has(heroId)) {
         const v = await getCurrentVersion()

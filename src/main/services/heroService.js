@@ -6,6 +6,8 @@ const DATA_DRAGON_CDN = 'https://ddragon.leagueoflegends.com/cdn'
 // 定期同步;断网时 Data Dragon 仍服务该版本,故可作离线兜底。
 // 最近一次同步:2026-08(对应 Data Dragon 最新版本)
 const BUILTIN_FALLBACK_VERSION = '16.15.1'
+// tiles 源缺失的英雄(实测 Fiddlesticks 返回 403)。导出供 devMock 复用,避免两处定义漂移
+const TILES_MISSING = new Set(['Fiddlesticks'])
 
 /**
  * HeroService 类
@@ -91,13 +93,11 @@ class HeroService {
    * - tiles/X_0.jpg:从原画裁切的精致方形头像,画风 = 正式服当前形象(玩家熟悉),首选
    * - img/champion/X.png:LOL 早期游戏内小图标画风,视觉偏旧,仅作 tiles 缺失时的回退
    *
-   * tiles 源覆盖绝大多数英雄(实测 172/173),仅 Fiddlesticks(远古恐惧)缺失(403)。
+   * tiles 源覆盖绝大多数英雄(实测 172/173),仅 TILES_MISSING 中的英雄缺失(403)。
    * 对已知缺失的英雄回退到 img/champion 源(虽画风旧但至少能显示,避免头像消失)。
    */
   getHeroImageUrl(heroId, version) {
     if (!heroId) return ''
-    // tiles 源缺失的英雄(实测 Fiddlesticks 返回 403),回退到 img/champion 方形头像
-    const TILES_MISSING = new Set(['Fiddlesticks'])
     if (TILES_MISSING.has(heroId)) {
       const hero = this.heroesCache.get(heroId)
       const v = version || hero?.version || BUILTIN_FALLBACK_VERSION
@@ -165,4 +165,4 @@ class HeroService {
 
 // 导出单例实例
 const heroServiceInstance = new HeroService()
-module.exports = { heroService: heroServiceInstance, HeroService, BUILTIN_FALLBACK_VERSION }
+module.exports = { heroService: heroServiceInstance, HeroService, BUILTIN_FALLBACK_VERSION, TILES_MISSING }
