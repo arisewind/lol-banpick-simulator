@@ -41,21 +41,18 @@ function TeamSection({ side, team }: TeamSectionProps) {
     <div className={cn('flex h-full min-h-0 flex-col gap-2 px-4 py-3', panelBg)}>
       {/* 队名标签(C 风格:半透明黑底圆角条) */}
       <div className={cn(
-        'flex shrink-0 items-center justify-between rounded-md bg-black/30 px-3 py-2',
+        'flex shrink-0 items-center gap-2 rounded-md bg-black/30 px-3 py-2',
       )}>
-        <div className="flex items-center gap-2">
-          <div className={cn(
-            'h-2.5 w-2.5 rounded-full',
-            isBlue ? 'bg-lol-blue-light' : 'bg-lol-red-light',
-          )} />
-          <h2 className={cn(
-            'font-display text-sm font-bold uppercase tracking-widest',
-            isBlue ? 'text-lol-blue-light' : 'text-lol-red-light',
-          )}>
-            {t(`bp.${side}Team`)}
-          </h2>
-        </div>
-        <span className="font-body text-[10px] font-medium tracking-wider text-lol-text-muted">PATCH 26.15</span>
+        <div className={cn(
+          'h-2.5 w-2.5 rounded-full',
+          isBlue ? 'bg-lol-blue-light' : 'bg-lol-red-light',
+        )} />
+        <h2 className={cn(
+          'font-display text-sm font-bold uppercase tracking-widest',
+          isBlue ? 'text-lol-blue-light' : 'text-lol-red-light',
+        )}>
+          {t(`bp.${side}Team`)}
+        </h2>
       </div>
 
       {/* ban-row-1:3 个 ban 槽横排(正方形,64px 够清晰,省高度给 pick) */}
