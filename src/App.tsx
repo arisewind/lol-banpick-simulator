@@ -144,21 +144,21 @@ function AppContent() {
         </div>
       )}
 
-      {/* Header - pickban.pro 风格:多列 grid,集中所有功能按钮,底部进度线 */}
-      <header className="relative flex h-16 shrink-0 items-center gap-4 border-b border-lol-border bg-lol-bg-dark px-4">
-        {/* 左:标题 */}
-        <h1 className="shrink-0 text-xl font-bold uppercase tracking-wider text-lol-text-primary">
+      {/* Header - C 风格:简洁(原型 A 样式),标题/进度用 display 字体,金色强调 */}
+      <header className="relative flex h-16 shrink-0 items-center gap-4 border-b border-lol-border bg-lol-bg-secondary px-4">
+        {/* 左:标题(display 字体) */}
+        <h1 className="shrink-0 font-display text-lg font-bold uppercase tracking-wider text-lol-text-primary">
           {t('app.title')}
         </h1>
 
         {/* 中:当前阶段信息 + 进度计数 */}
         <div className="flex min-w-0 flex-1 items-center justify-center gap-3">
-          <span className="font-mono text-xs text-lol-text-secondary">
+          <span className="font-display text-xs text-lol-text-secondary">
             {Math.min(currentPhase + 1, totalPhases)}/{totalPhases}
           </span>
-          <div className="h-1.5 w-40 overflow-hidden rounded-full bg-lol-bg-secondary">
+          <div className="h-1.5 w-40 overflow-hidden rounded-full bg-lol-bg-card">
             <div
-              className="h-full rounded-full bg-lol-blue transition-all duration-300"
+              className="h-full rounded-full bg-lol-gold transition-all duration-300"
               style={{ width: `${progressPct}%` }}
             />
           </div>
@@ -217,10 +217,10 @@ function AppContent() {
           </button>
         </div>
 
-        {/* 底部进度线(对齐 pickban navbar 底部 2px 线) */}
-        <div className="absolute inset-x-0 bottom-0 h-0.5 bg-lol-bg-secondary">
+        {/* 底部进度线(C 风格:金色) */}
+        <div className="absolute inset-x-0 bottom-0 h-0.5 bg-lol-bg-card">
           <div
-            className="h-full bg-lol-blue transition-all duration-300"
+            className="h-full bg-lol-gold transition-all duration-300"
             style={{ width: `${progressPct}%` }}
           />
         </div>

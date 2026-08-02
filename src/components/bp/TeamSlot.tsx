@@ -33,16 +33,25 @@ function TeamSlot({ heroId, type, side, index, mirrored = false }: TeamSlotProps
   const isBlue = side === 'blue'
 
   // 空槽位:仅显示序号。ban 空槽用 LOL 客户端原生深蓝黑 #010a13
+  // 序号标签:[B1]/[R1] 等(原型 C 风格独有元素)
+  const seqTag = `${isBlue ? 'B' : 'R'}${index + 1}`
+
   if (!hero) {
     return (
       <div className={cn(
-        'relative overflow-hidden rounded border flex items-center justify-center',
-        // ban 空槽:受 ban-row 高度约束(h-full),保持正方形且居中(不按格子宽度撑高度导致溢出)
-        // pick 空槽:撑满父格
-        isBan ? 'aspect-square h-full justify-self-center bg-lol-black border-lol-border' : 'h-full w-full bg-lol-bg-black border-lol-border',
+        'relative overflow-hidden flex items-center justify-center',
+        // ban 空槽:受 ban-row 高度约束(h-full),正方形居中;pick 空槽撑满父格
+        // C 风格:矩形圆角(ban rounded, pick rounded-lg)
+        isBan ? 'aspect-square h-full justify-self-center bg-lol-black border border-lol-border rounded'
+              : 'h-full w-full bg-lol-bg-black border border-lol-border rounded-lg',
         // pick 空槽:蓝方镜像
         !isBan && mirrored && 'scale-x-[-1]',
       )}>
+        {/* 序号标签(左上角) */}
+        <span className={cn(
+          'absolute left-1 top-0.5 z-20 font-body text-[9px] font-semibold tracking-wider text-lol-text-muted/70',
+          mirrored && !isBan && 'scale-x-[-1]',
+        )}>{seqTag}</span>
         <span className={cn(
           'font-mono text-lol-text-muted/60',
           // 镜像时文字反向修正
@@ -59,17 +68,23 @@ function TeamSlot({ heroId, type, side, index, mirrored = false }: TeamSlotProps
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded transition-all duration-300',
+        'relative overflow-hidden transition-all duration-300',
         'border-2',
-        // Ban 位:受 ban-row 高度约束(h-full),正方形且居中(不溢出挤压 pick)
-        isBan ? 'aspect-square h-full justify-self-center bg-lol-black border-lol-border' : 'h-full w-full bg-lol-bg-black',
-        // Pick 位:队伍色边框 + 硬偏移阴影(无发光)
-        !isBan && (isBlue ? 'border-lol-blue shadow-blue-lg' : 'border-lol-red shadow-red-lg'),
+        // C 风格:矩形圆角(ban rounded, pick rounded-lg)
+        isBan ? 'aspect-square h-full justify-self-center bg-lol-black border-lol-border rounded'
+              : 'h-full w-full bg-lol-bg-black rounded-lg',
+        // Pick 位:队伍色边框 + 品牌色柔光(C 风格:轻微发光,非硬阴影)
+        !isBan && (isBlue ? 'border-lol-blue-light shadow-blue-lg' : 'border-lol-red-light shadow-red-lg'),
         // 蓝方 pick 槽:整体水平镜像(英雄原画朝中心对峙)
         !isBan && mirrored && 'scale-x-[-1]',
       )}
       title={hero.name}
     >
+      {/* 序号标签(左上角,C 风格独有) */}
+      <span className={cn(
+        'absolute left-1.5 top-1 z-30 font-body text-[9px] font-semibold tracking-wider text-lol-text-muted/80',
+        mirrored && 'scale-x-[-1]',
+      )}>{seqTag}</span>
       {/* 英雄图片
           - ban:方形头像 + pickban.pro 复合滤镜(染暗红色调)
           - pick:竖版原画(loading)铺满,object-cover 裁切,略微增强对比饱和 */}

@@ -27,8 +27,9 @@ function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onSelect }: He
 
   const getCardStyle = () => {
     if (isDisabled) {
+      // C 风格:禁用态半透明黑底 + 灰度
       return cn(
-        'grayscale cursor-not-allowed bg-[#1c1c1c] border-2 border-lol-border',
+        'grayscale cursor-not-allowed bg-black/30 border-2 border-lol-border',
         'transition-all duration-150 ease-out'
       )
     }
@@ -40,16 +41,14 @@ function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onSelect }: He
       )
     }
 
-    // 可交互:透明背景,hover 变浅灰 + 提亮。ban/pick 仅边框色不同(字面量三元)
-    const accent = actionType === 'ban'
-      ? 'border-lol-red/60 hover:border-lol-red hover:bg-[#1c1c1c]'
-      : 'border-lol-blue/60 hover:border-lol-blue hover:bg-[#1c1c1c]'
-
+    // C 风格:透明背景,hover 金色边框 + 金色底晕(ban/pick 统一金色,不再分队伍色)
     return cn(
-      'cursor-pointer bg-transparent border-2',
+      'cursor-pointer bg-black/30 border-2 border-transparent',
       'transition-all duration-150 ease-out',
-      'hover:brightness-110',
-      accent,
+      'hover:border-lol-gold hover:bg-lol-gold/10 hover:brightness-110',
+      actionType === 'ban'
+        ? 'border-lol-red/40'
+        : 'border-lol-blue/40',
       'animate-fade-in'
     )
   }

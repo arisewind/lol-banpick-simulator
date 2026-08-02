@@ -6,30 +6,36 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        // 游戏字体(@fontsource 本地包,Electron 离线可用)
+        display: ['Orbitron', 'sans-serif'],  // 标题/数字/队名,未来科幻感
+        body: ['Rajdhani', 'sans-serif'],     // 正文/HUD,简洁紧凑
+        hud: ['"Chakra Petch"', 'sans-serif'],// 备选科技感
+      },
       colors: {
-        // pickban.pro 风格配色 —— 金/品红双色对抗
+        // 原型 C 品牌渐变风格 —— 品牌蓝/红双色对抗 + 独立金色强调
         // 语义名保留(蓝方/红方),只换色值;组件层 class 字面量无需改动
-        'lol-blue': '#FFD700',        // 蓝方主色 = 金(pickban.pro accent-primary)
-        'lol-blue-dark': '#B8860B',   // 金色加深
-        'lol-blue-light': '#FFED4E',  // 金色高亮
-        'lol-red': '#ff00ff',         // 红方主色 = 品红(pickban.pro accent-secondary #f0f)
-        'lol-red-dark': '#a300a3',    // 品红加深
-        'lol-red-light': '#ff4dff',   // 品红高亮
-        'lol-purple': '#5600b3',      // 第三强调色(pickban.pro accent-tertiary,深紫)
-        'lol-gold': '#FFD700',        // 金色强调(与蓝方色重合,语义不同)
-        'lol-gold-light': '#FFED4E',  // 金色高亮
-        // 背景色系 —— 纯黑深色主题(pickban.pro bg 层级)
-        'lol-bg-dark': '#101010',     // 主背景(pickban.pro --bg-primary)
-        'lol-bg-secondary': '#1a1a1a',// 按钮/卡片默认背景(pickban.pro --bg-primary-light-2)
-        'lol-bg-card': '#202020',     // hover 卡片/输入框背景(pickban.pro --bg-primary-light-3)
-        'lol-bg-black': '#050505',    // 更深背景(pickban.pro --bg-primary-dark-1)
+        'lol-blue': '#1565C0',        // 蓝方主色 = 品牌蓝
+        'lol-blue-dark': '#0D47A1',   // 品牌蓝加深
+        'lol-blue-light': '#42A5F5',  // 品牌蓝高亮(发光态用)
+        'lol-red': '#C62828',         // 红方主色 = 品牌红
+        'lol-red-dark': '#B71C1C',    // 品牌红加深
+        'lol-red-light': '#EF5350',   // 品牌红高亮(发光态用)
+        'lol-purple': '#5600b3',      // 第三强调色(中列分隔,保留)
+        'lol-gold': '#FFB300',        // 独立金色强调(原型 C 核心:与蓝方色分离)
+        'lol-gold-light': '#FFCA28',  // 金色高亮
+        // 背景色系 —— 深色主题(品牌渐变在组件层叠加)
+        'lol-bg-dark': '#15151A',     // 主背景
+        'lol-bg-secondary': '#1F1F28',// 按钮/卡片默认背景
+        'lol-bg-card': '#25252F',     // hover 卡片/输入框背景
+        'lol-bg-black': '#0A0A0F',    // 更深背景
         'lol-black': '#010a13',       // LOL 客户端原生深蓝黑(ban 空槽底色)
         // 文字色
         'lol-text-primary': '#FFFFFF',
         'lol-text-secondary': '#CCCCCC',
-        'lol-text-muted': '#888888',  // 对齐 pickban.pro --text-faint
+        'lol-text-muted': '#8A8A99',  // 中性灰
         // 分割线 / 边框
-        'lol-border': '#303030',      // 对齐 pickban.pro --bg-primary-light
+        'lol-border': '#2E2E3A',
       },
       boxShadow: {
         // 注意:自定义 boxShadow 不支持 Tailwind 的透明度修饰符

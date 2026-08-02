@@ -32,23 +32,30 @@ function TeamSection({ side, team }: TeamSectionProps) {
   const banPhase2 = [team.bans[3], team.bans[4]]                        // 2 个 ban(第二阶段)
   const pickPhase2 = [team.picks[3], team.picks[4]]                     // 2 个 pick(第二阶段)
 
+  // C 风格核心:两侧品牌色渐变铺底(蓝方蓝→黑,红方红→黑)
+  const panelBg = isBlue
+    ? 'bg-[linear-gradient(135deg,rgba(21,101,192,0.28),rgba(21,101,192,0.05)_60%,transparent)]'
+    : 'bg-[linear-gradient(225deg,rgba(198,40,40,0.28),rgba(198,40,40,0.05)_60%,transparent)]'
+
   return (
-    <div className="flex h-full min-h-0 flex-col gap-2 px-4 py-3">
-      {/* 队名标签(小型,面板顶部) */}
+    <div className={cn('flex h-full min-h-0 flex-col gap-2 px-4 py-3', panelBg)}>
+      {/* 队名标签(C 风格:半透明黑底圆角条) */}
       <div className={cn(
-        'flex shrink-0 items-center gap-2 border-b pb-2',
-        isBlue ? 'border-lol-blue/30' : 'border-lol-red/30',
+        'flex shrink-0 items-center justify-between rounded-md bg-black/30 px-3 py-2',
       )}>
-        <div className={cn(
-          'h-3 w-3 rounded-full',
-          isBlue ? 'bg-lol-blue' : 'bg-lol-red',
-        )} />
-        <h2 className={cn(
-          'text-sm font-bold uppercase tracking-widest',
-          isBlue ? 'text-lol-blue' : 'text-lol-red',
-        )}>
-          {t(`bp.${side}Team`)}
-        </h2>
+        <div className="flex items-center gap-2">
+          <div className={cn(
+            'h-2.5 w-2.5 rounded-full',
+            isBlue ? 'bg-lol-blue-light' : 'bg-lol-red-light',
+          )} />
+          <h2 className={cn(
+            'font-display text-sm font-bold uppercase tracking-widest',
+            isBlue ? 'text-lol-blue-light' : 'text-lol-red-light',
+          )}>
+            {t(`bp.${side}Team`)}
+          </h2>
+        </div>
+        <span className="font-body text-[10px] font-medium tracking-wider text-lol-text-muted">PATCH 26.15</span>
       </div>
 
       {/* ban-row-1:3 个 ban 槽横排(正方形,64px 够清晰,省高度给 pick) */}

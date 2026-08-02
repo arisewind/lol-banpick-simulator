@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>原型 C · 品牌渐变风</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     原型 C · Team-Branded Gradient(品牌渐变风)
+     核心:矩形圆角 + 两侧整片品牌色渐变铺底 + 教练/序号标签 + 流程化
+     ============================================================ */
+  :root{
+    --bg:#15151A; --card:#1F1F28; --card2:#25252F;
+    --blue:#1565C0; --blue-glow:#42A5F5; --red:#C62828; --red-glow:#EF5350;
+    --gold:#FFB300; --text:#FFFFFF; --muted:#8A8A99; --line:#2E2E3A;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden}
+  body{font-family:'Rajdhani',sans-serif;color:var(--text);background:var(--bg)}
+
+  .app{display:flex;flex-direction:column;height:100vh}
+
+  /* ============ Header(采用原型 A 简洁样式,去掉教练/VS 概念)============ */
+  header{
+    height:56px;flex-shrink:0;display:flex;align-items:center;gap:16px;padding:0 20px;
+    background:#232323;border-bottom:1px solid var(--line);
+  }
+  .logo{font-family:'Orbitron';font-weight:700;font-size:16px;letter-spacing:1px;color:var(--text)}
+  .phase-info{flex:1;display:flex;justify-content:center;align-items:center;gap:12px;font-size:13px;color:var(--muted)}
+  .phase-info .step{font-family:'Orbitron';color:var(--text)}
+  .phase-info .bar{width:140px;height:3px;background:#3A3A3A;overflow:hidden}
+  .phase-info .bar i{display:block;height:100%;width:35%;background:var(--gold)}
+  .btn{font-family:'Rajdhani';font-weight:600;font-size:13px;padding:7px 16px;color:#DDD;
+    background:#2A2A2A;border:1px solid var(--line);cursor:pointer;transition:.2s;border-radius:4px}
+  .btn:hover{background:#333;color:#FFF}
+
+  /* ============ Main 三列 ============ */
+  main{flex:1;display:grid;grid-template-columns:1fr minmax(420px,1.5fr) 1fr;gap:0;min-height:0}
+  /* 两侧品牌色渐变铺底(核心特征) */
+  .panel{display:flex;flex-direction:column;gap:8px;min-height:0;padding:14px}
+  .panel.blue{background:linear-gradient(135deg,rgba(21,101,192,.28),rgba(21,101,192,.05) 60%,transparent)}
+  .panel.red{background:linear-gradient(225deg,rgba(198,40,40,.28),rgba(198,40,40,.05) 60%,transparent)}
+
+  /* 队标条 */
+  .team-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;flex-shrink:0;border-radius:6px;background:rgba(0,0,0,.3)}
+  .team-bar h2{font-family:'Orbitron';font-weight:700;font-size:15px;letter-spacing:2px}
+  .team-bar.blue h2{color:var(--blue-glow)}
+  .team-bar.red h2{color:var(--red-glow)}
+  .seq{font-family:'Rajdhani';font-weight:500;font-size:11px;color:var(--muted);letter-spacing:1px}
+
+  /* ban-row */
+  .ban-row{display:grid;gap:6px;flex-shrink:0}
+  .ban-row.r3{grid-template-columns:repeat(3,1fr);height:72px}
+  .ban-row.r2{grid-template-columns:repeat(2,1fr);height:72px}
+  .pick-col{display:flex;flex-direction:column;gap:6px;min-height:0}
+  .pick-col.grow{flex:1}
+  .pick-col.grow2{flex:.67}
+
+  /* 槽位:矩形圆角,带 [B1]/[R1] 序号标签 */
+  .slot{position:relative;overflow:hidden;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:8px}
+  .slot .num{font-family:'Orbitron';font-size:13px;color:#444}
+  /* 序号标签(独有) */
+  .slot .tag{position:absolute;left:6px;top:4px;font-family:'Rajdhani';font-weight:600;font-size:9px;letter-spacing:1px;color:var(--muted);z-index:5}
+  .ban{aspect-ratio:1;height:100%;justify-self:center}
+  .ban.filled img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) brightness(.45)}
+  .pick{width:100%}
+  .pick.blue.filled{border-color:var(--blue-glow);border-width:2px;box-shadow:0 0 16px rgba(66,165,245,.25)}
+  .pick.red.filled{border-color:var(--red-glow);border-width:2px;box-shadow:0 0 16px rgba(239,83,80,.25)}
+  .pick.filled img{width:100%;height:100%;object-fit:cover;object-position:center top}
+  .pick .name{position:absolute;left:0;right:0;bottom:0;padding:5px 10px;font-family:'Rajdhani';font-weight:700;font-size:13px;
+    background:linear-gradient(0deg,rgba(0,0,0,.9),transparent)}
+  .pick.blue .name{color:#BAD7F5}
+  .pick.red .name{color:#F5BABA}
+  .pick.blue.filled{transform:scaleX(-1)}
+  .pick.blue.filled .name,.pick.blue.filled .tag,.pick.blue.filled .num{transform:scaleX(-1)}
+
+  /* ============ 中列 英雄选择 ============ */
+  .center{display:flex;flex-direction:column;gap:8px;min-height:0;background:rgba(0,0,0,.25);border-left:1px solid var(--line);border-right:1px solid var(--line)}
+  .filter-row{display:flex;gap:8px;padding:10px;flex-shrink:0;align-items:center}
+  .search{flex:1;background:rgba(0,0,0,.4);border:1px solid var(--line);padding:9px 14px;color:var(--text);font-family:'Rajdhani';font-size:14px;border-radius:8px}
+  .search::placeholder{color:#666}
+  .search:focus{outline:none;border-color:var(--gold)}
+  .role-tabs{display:flex;gap:4px}
+  .role-tab{padding:7px 12px;font-size:12px;font-weight:600;border:1px solid var(--line);cursor:pointer;color:var(--muted);border-radius:6px;background:rgba(0,0,0,.3)}
+  .role-tab.active{background:var(--gold);border-color:var(--gold);color:#000}
+  .hero-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:4px 10px;min-height:0}
+  .hero{position:relative;cursor:pointer;background:rgba(0,0,0,.3);border:1px solid transparent;border-radius:6px;transition:.2s}
+  .hero:hover{background:rgba(255,179,0,.1);border-color:var(--gold)}
+  .hero img{width:100%;aspect-ratio:1;object-fit:cover;background:#000;border-radius:6px}
+  .hero .hname{display:block;text-align:center;font-size:12px;padding:3px 0;color:#AAA}
+  .hero:hover .hname{color:var(--gold)}
+  .hero.disabled{filter:grayscale(1) brightness(.4);cursor:not-allowed}
+  .hint{flex-shrink:0;text-align:center;padding:8px;font-size:13px;font-weight:600;
+    background:rgba(21,101,192,.2);border-top:1px solid var(--line);color:var(--blue-glow)}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Header(原型 A 简洁样式:logo + 阶段信息 + 按钮) -->
+  <header>
+    <div class="logo">BP SIMULATOR</div>
+    <div class="phase-info">
+      <span class="step">04 / 20</span>
+      <div class="bar"><i></i></div>
+      <span>禁用阶段 · 蓝方</span>
+    </div>
+    <button class="btn">撤销</button>
+    <button class="btn">重置</button>
+    <button class="btn">分析</button>
+  </header>
+
+  <main>
+    <!-- 蓝方(品牌色渐变铺底) -->
+    <div class="panel blue">
+      <div class="team-bar"><h2>BLUE TEAM</h2><span class="seq">PATCH 26.15</span></div>
+      <div class="ban-row r3">
+        <div class="slot ban filled"><span class="tag">B1</span><img src="https://picsum.photos/seed/ban1/80" alt=""></div>
+        <div class="slot ban filled"><span class="tag">B2</span><img src="https://picsum.photos/seed/ban2/80" alt=""></div>
+        <div class="slot ban"><span class="tag">B3</span><span class="num">3</span></div>
+      </div>
+      <div class="pick-col grow">
+        <div class="slot pick blue filled"><span class="tag">B1</span><img src="https://picsum.photos/seed/p1/300/120" alt=""><span class="name">剑魔</span></div>
+        <div class="slot pick blue"><span class="tag">B2</span><span class="num">2</span></div>
+        <div class="slot pick blue"><span class="tag">B3</span><span class="num">3</span></div>
+      </div>
+      <div class="ban-row r2">
+        <div class="slot ban"><span class="tag">B4</span><span class="num">4</span></div>
+        <div class="slot ban"><span class="tag">B5</span><span class="num">5</span></div>
+      </div>
+      <div class="pick-col grow2">
+        <div class="slot pick blue"><span class="tag">B4</span><span class="num">4</span></div>
+        <div class="slot pick blue"><span class="tag">B5</span><span class="num">5</span></div>
+      </div>
+    </div>
+
+    <!-- 中列 -->
+    <div class="center">
+      <div class="filter-row">
+        <input class="search" placeholder="搜索英雄...">
+        <div class="role-tabs">
+          <span class="role-tab active">全部</span>
+          <span class="role-tab">坦克</span>
+          <span class="role-tab">法师</span>
+          <span class="role-tab">刺客</span>
+        </div>
+      </div>
+      <div class="hero-grid" id="grid"></div>
+      <div class="hint">禁用英雄 · 蓝方回合</div>
+    </div>
+
+    <!-- 红方(品牌色渐变铺底) -->
+    <div class="panel red">
+      <div class="team-bar"><span class="seq">PATCH 26.15</span><h2>RED TEAM</h2></div>
+      <div class="ban-row r3">
+        <div class="slot ban filled"><span class="tag">R1</span><img src="https://picsum.photos/seed/rban1/80" alt=""></div>
+        <div class="slot ban"><span class="tag">R2</span><span class="num">2</span></div>
+        <div class="slot ban"><span class="tag">R3</span><span class="num">3</span></div>
+      </div>
+      <div class="pick-col grow">
+        <div class="slot pick red"><span class="tag">R1</span><span class="num">1</span></div>
+        <div class="slot pick red"><span class="tag">R2</span><span class="num">2</span></div>
+        <div class="slot pick red"><span class="tag">R3</span><span class="num">3</span></div>
+      </div>
+      <div class="ban-row r2">
+        <div class="slot ban"><span class="tag">R4</span><span class="num">4</span></div>
+        <div class="slot ban"><span class="tag">R5</span><span class="num">5</span></div>
+      </div>
+      <div class="pick-col grow2">
+        <div class="slot pick red"><span class="tag">R4</span><span class="num">4</span></div>
+        <div class="slot pick red"><span class="tag">R5</span><span class="num">5</span></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const names=['剑魔','阿狸','阿卡丽','阿克尚','牛头','安蓓萨','阿木木','冰鸟','安妮','厄斐琉斯','艾希','龙王','阿萝拉','阿兹尔','巴德','卑尔维斯','布里茨','火男','布隆','贝蕾亚','女警','卡蜜尔','蛇女','大虫子','库奇','诺手','皎月','德莱文','蒙多','艾克','蜘蛛','寡妇','EZ','稻草人','剑姬','小鱼人','加里奥','船长','盖伦','纳尔'];
+  const grid=document.getElementById('grid');
+  const disabled=new Set([0]);
+  names.forEach((n,i)=>{
+    const d=document.createElement('div');
+    d.className='hero'+(disabled.has(i)?' disabled':'');
+    d.innerHTML=`<img src="https://picsum.photos/seed/h${i}/80" alt=""><span class="hname">${n}</span>`;
+    grid.appendChild(d);
+  });
+</script>
+</body>
+</html>

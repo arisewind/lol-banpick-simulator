@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>原型 B · 赛博 HUD 风</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     原型 B · HUD Cyberpunk(赛博 HUD 风)
+     核心:45° 切角矩形 + 极深黑 + 扫描线 + 网格 + 高饱和霓虹 + 发光
+     ============================================================ */
+  :root{
+    --bg:#0A0F1F; --bg2:#0D1428; --card:#101a2e; --glass:rgba(16,26,46,.7);
+    --blue:#00BFFF; --blue-dim:#006699; --red:#FF3B30; --red-dim:#992319;
+    --cyan:#00FFFF; --text:#E6F4FF; --muted:#5A7A9E; --line:rgba(0,191,255,.15);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden}
+  body{
+    font-family:'Chakra Petch',sans-serif;color:var(--text);
+    background:
+      /* 扫描线 */ repeating-linear-gradient(0deg,rgba(0,191,255,.04) 0,rgba(0,191,255,.04) 1px,transparent 1px,transparent 3px),
+      /* 细网格 */ linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px),
+      /* 底色 */ radial-gradient(ellipse at center,#0D1428 0%,var(--bg) 70%);
+    background-size:100% 3px,32px 32px,32px 32px,100% 100%;
+  }
+  /* 切角矩形 mixin:用 clip-path 切左上+右下两角 */
+  .cut{clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px)}
+  .cut-sm{clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+
+  .app{display:flex;flex-direction:column;height:100vh}
+
+  /* ============ Header ============ */
+  header{
+    height:56px;flex-shrink:0;display:flex;align-items:center;gap:16px;padding:0 20px;
+    background:linear-gradient(180deg,rgba(0,191,255,.08),transparent);
+    border-bottom:1px solid rgba(0,191,255,.25);position:relative;
+  }
+  header::after{content:"";position:absolute;left:0;bottom:-1px;height:2px;background:var(--cyan);box-shadow:0 0 8px var(--cyan);width:35%}
+  .logo{font-family:'Orbitron';font-weight:900;font-size:18px;letter-spacing:2px;
+    background:linear-gradient(90deg,var(--blue),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .phase-info{flex:1;display:flex;justify-content:center;align-items:center;gap:14px;font-size:13px}
+  .phase-info .step{font-family:'Orbitron';color:var(--cyan);text-shadow:0 0 6px rgba(0,255,255,.6)}
+  .phase-info .bar{width:160px;height:4px;background:rgba(0,191,255,.15);overflow:hidden}
+  .phase-info .bar i{display:block;height:100%;width:35%;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+  .btn{font-family:'Chakra Petch';font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase;
+    padding:7px 14px;color:var(--text);background:rgba(0,191,255,.08);border:1px solid rgba(0,191,255,.3);cursor:pointer;transition:.2s}
+  .btn:hover{background:rgba(0,191,255,.18);box-shadow:0 0 10px rgba(0,191,255,.4)}
+
+  /* ============ Main 三列 ============ */
+  main{flex:1;display:grid;grid-template-columns:1fr minmax(440px,1.6fr) 1fr;gap:10px;padding:10px;min-height:0}
+  .panel{display:flex;flex-direction:column;gap:8px;min-height:0}
+
+  /* 队标条 */
+  .team-bar{display:flex;align-items:center;gap:10px;padding:8px 12px;border-width:1px;border-style:solid;flex-shrink:0}
+  .team-bar.blue{border-color:rgba(0,191,255,.4);background:linear-gradient(90deg,rgba(0,191,255,.1),transparent)}
+  .team-bar.red{border-color:rgba(255,59,48,.4);background:linear-gradient(270deg,rgba(255,59,48,.1),transparent);flex-direction:row-reverse}
+  .team-bar .dot{width:8px;height:8px;border-radius:50%}
+  .team-bar.blue .dot{background:var(--blue);box-shadow:0 0 8px var(--blue)}
+  .team-bar.red .dot{background:var(--red);box-shadow:0 0 8px var(--red)}
+  .team-bar h2{font-family:'Orbitron';font-weight:700;font-size:14px;letter-spacing:2px}
+  .team-bar.blue h2{color:var(--blue)}
+  .team-bar.red h2{color:var(--red)}
+
+  /* ban-row */
+  .ban-row{display:grid;gap:5px;flex-shrink:0}
+  .ban-row.r3{grid-template-columns:repeat(3,1fr);height:72px}
+  .ban-row.r2{grid-template-columns:repeat(2,1fr);height:72px}
+  /* pick 区 */
+  .pick-col{display:flex;flex-direction:column;gap:5px;min-height:0}
+  .pick-col.grow{flex:1}
+  .pick-col.grow2{flex:.67}
+
+  /* 槽位通用 */
+  .slot{position:relative;overflow:hidden;background:var(--card);display:flex;align-items:center;justify-content:center;border:1px solid}
+  .slot .num{font-family:'Orbitron';font-size:14px;color:var(--muted);opacity:.5}
+  /* ban 槽:正方形居中 */
+  .ban{aspect-ratio:1;height:100%;justify-self:center;border-color:rgba(90,122,158,.3)}
+  .ban.filled img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) brightness(.4) sepia(1) hue-rotate(-50deg) saturate(3) contrast(.7)}
+  /* pick 槽:横向 banner */
+  .pick{width:100%;border-color:rgba(90,122,158,.3)}
+  .pick.blue.filled{border-color:var(--blue);box-shadow:0 0 12px rgba(0,191,255,.3),inset 0 0 20px rgba(0,191,255,.1)}
+  .pick.red.filled{border-color:var(--red);box-shadow:0 0 12px rgba(255,59,48,.3),inset 0 0 20px rgba(255,59,48,.1)}
+  .pick.filled img{width:100%;height:100%;object-fit:cover;object-position:center top}
+  .pick .name{position:absolute;left:0;right:0;bottom:0;padding:4px 8px;font-family:'Orbitron';font-weight:700;font-size:11px;
+    text-shadow:0 0 4px #000;background:linear-gradient(0deg,rgba(0,0,0,.85),transparent)}
+  .pick.blue .name{color:var(--blue)}
+  .pick.red .name{color:var(--red)}
+  .pick.blue.filled{transform:scaleX(-1)}
+  .pick.blue.filled .name,.pick.blue.filled .num{transform:scaleX(-1)}
+
+  /* ============ 中列 英雄选择 ============ */
+  .center{display:flex;flex-direction:column;gap:8px;min-height:0;border:1px solid rgba(0,191,255,.2);background:rgba(13,20,40,.4)}
+  .filter-row{display:flex;gap:8px;padding:8px;flex-shrink:0;align-items:center}
+  .search{flex:1;background:rgba(0,191,255,.05);border:1px solid rgba(0,191,255,.25);padding:8px 12px;color:var(--text);font-family:'Chakra Petch';font-size:13px}
+  .search::placeholder{color:var(--muted)}
+  .search:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 8px rgba(0,255,255,.3)}
+  .role-tabs{display:flex;gap:4px}
+  .role-tab{padding:6px 10px;font-size:11px;font-weight:600;border:1px solid rgba(90,122,158,.3);cursor:pointer;color:var(--muted)}
+  .role-tab.active{background:rgba(0,191,255,.15);border-color:var(--blue);color:var(--blue);box-shadow:0 0 6px rgba(0,191,255,.3)}
+  .hero-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:4px 8px;min-height:0}
+  .hero{position:relative;cursor:pointer;background:transparent;border:1px solid transparent;transition:.2s}
+  .hero:hover{background:rgba(0,191,255,.08);border-color:rgba(0,191,255,.4);box-shadow:0 0 12px rgba(0,191,255,.25)}
+  .hero img{width:100%;aspect-ratio:1;object-fit:cover;background:#000}
+  .hero .hname{display:block;text-align:center;font-size:11px;padding:3px 0;color:var(--muted)}
+  .hero:hover .hname{color:var(--cyan)}
+  .hero.disabled{filter:grayscale(1) brightness(.4);cursor:not-allowed}
+  .hint{flex-shrink:0;text-align:center;padding:6px;font-size:12px;font-weight:600;letter-spacing:1px;
+    background:rgba(0,191,255,.1);border:1px solid rgba(0,191,255,.3);color:var(--blue)}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Header -->
+  <header>
+    <div class="logo">BP SIMULATOR</div>
+    <div class="phase-info">
+      <span class="step">04 / 20</span>
+      <div class="bar"><i></i></div>
+      <span>禁用阶段 · 蓝方</span>
+    </div>
+    <button class="btn cut-sm">撤销</button>
+    <button class="btn cut-sm">重置</button>
+    <button class="btn cut-sm">分析</button>
+  </header>
+
+  <!-- Main -->
+  <main>
+    <!-- 蓝方 -->
+    <div class="panel">
+      <div class="team-bar blue cut-sm"><span class="dot"></span><h2>BLUE TEAM</h2></div>
+      <div class="ban-row r3">
+        <div class="slot ban cut-sm filled"><img src="https://picsum.photos/seed/ban1/80" alt=""></div>
+        <div class="slot ban cut-sm filled"><img src="https://picsum.photos/seed/ban2/80" alt=""></div>
+        <div class="slot ban cut-sm"><span class="num">3</span></div>
+      </div>
+      <div class="pick-col grow">
+        <div class="slot pick blue cut-sm filled"><img src="https://picsum.photos/seed/p1/300/120" alt=""><span class="name">剑魔</span></div>
+        <div class="slot pick blue cut-sm"><span class="num">2</span></div>
+        <div class="slot pick blue cut-sm"><span class="num">3</span></div>
+      </div>
+      <div class="ban-row r2">
+        <div class="slot ban cut-sm"><span class="num">4</span></div>
+        <div class="slot ban cut-sm"><span class="num">5</span></div>
+      </div>
+      <div class="pick-col grow2">
+        <div class="slot pick blue cut-sm"><span class="num">4</span></div>
+        <div class="slot pick blue cut-sm"><span class="num">5</span></div>
+      </div>
+    </div>
+
+    <!-- 中列 英雄选择 -->
+    <div class="center cut">
+      <div class="filter-row">
+        <input class="search cut-sm" placeholder="搜索英雄...">
+        <div class="role-tabs">
+          <span class="role-tab cut-sm active">全部</span>
+          <span class="role-tab cut-sm">坦克</span>
+          <span class="role-tab cut-sm">法师</span>
+          <span class="role-tab cut-sm">刺客</span>
+        </div>
+      </div>
+      <div class="hero-grid" id="grid"></div>
+      <div class="hint cut-sm">禁用英雄 · 蓝方回合</div>
+    </div>
+
+    <!-- 红方 -->
+    <div class="panel">
+      <div class="team-bar red cut-sm"><span class="dot"></span><h2>RED TEAM</h2></div>
+      <div class="ban-row r3">
+        <div class="slot ban cut-sm filled"><img src="https://picsum.photos/seed/rban1/80" alt=""></div>
+        <div class="slot ban cut-sm"><span class="num">2</span></div>
+        <div class="slot ban cut-sm"><span class="num">3</span></div>
+      </div>
+      <div class="pick-col grow">
+        <div class="slot pick red cut-sm"><span class="num">1</span></div>
+        <div class="slot pick red cut-sm"><span class="num">2</span></div>
+        <div class="slot pick red cut-sm"><span class="num">3</span></div>
+      </div>
+      <div class="ban-row r2">
+        <div class="slot ban cut-sm"><span class="num">4</span></div>
+        <div class="slot ban cut-sm"><span class="num">5</span></div>
+      </div>
+      <div class="pick-col grow2">
+        <div class="slot pick red cut-sm"><span class="num">4</span></div>
+        <div class="slot pick red cut-sm"><span class="num">5</span></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  // mock 英雄网格
+  const names=['剑魔','阿狸','阿卡丽','阿克尚','牛头','安蓓萨','阿木木','冰鸟','安妮','厄斐琉斯','艾希','龙王','阿萝拉','阿兹尔','巴德','卑尔维斯','布里茨','火男','布隆','贝蕾亚','女警','卡蜜尔','蛇女','大虫子','库奇','诺手','皎月','德莱文','蒙多','艾克','蜘蛛','寡妇','EZ','稻草人','剑姬','小鱼人','加里奥','船长','盖伦','纳尔'];
+  const grid=document.getElementById('grid');
+  const disabled=new Set([0]); // 第一个禁用
+  names.forEach((n,i)=>{
+    const d=document.createElement('div');
+    d.className='hero cut-sm'+(disabled.has(i)?' disabled':'');
+    d.innerHTML=`<img src="https://picsum.photos/seed/h${i}/80" alt=""><span class="hname">${n}</span>`;
+    grid.appendChild(d);
+  });
+</script>
+</body>
+</html>
