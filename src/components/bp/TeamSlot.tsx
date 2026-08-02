@@ -25,9 +25,9 @@ export interface TeamSlotProps {
 function TeamSlot({ heroId, type, side, index, mirrored = false }: TeamSlotProps) {
   const { getHeroById } = useHeroes()
   const hero = heroId ? getHeroById(heroId) : null
-  // ban 用方形头像,pick 用竖版原画(loading,308×560,适配竖向 pick 槽)
+  // ban 用方形头像,pick 用横版原画(splash,适配横向 banner 形态的 pick 槽)
   const { imageUrl } = useHeroImage(hero?.id)
-  const { splashUrl } = useHeroSplash(hero?.id, 'loading')
+  const { splashUrl } = useHeroSplash(hero?.id, 'splash')
 
   const isBan = type === 'ban'
   const isBlue = side === 'blue'
@@ -92,7 +92,8 @@ function TeamSlot({ heroId, type, side, index, mirrored = false }: TeamSlotProps
           <img
             src={pickImgSrc}
             alt={hero.name}
-            className="relative z-10 h-full w-full object-cover"
+            // splash 横版原画:object-cover + object-top 显示上半部(英雄头部通常在上半)
+            className="relative z-10 h-full w-full object-cover object-top"
             style={{ filter: 'contrast(1.1) saturate(1.2)' }}
           />
         ) : (

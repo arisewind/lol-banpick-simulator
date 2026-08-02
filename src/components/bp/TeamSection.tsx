@@ -51,14 +51,14 @@ function TeamSection({ side, team }: TeamSectionProps) {
         </h2>
       </div>
 
-      {/* ban-row-1:3 个 ban 槽横排(固定高度,对齐 pickban ban-row) */}
-      <div className="grid h-[80px] shrink-0 grid-cols-3 gap-[5px]">
+      {/* ban-row-1:3 个 ban 槽横排(正方形,64px 够清晰,省高度给 pick) */}
+      <div className="grid h-16 shrink-0 grid-cols-3 gap-[5px]">
         {banPhase1.map((heroId, i) => (
           <TeamSlot key={`b1-${i}`} heroId={heroId ?? null} type="ban" side={side} index={i} mirrored={isBlue} />
         ))}
       </div>
 
-      {/* pick ×3:竖向堆叠,每个 flex-1 瓜分剩余高度 */}
+      {/* pick ×3:竖向堆叠,每个 flex-1 瓜分剩余高度(横向 banner 形态,配 splash 横版原画) */}
       <div className="flex min-h-0 flex-1 flex-col gap-[5px]">
         {pickPhase1.map((heroId, i) => (
           <TeamSlot key={`p1-${i}`} heroId={heroId ?? null} type="pick" side={side} index={i} mirrored={isBlue} />
@@ -66,13 +66,13 @@ function TeamSection({ side, team }: TeamSectionProps) {
       </div>
 
       {/* ban-row-2:2 个 ban 槽横排 */}
-      <div className="grid h-[80px] shrink-0 grid-cols-2 gap-[5px]">
+      <div className="grid h-16 shrink-0 grid-cols-2 gap-[5px]">
         {banPhase2.map((heroId, i) => (
           <TeamSlot key={`b2-${i}`} heroId={heroId ?? null} type="ban" side={side} index={3 + i} mirrored={isBlue} />
         ))}
       </div>
 
-      {/* pick ×2:竖向堆叠 */}
+      {/* pick ×2:竖向堆叠(与上方 pick 区等比,保证每个 pick 槽高度接近) */}
       <div className="flex min-h-0 flex-[0.67] flex-col gap-[5px]">
         {pickPhase2.map((heroId, i) => (
           <TeamSlot key={`p2-${i}`} heroId={heroId ?? null} type="pick" side={side} index={3 + i} mirrored={isBlue} />
