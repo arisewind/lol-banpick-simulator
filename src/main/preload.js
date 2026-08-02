@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 英雄数据 API
   fetchHeroes: () => ipcRenderer.invoke('fetch-heroes'),
   getHeroImageUrl: (heroId) => ipcRenderer.invoke('get-hero-image-url', heroId),
+  getHeroSplashUrl: (heroId, type) => ipcRenderer.invoke('get-hero-splash-url', heroId, type),
   getCurrentVersion: () => ipcRenderer.invoke('get-current-version'),
 
   // 文件操作 API（待实现）

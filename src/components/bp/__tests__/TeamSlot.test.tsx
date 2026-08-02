@@ -34,6 +34,15 @@ vi.mock('../../../hooks/useHeroImage', () => ({
   }),
 }))
 
+// mock useHeroSplash：pick 槽用的原画 URL(有 id 返回 loading 原画,无 id 返回空)
+vi.mock('../../../hooks/useHeroSplash', () => ({
+  useHeroSplash: (id?: string) => ({
+    splashUrl: id ? `http://cdn/${id}_loading.jpg` : '',
+    splashError: false,
+    isLoading: false,
+  }),
+}))
+
 describe('TeamSlot - 空槽位', () => {
   it('heroId 为 null 时显示序号（index + 1）', () => {
     render(<TeamSlot heroId={null} type="ban" side="blue" index={2} />)
@@ -76,11 +85,12 @@ describe('TeamSlot - 已填充槽位', () => {
     expect(slot.className).not.toContain('border-lol-blue')
   })
 
-  it('pick 位渲染英雄头像 img', () => {
+  it('pick 位渲染英雄原画 img(优先原画,回退头像)', () => {
     const { container } = render(<TeamSlot heroId="Ahri" type="pick" side="blue" index={0} />)
     const img = container.querySelector('img')
     expect(img).toBeTruthy()
-    expect(img?.getAttribute('src')).toBe('http://cdn/Ahri.png')
+    // pick 槽优先用原画(useHeroSplash),故 src 是 loading 原画 URL
+    expect(img?.getAttribute('src')).toBe('http://cdn/Ahri_loading.jpg')
   })
 
   it('pick 位底部显示英雄名', () => {

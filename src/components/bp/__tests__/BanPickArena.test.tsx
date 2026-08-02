@@ -34,9 +34,19 @@ vi.mock('../../../contexts/BPContext', async (importOriginal) => {
 })
 
 // mock HeroContext：getHeroById 返回英雄名映射
+// 新布局下 BanPickArena 内含 HeroGrid,需补全 useHeroes 的全部字段
 vi.mock('../../../contexts/HeroContext', () => ({
   useHeroes: () => ({
     getHeroById: (id: string | null) => (id ? { id, name: id, title: '', tags: [] } : null),
+    filteredHeroes: [],
+    searchQuery: '',
+    setSearchQuery: () => {},
+    selectedTags: [],
+    setSelectedTags: () => {},
+    availableTags: [],
+    loading: false,
+    error: null,
+    refreshHeroes: () => {},
   }),
 }))
 
@@ -48,16 +58,19 @@ vi.mock('../../../hooks/useHeroImage', () => ({
   }),
 }))
 
-describe('BanPickArena - 集成渲染（拆分后组合验证）', () => {
-  it('渲染顶部阶段指示器（红方 pick 阶段）', () => {
-    render(<BanPickArena />)
-    expect(screen.getAllByText('bp.redTeam').length).toBeGreaterThan(0)
-    expect(screen.getByText('bp.pickHero')).toBeTruthy()
-  })
+// mock useHeroSplash(pick 槽原画)
+vi.mock('../../../hooks/useHeroSplash', () => ({
+  useHeroSplash: (id?: string) => ({
+    splashUrl: id ? `http://cdn/${id}_loading.jpg` : '',
+    splashError: false,
+    isLoading: false,
+  }),
+}))
 
-  it('渲染蓝队和红队标题', () => {
+describe('BanPickArena - 集成渲染（三列横向布局）', () => {
+  it('渲染蓝队和红队面板标题', () => {
     render(<BanPickArena />)
-    // bp.blueTeam / bp.redTeam 在阶段指示器和队名区都出现，用 getAllByText
+    // 队名标签在 TeamSection 顶部(bp.blueTeam / bp.redTeam)
     expect(screen.getAllByText('bp.blueTeam').length).toBeGreaterThan(0)
     expect(screen.getAllByText('bp.redTeam').length).toBeGreaterThan(0)
   })
@@ -74,9 +87,16 @@ describe('BanPickArena - 集成渲染（拆分后组合验证）', () => {
     expect(screen.getAllByText('Ahri').length).toBeGreaterThan(0)
   })
 
-  it('渲染中央紫色分隔区', () => {
+  it('渲染中央紫色分隔元素', () => {
     const { container } = render(<BanPickArena />)
-    const divider = container.querySelector('.bg-lol-purple')
-    expect(divider).toBeTruthy()
+    // 中列顶部紫色装饰条 + 左右边框(均为 .bg-lol-purple / border-lol-purple)
+    const purple = container.querySelector('.bg-lol-purple')
+    expect(purple).toBeTruthy()
+  })
+
+  it('中列渲染英雄选择区', () => {
+    render(<BanPickArena />)
+    // HeroGrid 的搜索框 placeholder 存在,证明中列英雄选择区已渲染
+    expect(screen.getByPlaceholderText('hero.searchPlaceholder')).toBeTruthy()
   })
 })

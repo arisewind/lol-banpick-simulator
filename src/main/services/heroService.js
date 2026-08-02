@@ -2,8 +2,10 @@
 
 const DATA_DRAGON_BASE_URL = 'https://ddragon.leagueoflegends.com'
 const DATA_DRAGON_CDN = 'https://ddragon.leagueoflegends.com/cdn'
-// 离线兜底版本（getCurrentVersion 网络失败时使用）。非"当前版本"——Data Dragon 仍服务旧版本，故离线可用。
-const BUILTIN_FALLBACK_VERSION = '14.10.5'
+// 离线兜底版本(getCurrentVersion 网络失败时使用)。紧跟 Data Dragon 最新发布版本,
+// 定期同步;断网时 Data Dragon 仍服务该版本,故可作离线兜底。
+// 最近一次同步:2026-08(对应 Data Dragon 最新版本)
+const BUILTIN_FALLBACK_VERSION = '16.15.1'
 
 /**
  * HeroService 类
@@ -83,13 +85,27 @@ class HeroService {
   }
 
   /**
-   * 获取英雄头像 URL
+   * 获取英雄头像 URL(方形小头像,网格/列表用)
    */
   getHeroImageUrl(heroId, version) {
     const hero = this.heroesCache.get(heroId)
     if (!hero) return ''
     const v = version || hero.version
     return `${DATA_DRAGON_CDN}/${v}/img/champion/${hero.image.full}`
+  }
+
+  /**
+   * 获取英雄原画 URL(大图,pick 槽展示用)
+   * Data Dragon 提供三种原画格式,均无需 version 路径段:
+   *   - 'loading':竖版加载原画(308×560),适合竖向 pick 槽(本项目默认)
+   *   - 'splash':横版全屏原画,适合宽幅展示
+   *   - 'centered':居中裁切竖版,适合背景
+   * 文件名约定:{heroId}_0.jpg(默认皮肤)
+   */
+  getHeroSplashUrl(heroId, type = 'loading') {
+    if (!heroId) return ''
+    const folder = type === 'splash' ? 'splash' : type === 'centered' ? 'centered' : 'loading'
+    return `${DATA_DRAGON_CDN}/img/champion/${folder}/${heroId}_0.jpg`
   }
 
   /**
@@ -137,4 +153,4 @@ class HeroService {
 
 // 导出单例实例
 const heroServiceInstance = new HeroService()
-module.exports = { heroService: heroServiceInstance, HeroService }
+module.exports = { heroService: heroServiceInstance, HeroService, BUILTIN_FALLBACK_VERSION }

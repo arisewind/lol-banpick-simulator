@@ -27,10 +27,10 @@ function PhaseIndicator({ phase }: PhaseIndicatorProps) {
     <div className="flex items-center justify-center gap-6">
       <div
         className={cn(
-          'rounded px-6 py-2 text-base font-bold',
-          'shadow-lg',
+          'rounded px-6 py-2 text-base font-bold uppercase tracking-wider',
+          'shadow-hard',
           phase.side === 'blue'
-            ? 'bg-lol-blue text-white'
+            ? 'bg-lol-blue text-black'
             : 'bg-lol-red text-white',
         )}
       >

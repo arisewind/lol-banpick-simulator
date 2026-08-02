@@ -1,42 +1,44 @@
-/* LoL Ban/Pick Simulator 设计系统 */
+/* LoL Ban/Pick Simulator 设计系统 —— pickban.pro 风格 */
 
 @layer base {
   :root {
-    /* === LoL 电竞风格配色 === */
-    /* 蓝方配色 - 参考设计标准 */
-    --lol-blue-primary: #0066CC;
-    --lol-blue-dark: #1E3A8A;
-    --lol-blue-light: #3B82F6;
+    /* === 双方对抗色(pickban.pro:金 / 品红)=== */
+    /* 蓝方配色 = 金 */
+    --lol-blue-primary: #FFD700;
+    --lol-blue-dark: #B8860B;
+    --lol-blue-light: #FFED4E;
 
-    /* 红方配色 - 参考设计标准 */
-    --lol-red-primary: #CC0000;
-    --lol-red-dark: #991B1B;
-    --lol-red-light: #EF4444;
+    /* 红方配色 = 品红 */
+    --lol-red-primary: #ff00ff;
+    --lol-red-dark: #a300a3;
+    --lol-red-light: #ff4dff;
 
-    /* 分隔色 */
-    --lol-purple: #6A0DAD;
-
-    /* 金色装饰 */
+    /* 第三强调色(深紫)/ 金色装饰 */
+    --lol-purple: #5600b3;
     --lol-gold: #FFD700;
     --lol-gold-light: #FFED4E;
 
-    /* 背景色系 */
-    --bg-primary: #1A1A1A;
-    --bg-secondary: #1E1E1E;
-    --bg-card: rgba(26, 26, 26, 0.8);
-    --bg-glass: rgba(26, 26, 26, 0.85);
+    /* 背景色系 —— 纯黑深色主题(pickban.pro bg 层级) */
+    --bg-primary: #101010;            /* 主背景 */
+    --bg-secondary: #1a1a1a;          /* 次背景 / 按钮 hover */
+    --bg-card: #202020;               /* 卡片 / 输入框背景 */
+    --bg-card-default: #1a1a1a;       /* 按钮默认背景 */
+    --bg-glass: rgba(16, 16, 16, 0.87); /* 半透明导航/页脚(无毛玻璃) */
 
     /* 边框色系 */
     --border-subtle: #222222;
-    --border-default: #333333;
+    --border-default: #303030;
     --border-accent: #444444;
 
     /* 文本色系 */
     --text-primary: #FFFFFF;
     --text-secondary: #CCCCCC;
-    --text-muted: #6B7280;
+    --text-muted: #888888;
 
-    /* === 间距系统（8px 基准） === */
+    /* LOL 客户端原生深蓝黑(ban 空槽底色) */
+    --lol-black: #010a13;
+
+    /* === 间距系统(8px 基准) === */
     --space-1: 4px;
     --space-2: 8px;
     --space-3: 12px;
@@ -44,10 +46,15 @@
     --space-6: 24px;
     --space-8: 32px;
 
-    /* === 阴影系统 === */
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
-    --shadow-base: 0 4px 6px rgba(0, 0, 0, 0.6);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.7);
+    /* === 阴影系统 —— 偏移硬阴影(pickban.pro 规范)=== */
+    --shadow-hard: 2px 2px 5px 0 #000;
+    --shadow-hard-hover: 1px 1px 5px 1px #000;
+    --shadow-hard-active: 1px 1px 0 0 #000;
+    --shadow-inset: inset 1px 1px 5px 1px #000;
+    /* 旧 key 保留兼容(指向硬阴影,无发光) */
+    --shadow-sm: 1px 1px 3px 0 #000;
+    --shadow-base: 2px 2px 5px 0 #000;
+    --shadow-lg: 3px 3px 7px 1px #000;
 
     /* === 动画参数 === */
     --transition-fast: 150ms;
@@ -60,20 +67,22 @@
 
 /* === 游戏化组件类 === */
 @layer components {
-  /* 输入框游戏化样式 */
+  /* 输入框:深底 + 凹陷硬阴影;聚焦金色细边,无发光
+     (修复历史 bug:原聚焦发光为青色 rgba(10,200,185),与金/品红主题不一致) */
   .input-game {
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid var(--border-default);
-    transition: all var(--transition-base) var(--ease-out);
+    background: var(--bg-card);
+    border: none;
+    box-shadow: var(--shadow-inset);
+    transition: box-shadow var(--transition-base) var(--ease-out),
+                background-color var(--transition-base) var(--ease-out);
   }
 
   .input-game:focus {
-    border-color: var(--lol-blue-primary);
-    box-shadow: 0 0 15px rgba(10, 200, 185, 0.3);
+    box-shadow: var(--shadow-inset), 0 0 0 1px var(--lol-blue-primary);
     outline: none;
   }
 
-  /* 按钮游戏化样式 */
+  /* 按钮:顶部高光 hover 显现(通用增强,中性,不绑定队伍色) */
   .btn-game {
     position: relative;
     overflow: hidden;

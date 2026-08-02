@@ -6,22 +6,22 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 自定义滚动条 */
+/* 自定义滚动条 - pickban.pro 风格(8px、#303030 thumb、4px 圆角) */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-slate-900;
+  @apply bg-lol-bg-black;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-700 rounded;
+  @apply bg-lol-border rounded;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-slate-600;
+  @apply bg-lol-text-muted;
 }
 
 /* 全局样式 */

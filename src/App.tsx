@@ -4,7 +4,6 @@ import { BPProvider as BPContext } from './contexts/BPContext'
 import { HeroProvider as HeroContext } from './contexts/HeroContext'
 import { DataProvider as DataContext } from './contexts/DataContext'
 import BanPickArena from './components/bp/BanPickArena'
-import HeroGrid from './components/bp/HeroGrid'
 import AnalysisDrawer from './components/analysis/AnalysisDrawer'
 import { useBP } from './contexts/BPContext'
 import { isValidBPSnapshotRenderer } from './utils/typeGuards'
@@ -12,34 +11,55 @@ import { isValidBPSnapshotRenderer } from './utils/typeGuards'
 // 环境检测组件
 function EnvironmentGuard({ children }: { children: React.ReactNode }) {
   const [isElectron, setIsElectron] = useState(false)
+  const [isBrowserDev, setIsBrowserDev] = useState(false)
   const [checked, setChecked] = useState(false)
 
   useEffect(() => {
-    // 检测是否在 Electron 环境中
+    // 检测是否在 Electron 环境中(已由 preload 注入 electronAPI)
     const hasElectronAPI = typeof window !== 'undefined' && window.electronAPI
-    setIsElectron(!!hasElectronAPI)
-    setChecked(true)
+    if (hasElectronAPI) {
+      setIsElectron(true)
+      setChecked(true)
+      return
+    }
+
+    // 非 Electron:DEV 模式下注入浏览器 mock,放行预览;生产模式拦住
+    if (import.meta.env.DEV) {
+      // 动态导入,生产构建被 tree-shake 掉,不含 mock 代码
+      import('./dev/devMock')
+        .then(({ setupDevMock }) => setupDevMock())
+        .then(() => {
+          setIsBrowserDev(true)
+          setChecked(true)
+        })
+        .catch(() => {
+          setChecked(true)
+        })
+    } else {
+      setChecked(true)
+    }
   }, [])
 
   if (!checked) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-lol-bg-black">
+      <div className="flex h-screen w-screen items-center justify-center bg-lol-bg-dark">
         <div className="text-lol-text-secondary">检测运行环境...</div>
       </div>
     )
   }
 
-  if (!isElectron) {
+  // 生产模式且非 Electron:拦截,提示正确启动方式
+  if (!isElectron && !isBrowserDev) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-lol-bg-black">
-        <div className="max-w-md rounded-lg border-2 border-lol-red bg-lol-bg-dark p-8 shadow-xl shadow-red-lg">
+      <div className="flex h-screen w-screen items-center justify-center bg-lol-bg-dark">
+        <div className="max-w-md rounded border-2 border-lol-red bg-lol-bg-secondary p-8 shadow-hard">
           <h1 className="mb-4 text-2xl font-bold text-lol-red">⚠️ 运行环境错误</h1>
           <p className="mb-4 text-lol-text-secondary">
             此应用必须在 Electron 环境中运行，不能直接在浏览器中打开。
           </p>
-          <div className="rounded-lg bg-lol-bg-black p-4">
+          <div className="rounded bg-lol-bg-black p-4">
             <p className="mb-2 text-sm font-bold text-lol-text-primary">正确的启动方式：</p>
-            <code className="block rounded bg-lol-bg-dark p-2 text-sm text-lol-gold">
+            <code className="block rounded bg-lol-bg-secondary p-2 text-sm text-lol-gold">
               pnpm electron:dev
             </code>
             <p className="mt-3 text-xs text-lol-text-muted">
@@ -51,7 +71,17 @@ function EnvironmentGuard({ children }: { children: React.ReactNode }) {
     )
   }
 
-  return <>{children}</>
+  // DEV 浏览器预览模式:放行,但顶部显示提示条(导出/导入等文件操作不可用)
+  return (
+    <>
+      {isBrowserDev && (
+        <div className="fixed left-1/2 top-2 z-[60] -translate-x-1/2 rounded border border-lol-gold/40 bg-lol-bg-secondary/95 px-3 py-1 text-xs text-lol-gold shadow-hard">
+          浏览器预览模式(DEV mock) · 导出/导入不可用 · 完整功能请用 pnpm electron:dev
+        </div>
+      )}
+      {children}
+    </>
+  )
 }
 
 function AppContent() {
@@ -105,27 +135,48 @@ function AppContent() {
   const progressPct = (Math.min(currentPhase + 1, totalPhases) / totalPhases) * 100
 
   return (
-    <div className="h-screen w-screen bg-lol-bg-dark text-lol-text-primary">
+    <div className="flex h-screen w-screen flex-col overflow-hidden bg-lol-bg-dark text-lol-text-primary">
       {notice && (
-        <div className={`fixed left-1/2 top-20 z-50 -translate-x-1/2 rounded-lg px-4 py-2 text-sm text-white shadow-lg ${
-          notice.type === 'success' ? 'bg-green-600' : 'bg-lol-red'
+        <div className={`fixed left-1/2 top-20 z-50 -translate-x-1/2 rounded px-4 py-2 text-sm text-white shadow-hard ${
+          notice.type === 'success' ? 'bg-lol-blue text-black' : 'bg-lol-red'
         }`}>
           {notice.text}
         </div>
       )}
 
-      {/* Header - 电竞风格 */}
-      <header className="flex h-16 items-center justify-between border-b border-lol-border glass-esports px-6">
-        <h1 className="text-xl font-bold text-lol-text-primary">{t('app.title')}</h1>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1">
+      {/* Header - pickban.pro 风格:多列 grid,集中所有功能按钮,底部进度线 */}
+      <header className="relative flex h-16 shrink-0 items-center gap-4 border-b border-lol-border bg-lol-bg-dark px-4">
+        {/* 左:标题 */}
+        <h1 className="shrink-0 text-xl font-bold uppercase tracking-wider text-lol-text-primary">
+          {t('app.title')}
+        </h1>
+
+        {/* 中:当前阶段信息 + 进度计数 + 诊断版本标记 */}
+        <div className="flex min-w-0 flex-1 items-center justify-center gap-3">
+          {/* 诊断标记:确认是否跑新代码。看到 [v3] 说明新代码已生效,否则需重启 Electron */}
+          <span className="rounded bg-lol-gold/20 px-1.5 py-0.5 font-mono text-[10px] font-bold text-lol-gold">[v3]</span>
+          <span className="font-mono text-xs text-lol-text-secondary">
+            {Math.min(currentPhase + 1, totalPhases)}/{totalPhases}
+          </span>
+          <div className="h-1.5 w-40 overflow-hidden rounded-full bg-lol-bg-secondary">
+            <div
+              className="h-full rounded-full bg-lol-blue transition-all duration-300"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+        </div>
+
+        {/* 右:功能按钮组(原 Header + Footer 所有按钮集中于此) */}
+        <div className="flex shrink-0 items-center gap-1.5">
+          {/* 语言切换 */}
+          <div className="flex items-center gap-0.5">
             {(['zh-CN', 'zh-TW', 'en'] as const).map(lng => (
               <button
                 key={lng}
                 onClick={() => i18n.changeLanguage(lng)}
-                className={`rounded px-2 py-1 text-xs font-medium ${
+                className={`rounded px-2 py-1 text-xs font-medium transition-colors ${
                   i18n.language === lng
-                    ? 'bg-lol-blue text-white'
+                    ? 'bg-lol-blue text-black'
                     : 'text-lol-text-muted hover:text-lol-text-secondary'
                 }`}
               >
@@ -133,71 +184,56 @@ function AppContent() {
               </button>
             ))}
           </div>
-          <button
-            onClick={() => setAnalysisOpen(true)}
-            className="btn-game rounded bg-lol-blue/20 px-3 py-1.5 text-xs font-medium text-lol-blue transition-colors hover:bg-lol-blue/30"
-          >
-            {t('analysis.open')}
-          </button>
-          <span className="text-sm text-lol-text-secondary">{t('app.status')}</span>
-        </div>
-      </header>
-
-      {/* Main: 上下分区（顶部英雄池 / 中部 ban+pick 竞技场） */}
-      <main className="flex h-[calc(100vh-8rem)] flex-col">
-        <section className="h-[32vh] overflow-hidden border-b border-lol-border bg-lol-bg-dark/60 px-6 py-3">
-          <HeroGrid />
-        </section>
-        <section className="flex-1 overflow-hidden px-6 py-4">
-          <BanPickArena />
-        </section>
-      </main>
-
-      {/* Footer - 电竞风格 */}
-      <footer className="flex h-16 items-center justify-between border-t border-lol-border glass-esports px-6">
-        <div className="flex gap-2">
+          <div className="mx-1 h-5 w-px bg-lol-border" />
           <button
             onClick={undo}
             disabled={currentPhase === 0}
-            className="rounded-lg bg-lol-bg-dark px-4 py-2 text-sm hover:bg-lol-border disabled:cursor-not-allowed disabled:opacity-50"
+            className="btn-game rounded bg-lol-bg-secondary px-3 py-1.5 text-xs text-white shadow-hard uppercase tracking-wide hover:bg-lol-bg-card hover:shadow-hard-hover disabled:cursor-not-allowed disabled:bg-black disabled:text-lol-bg-secondary disabled:shadow-none"
           >
             {t('common.undo')}
           </button>
           <button
             onClick={reset}
-            className="rounded-lg bg-lol-bg-dark px-4 py-2 text-sm hover:bg-lol-border"
+            className="btn-game rounded bg-lol-bg-secondary px-3 py-1.5 text-xs text-white shadow-hard uppercase tracking-wide hover:bg-lol-bg-card hover:shadow-hard-hover"
           >
             {t('common.reset')}
           </button>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="h-2 w-40 overflow-hidden rounded-full bg-lol-bg-black">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-lol-blue to-lol-blue-light shadow-blue-sm transition-all duration-300"
-              style={{ width: `${progressPct}%` }}
-            />
-          </div>
-          <span className="font-mono text-xs text-lol-text-secondary">
-            {Math.min(currentPhase + 1, totalPhases)}/{totalPhases}
-          </span>
-        </div>
-        <div className="flex gap-2">
+          <div className="mx-1 h-5 w-px bg-lol-border" />
+          <button
+            onClick={() => setAnalysisOpen(true)}
+            className="btn-game rounded bg-lol-blue/20 px-3 py-1.5 text-xs font-medium text-lol-blue uppercase tracking-wide transition-colors hover:bg-lol-blue/30"
+          >
+            {t('analysis.open')}
+          </button>
           <button
             onClick={handleExport}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm hover:bg-blue-700"
+            className="btn-game rounded bg-lol-bg-secondary px-3 py-1.5 text-xs text-white shadow-hard uppercase tracking-wide hover:bg-lol-bg-card hover:shadow-hard-hover"
           >
             {t('common.export')}
           </button>
           <button
             onClick={handleImport}
-            className="rounded-lg bg-green-600 px-4 py-2 text-sm hover:bg-green-700"
+            className="btn-game rounded bg-lol-bg-secondary px-3 py-1.5 text-xs text-white shadow-hard uppercase tracking-wide hover:bg-lol-bg-card hover:shadow-hard-hover"
           >
             {t('common.import')}
           </button>
         </div>
-      </footer>
 
-      {/* 分析抽屉（默认收起） */}
+        {/* 底部进度线(对齐 pickban navbar 底部 2px 线) */}
+        <div className="absolute inset-x-0 bottom-0 h-0.5 bg-lol-bg-secondary">
+          <div
+            className="h-full bg-lol-blue transition-all duration-300"
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
+      </header>
+
+      {/* Main:三列横向铺满(蓝|英雄选择|红),整页固定一屏,仅英雄网格内部滚动 */}
+      <main className="flex-1 overflow-hidden">
+        <BanPickArena />
+      </main>
+
+      {/* 分析抽屉(默认收起,独立浮层不影响主布局) */}
       <AnalysisDrawer open={analysisOpen} onClose={() => setAnalysisOpen(false)} />
     </div>
   )

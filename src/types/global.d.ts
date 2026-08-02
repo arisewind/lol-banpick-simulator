@@ -28,6 +28,7 @@ export interface ElectronAPI {
   // 英雄数据 API
   fetchHeroes: () => Promise<ElectronResponse<Hero[]>>
   getHeroImageUrl: (heroId: string) => Promise<ElectronResponse<string>>
+  getHeroSplashUrl: (heroId: string, type?: 'loading' | 'splash' | 'centered') => Promise<ElectronResponse<string>>
   getCurrentVersion: () => Promise<ElectronResponse<string>>
 
   // 文件操作 API

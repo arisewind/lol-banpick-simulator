@@ -20,10 +20,23 @@ function registerHeroHandlers() {
     }
   })
 
-  // 获取英雄图片 URL
+  // 获取英雄图片 URL(方形头像)
   ipcMain.handle('get-hero-image-url', async (event, heroId) => {
     try {
       const url = heroService.getHeroImageUrl(heroId)
+      return { success: true, data: url }
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      }
+    }
+  })
+
+  // 获取英雄原画 URL(loading/splash/centered,pick 槽展示用)
+  ipcMain.handle('get-hero-splash-url', async (event, heroId, type) => {
+    try {
+      const url = heroService.getHeroSplashUrl(heroId, type)
       return { success: true, data: url }
     } catch (error) {
       return {

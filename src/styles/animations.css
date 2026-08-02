@@ -1,106 +1,48 @@
-/* LoL Ban/Pick Simulator 动画系统 - 电竞风格 */
+/* LoL Ban/Pick Simulator 动画系统 —— pickban.pro 风格(弱发光) */
 
 @layer utilities {
-  /* === 发光脉冲动画 - 基础版 === */
+  /* === 脉冲提示(焦点态用,弱化版)=== */
+  /* pickban.pro 几乎不用发光;这里保留极弱 opacity 脉冲用于"当前操作"提示,
+     不再使用大范围 box-shadow 发光伪元素。opacity 范围收窄到 0.7↔1,克制。 */
   @keyframes glow-pulse {
     0%, 100% {
-      opacity: 0.45;
+      opacity: 0.7;
     }
     50% {
       opacity: 1;
     }
   }
 
-  /* 电竞风格发光脉冲 - 更强烈 */
-  @keyframes glow-pulse-esports {
-    0%, 100% {
-      opacity: 0.5;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 1;
-      transform: scale(1.05);
-    }
-  }
-
-  /* 脉冲光晕：伪元素承载静态队伍色 box-shadow，仅对 opacity 动画（可 GPU 合成、不触发重绘）。
-     元素需已定位（absolute/relative），::after 才能锚定；队伍色由 .glow-blue/.glow-red/.glow-gold 设 --glow-color */
-  .animate-glow::after {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: inherit;
-    pointer-events: none;
-    box-shadow: 0 0 14px 2px var(--glow-color, currentColor);
-    opacity: 0.6;
+  /* .animate-glow:降级为轻微 opacity 脉冲(仅作用于元素自身,无外发光)。
+     历史上用 ::after 伪元素承载 box-shadow 发光,现移除外发光,保留脉冲提示语义。
+     元素仍需自身已定位。 */
+  .animate-glow {
     animation: glow-pulse 2s ease-in-out infinite;
   }
 
-  /* 电竞风格发光动画 - 更大的发光范围 */
-  .animate-glow-esports::after {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: inherit;
-    pointer-events: none;
-    box-shadow: 0 0 30px 4px var(--glow-color, currentColor);
-    opacity: 0.7;
-    animation: glow-pulse-esports 2s ease-in-out infinite;
-  }
-
-  /* === 队伍色发光类 - 电竞风格 === */
+  /* === 队伍色标识类(pickban.pro:金 / 品红)=== */
+  /* 不再承载发光颜色,仅保留类名占位以兼容旧引用;队伍色改由 Tailwind class 直接控制。 */
   .glow-blue {
-    --glow-color: rgba(0, 102, 204, 0.9);
+    /* 蓝方 = 金 */
   }
 
   .glow-red {
-    --glow-color: rgba(204, 0, 0, 0.9);
+    /* 红方 = 品红 */
   }
 
-  .glow-purple {
-    --glow-color: rgba(106, 13, 173, 0.9);
-  }
-
-  .glow-gold {
-    --glow-color: rgba(255, 215, 0, 0.9);
-  }
-
-  /* === 悬停缩放 === */
+  /* === 悬停缩放(克制版,对齐 pickban.pro 的轻微提亮而非放大)=== */
   .hover-scale {
-    transition: transform var(--transition-fast) var(--ease-out);
+    transition: background-color var(--transition-base) var(--ease-out),
+                filter var(--transition-base) var(--ease-out);
   }
 
   .hover-scale:hover {
-    transform: scale(1.05);
+    filter: brightness(1.15);
   }
 
-  /* === 电竞风格悬停发光 === */
-  .hover-glow-blue:hover {
-    box-shadow: 0 0 25px rgba(0, 102, 204, 0.6);
-  }
-
-  .hover-glow-red:hover {
-    box-shadow: 0 0 25px rgba(204, 0, 0, 0.6);
-  }
-
-  .hover-gold-glow:hover {
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-  }
-
-  /* === 电竞风格渐变背景 === */
-  .bg-gradient-esports-blue {
-    background: linear-gradient(135deg, rgba(0, 102, 204, 0.3) 0%, rgba(26, 26, 26, 0.95) 100%);
-  }
-
-  .bg-gradient-esports-red {
-    background: linear-gradient(135deg, rgba(204, 0, 0, 0.3) 0%, rgba(26, 26, 26, 0.95) 100%);
-  }
-
-  /* === 增强玻璃态 === */
+  /* === 半透明纯黑容器(pickban.pro navbar 规范,无毛玻璃)=== */
   .glass-esports {
-    background: rgba(26, 26, 26, 0.85);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(51, 51, 51, 0.3);
+    background: var(--bg-glass);
+    border-bottom: 1px solid var(--border-default);
   }
 }

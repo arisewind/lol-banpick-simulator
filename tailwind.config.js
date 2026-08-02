@@ -7,47 +7,61 @@ export default {
   theme: {
     extend: {
       colors: {
-        // LoL 电竞风格配色 - 参考设计标准
-        'lol-blue': '#0066CC',        // 蓝队主色
-        'lol-blue-dark': '#1E3A8A',   // 蓝队深色
-        'lol-blue-light': '#3B82F6',  // 蓝队高亮
-        'lol-red': '#CC0000',         // 红队主色
-        'lol-red-dark': '#991B1B',    // 红队深色
-        'lol-red-light': '#EF4444',   // 红队高亮
-        'lol-purple': '#6A0DAD',      // 中央分隔色
-        'lol-gold': '#FFD700',        // 金色强调
+        // pickban.pro 风格配色 —— 金/品红双色对抗
+        // 语义名保留(蓝方/红方),只换色值;组件层 class 字面量无需改动
+        'lol-blue': '#FFD700',        // 蓝方主色 = 金(pickban.pro accent-primary)
+        'lol-blue-dark': '#B8860B',   // 金色加深
+        'lol-blue-light': '#FFED4E',  // 金色高亮
+        'lol-red': '#ff00ff',         // 红方主色 = 品红(pickban.pro accent-secondary #f0f)
+        'lol-red-dark': '#a300a3',    // 品红加深
+        'lol-red-light': '#ff4dff',   // 品红高亮
+        'lol-purple': '#5600b3',      // 第三强调色(pickban.pro accent-tertiary,深紫)
+        'lol-gold': '#FFD700',        // 金色强调(与蓝方色重合,语义不同)
         'lol-gold-light': '#FFED4E',  // 金色高亮
-        // 背景色
-        'lol-bg-dark': '#1A1A1A',    // 深灰背景
-        'lol-bg-black': '#1E1E1E',   // 更深背景
+        // 背景色系 —— 纯黑深色主题(pickban.pro bg 层级)
+        'lol-bg-dark': '#101010',     // 主背景(pickban.pro --bg-primary)
+        'lol-bg-secondary': '#1a1a1a',// 按钮/卡片默认背景(pickban.pro --bg-primary-light-2)
+        'lol-bg-card': '#202020',     // hover 卡片/输入框背景(pickban.pro --bg-primary-light-3)
+        'lol-bg-black': '#050505',    // 更深背景(pickban.pro --bg-primary-dark-1)
+        'lol-black': '#010a13',       // LOL 客户端原生深蓝黑(ban 空槽底色)
         // 文字色
         'lol-text-primary': '#FFFFFF',
         'lol-text-secondary': '#CCCCCC',
-        'lol-text-muted': '#6B7280',
-        // 分割线
-        'lol-border': '#333333',
+        'lol-text-muted': '#888888',  // 对齐 pickban.pro --text-faint
+        // 分割线 / 边框
+        'lol-border': '#303030',      // 对齐 pickban.pro --bg-primary-light
       },
       boxShadow: {
-        // 注意：自定义 boxShadow 不支持 Tailwind 的透明度修饰符
-        // （shadow-blue/40 会被误解析为阴影颜色染色），故为每档单独定义 key
-        // 电竞风格 - 参考设计配色
-        'blue-sm': '0 0 15px rgba(0, 102, 204, 0.3)',
-        'blue': '0 0 25px rgba(0, 102, 204, 0.5)',
-        'blue-lg': '0 0 40px rgba(0, 102, 204, 0.7)',
-        'blue-xl': '0 0 60px rgba(0, 102, 204, 0.9)',
-        'blue-2xl': '0 0 80px rgba(0, 102, 204, 1)',
-        'red-sm': '0 0 15px rgba(204, 0, 0, 0.3)',
-        'red': '0 0 25px rgba(204, 0, 0, 0.5)',
-        'red-lg': '0 0 40px rgba(204, 0, 0, 0.7)',
-        'red-xl': '0 0 60px rgba(204, 0, 0, 0.9)',
-        'red-2xl': '0 0 80px rgba(204, 0, 0, 1)',
-        'purple': '0 0 30px rgba(106, 13, 173, 0.6)',
-        'purple-lg': '0 0 50px rgba(106, 13, 173, 0.8)',
-        'purple-xl': '0 0 70px rgba(106, 13, 173, 1)',
-        'gold-sm': '0 0 15px rgba(255, 215, 0, 0.3)',
-        'gold': '0 0 20px rgba(255, 215, 0, 0.5)',
-        'gold-lg': '0 0 35px rgba(255, 215, 0, 0.7)',
-        'gold-xl': '0 0 50px rgba(255, 215, 0, 0.9)',
+        // 注意:自定义 boxShadow 不支持 Tailwind 的透明度修饰符
+        // (shadow-blue/40 会被误解析为阴影颜色染色),故为每档单独定义 key。
+        //
+        // pickban.pro 风格:偏移硬阴影(offset hard shadow),非柔光发光。
+        // 原有 key 名保留(组件层 class 无需改),值统一改为纯黑偏移阴影。
+        // 强度递增体现在偏移量与模糊半径,而非彩色发光。
+        'blue-sm': '1px 1px 3px 0 #000',
+        'blue': '2px 2px 5px 0 #000',
+        'blue-lg': '3px 3px 7px 1px #000',
+        'blue-xl': '4px 4px 10px 2px #000',
+        'blue-2xl': '5px 5px 14px 3px #000',
+        'red-sm': '1px 1px 3px 0 #000',
+        'red': '2px 2px 5px 0 #000',
+        'red-lg': '3px 3px 7px 1px #000',
+        'red-xl': '4px 4px 10px 2px #000',
+        'red-2xl': '5px 5px 14px 3px #000',
+        'purple': '2px 2px 5px 0 #000',
+        'purple-lg': '3px 3px 7px 1px #000',
+        'purple-xl': '4px 4px 10px 2px #000',
+        'gold-sm': '1px 1px 3px 0 #000',
+        'gold': '2px 2px 5px 0 #000',
+        'gold-lg': '3px 3px 7px 1px #000',
+        'gold-xl': '4px 4px 10px 2px #000',
+        // 通用硬偏移阴影(pickban.pro 按钮规范)
+        'hard': '2px 2px 5px 0 #000',     // 按钮默认
+        'hard-hover': '1px 1px 5px 1px #000', // hover:偏移变小=抬起
+        'hard-active': '1px 1px 0 0 #000',    // active:几乎无偏移=按下
+        'hard-sm': '1px 1px 3px #000',
+        // 内嵌阴影(输入框凹陷感、active tab)
+        'inset-hard': 'inset 1px 1px 5px 1px #000',
       },
       animation: {
         'fade-in': 'fade-in 0.3s ease-out',

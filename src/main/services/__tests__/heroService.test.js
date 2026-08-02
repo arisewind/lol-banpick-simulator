@@ -1,10 +1,11 @@
 // 后端（Electron 主进程）逻辑测试
 // heroService.js 用 CommonJS（module.exports），通过 vite 的 CJS 互操作导入
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { HeroService } from '../heroService.js'
+import { HeroService, BUILTIN_FALLBACK_VERSION } from '../heroService.js'
 
 const CDN = 'https://ddragon.leagueoflegends.com/cdn'
-const BUILTIN_VERSION = '14.10.5'
+// 直接引用源码常量,避免测试与源码脱钩(源码改版本时测试自动跟随)
+const BUILTIN_VERSION = BUILTIN_FALLBACK_VERSION
 
 describe('HeroService - getHeroImageUrl', () => {
   let svc
@@ -22,6 +23,28 @@ describe('HeroService - getHeroImageUrl', () => {
   it('显式传入版本时使用该版本', () => {
     svc.heroesCache.set('Ahri', { id: 'Ahri', version: BUILTIN_VERSION, image: { full: 'Ahri.png' } })
     expect(svc.getHeroImageUrl('Ahri', '15.1.1')).toBe(`${CDN}/15.1.1/img/champion/Ahri.png`)
+  })
+})
+
+describe('HeroService - getHeroSplashUrl', () => {
+  let svc
+  beforeEach(() => { svc = new HeroService() })
+
+  it('默认返回 loading 竖版原画 URL', () => {
+    expect(svc.getHeroSplashUrl('Ahri')).toBe(`${CDN}/img/champion/loading/Ahri_0.jpg`)
+  })
+
+  it('type="splash" 返回横版原画 URL', () => {
+    expect(svc.getHeroSplashUrl('Ahri', 'splash')).toBe(`${CDN}/img/champion/splash/Ahri_0.jpg`)
+  })
+
+  it('type="centered" 返回居中原画 URL', () => {
+    expect(svc.getHeroSplashUrl('Ahri', 'centered')).toBe(`${CDN}/img/champion/centered/Ahri_0.jpg`)
+  })
+
+  it('空 heroId 返回空字符串', () => {
+    expect(svc.getHeroSplashUrl('')).toBe('')
+    expect(svc.getHeroSplashUrl(null)).toBe('')
   })
 })
 

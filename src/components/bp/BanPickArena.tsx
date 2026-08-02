@@ -1,40 +1,32 @@
 import { useBP } from '../../contexts/BPContext'
-import PhaseIndicator from './PhaseIndicator'
 import TeamSection from './TeamSection'
+import HeroGrid from './HeroGrid'
 
 /**
- * BP 主竞技场
- * 组合 PhaseIndicator（顶部阶段）+ TeamSection（蓝/红双方面板）+ 中央分隔
+ * BP 主竞技场 - pickban.pro 三列横向范式
+ * 左列(蓝方面板) | 中列(英雄选择区) | 右列(红方面板)
+ * 整页固定一屏,仅中列英雄网格内部滚动。
+ * 中列左右两侧各一条紫色细线作为蓝红视觉分隔(保留 .bg-lol-purple 元素)。
  */
 export default function BanPickArena() {
-  const { blueTeam, redTeam, getCurrentPhase } = useBP()
-  const phase = getCurrentPhase()
+  const { blueTeam, redTeam } = useBP()
 
   return (
-    <div className="flex h-full flex-col bg-black">
-      {/* 顶部阶段指示器 - 电竞风格 */}
-      <div className="border-b border-lol-border/50 bg-black/80 px-6 py-4">
-        <PhaseIndicator phase={phase} />
+    // 三列固定比例:蓝方 1fr | 英雄选择 1.8fr | 红方 1fr
+    // 中列用 1.8fr(占比最大)且 minmax 兜底,避免被两侧 1fr 的 ban/pick 内容挤压变窄
+    <div className="relative grid h-full grid-cols-[minmax(0,1fr)_minmax(420px,1.8fr)_minmax(0,1fr)] gap-x-2 overflow-hidden">
+      {/* 左列:蓝方面板 */}
+      <TeamSection side="blue" team={blueTeam} />
+
+      {/* 中列:英雄选择区(min-h-0 防止内部网格撑破一屏;左右紫色细线分隔) */}
+      <div className="relative h-full min-h-0 border-x border-lol-purple/30">
+        {/* 顶部紫色装饰条(蓝红视觉分隔锚点) */}
+        <div className="absolute inset-x-0 top-0 z-10 h-0.5 bg-lol-purple" aria-hidden="true" />
+        <HeroGrid />
       </div>
 
-      {/* BP 主区域 - 电竞风格：水平布局 + 中央紫色分隔 */}
-      <div className="grid flex-1 grid-cols-[1fr_auto_1fr]">
-        {/* 蓝方 */}
-        <TeamSection side="blue" team={blueTeam} />
-
-        {/* 中央紫色分隔 - 电竞风格 */}
-        <div className="relative flex w-20 flex-col items-center justify-center">
-          <div className="absolute inset-y-0 w-px bg-gradient-to-b from-transparent via-lol-purple to-transparent shadow-purple-lg" />
-          <div className="relative z-10 flex h-20 w-20 items-center justify-center">
-            <div className="absolute h-full w-px bg-lol-purple" />
-            <div className="absolute h-px w-full bg-lol-purple" />
-            <div className="h-4 w-4 rounded-full bg-lol-purple shadow-xl shadow-purple-lg animate-pulse" />
-          </div>
-        </div>
-
-        {/* 红方 */}
-        <TeamSection side="red" team={redTeam} />
-      </div>
+      {/* 右列:红方面板 */}
+      <TeamSection side="red" team={redTeam} />
     </div>
   )
 }
