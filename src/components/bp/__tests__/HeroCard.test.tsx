@@ -17,6 +17,7 @@ const hero: HeroWithStats = {
   version: '14.10.5',
   image: { full: 'Ahri.png', sprite: 's', group: 'g', x: 0, y: 0, w: 48, h: 48 },
   tags: ['Mage', 'Assassin'],
+  lanes: ['mid'],
 }
 
 beforeEach(() => {
@@ -115,5 +116,25 @@ describe('HeroCard - 图片加载', () => {
       expect(container.querySelector('img')).toBeNull()
       expect(container.querySelector('svg')).toBeTruthy()
     })
+  })
+})
+
+describe('HeroCard - 无畏征召禁用(isFearless)', () => {
+  it('isFearless:应用禁用样式但不显示已选择绿点', () => {
+    const { container } = renderCard({ isFearless: true })
+    const card = container.firstChild as HTMLElement
+    expect(card.className).toContain('cursor-not-allowed')
+    expect(card.className).toContain('grayscale')
+    expect(card.querySelector('.bg-green-500')).toBeNull()
+  })
+
+  it('isFearless:title 提示无畏征召已使用', () => {
+    renderCard({ isFearless: true })
+    expect(screen.getByTitle('阿狸 - bp.fearlessUsed')).toBeTruthy()
+  })
+
+  it('isDisabled(本局已选)时 isFearless 不影响绿点显示', () => {
+    const { container } = renderCard({ isDisabled: true })
+    expect(container.querySelector('.bg-green-500')).toBeTruthy()
   })
 })

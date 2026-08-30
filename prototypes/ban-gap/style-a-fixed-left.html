@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方案A - 固定槽宽64px + 左对齐</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lol-blue: #1565C0; --lol-blue-light: #42A5F5;
+    --lol-red: #C62828; --lol-red-light: #EF5350;
+    --lol-gold: #FFB300;
+    --bg-dark: #15151A; --bg-secondary: #1F1F28; --bg-card: #25252F;
+    --lol-black: #010a13; --border: #2E2E3A;
+    --text-muted: #8A8A99;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--bg-dark); color: #fff;
+    min-height: 100vh; display: flex; flex-direction: column;
+  }
+  .header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 20px; background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+  }
+  .header h1 { font-family: 'Orbitron'; font-size: 18px; font-weight: 700; }
+  .patch { font-family: 'Orbitron'; font-size: 12px; color: var(--lol-gold); }
+  .arena {
+    flex: 1; display: grid;
+    grid-template-columns: minmax(0,1fr) minmax(420px,1.8fr) minmax(0,1fr);
+    gap: 2px; min-height: 0;
+  }
+  .team {
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 12px 16px; min-height: 0;
+  }
+  .team.blue { background: linear-gradient(135deg, rgba(21,101,192,0.30), rgba(21,101,192,0.05) 60%, transparent); }
+  .team.red  { background: linear-gradient(225deg, rgba(198,40,40,0.30), rgba(198,40,40,0.05) 60%, transparent); }
+  .team-name {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(0,0,0,0.3); border-radius: 6px; padding: 8px 12px;
+    flex-shrink: 0;
+  }
+  .team-name .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .blue .dot { background: var(--lol-blue-light); }
+  .red .dot  { background: var(--lol-red-light); }
+  .team-name h2 {
+    font-family: 'Orbitron'; font-size: 13px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+  .blue .team-name h2 { color: var(--lol-blue-light); }
+  .red .team-name h2  { color: var(--lol-red-light); }
+
+  /* === BAN 行布局:方案A 关键差异 ===
+     固定槽宽 64px, flex 左对齐, gap 6px。
+     两组 ban 槽间距物理完全相同。 */
+  .ban-row {
+    height: 64px; flex-shrink: 0;
+    display: flex; gap: 6px; justify-content: flex-start;
+  }
+  .ban-slot {
+    width: 64px; height: 64px; flex-shrink: 0;
+    border-radius: 4px; overflow: hidden; position: relative;
+    border: 1px solid var(--border); background: var(--lol-black);
+  }
+  .ban-slot img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(100%) brightness(30%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(.7);
+  }
+  .ban-slot .slash {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  }
+  .ban-slot .slash::before {
+    content: ''; width: 100%; height: 1px; background: rgba(255,255,255,0.8); transform: rotate(45deg);
+  }
+  .ban-slot .seq {
+    position: absolute; left: 4px; top: 2px; z-index: 2;
+    font-size: 9px; font-weight: 600; letter-spacing: 1px;
+    color: rgba(138,138,153,0.7);
+  }
+  .ban-slot.empty { display: flex; align-items: center; justify-content: center; color: rgba(138,138,153,0.6); font-family: monospace; font-size: 18px; }
+
+  .pick-col { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+  .pick-col.main { flex: 1; }
+  .pick-col.sub { flex: 0.67; }
+  .pick-slot {
+    flex: 1; border-radius: 8px; overflow: hidden; position: relative;
+    background: var(--bg-card); min-height: 0;
+  }
+  .blue .pick-slot { border: 2px solid var(--lol-blue-light); }
+  .red .pick-slot  { border: 2px solid var(--lol-red-light); }
+  .pick-slot img { width: 100%; height: 100%; object-fit: cover; object-position: top; filter: contrast(1.1) saturate(1.2); }
+  .pick-slot .seq { position: absolute; left: 6px; top: 4px; z-index: 2; font-size: 9px; font-weight: 600; color: rgba(138,138,153,0.8); }
+  .pick-slot .name {
+    position: absolute; inset-inline: 0; bottom: 0; z-index: 2;
+    background: linear-gradient(to top, #000, rgba(0,0,0,0.8), transparent);
+    padding: 8px; text-align: center; font-weight: 700; font-size: 13px;
+  }
+  .blue .pick-slot .name { color: var(--lol-blue); }
+  .red .pick-slot .name  { color: var(--lol-red); }
+  .pick-slot .name { text-shadow: 2px 2px 1px #000; }
+  .pick-slot.empty { display: flex; align-items: center; justify-content: center; color: rgba(138,138,153,0.6); font-family: monospace; font-size: 24px; border-style: dashed; }
+
+  /* 中间英雄选择区占位 */
+  .hero-pool {
+    border-inline: 1px solid rgba(86,0,179,0.3);
+    padding: 12px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .hero-pool .placeholder {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); font-size: 14px;
+  }
+  .scheme-tag {
+    position: fixed; top: 10px; right: 20px; z-index: 100;
+    background: var(--lol-gold); color: #000;
+    padding: 6px 14px; border-radius: 4px; font-weight: 700; font-size: 12px;
+    font-family: 'Orbitron';
+  }
+</style>
+</head>
+<body>
+  <div class="scheme-tag">方案A · 固定64px · 左对齐</div>
+  <div class="header">
+    <h1>英雄联盟 BP 模拟器</h1>
+    <span class="patch">PATCH 16.15.1</span>
+  </div>
+  <div class="arena">
+    <!-- 蓝方 -->
+    <div class="team blue">
+      <div class="team-name"><span class="dot"></span><h2>蓝方</h2></div>
+      <!-- ban-row-1: 3槽 -->
+      <div class="ban-row">
+        <div class="ban-slot"><span class="seq">B1</span><img src="https://ddragon.leagueoflegends.com/img/champion/tiles/Leesin_0.jpg" alt=""><div class="slash"></div></div>
+        <div class="ban-slot"><span class="seq">B2</span><img src="https://ddragon.leagueoflegends.com/img/champion/tiles/Aatrox_0.jpg" alt=""><div class="slash"></div></div>
+        <div class="ban-slot"><span class="seq">B3</span><img src="https://ddragon.leagueoflegends.com/img/champion/tiles/Caitlyn_0.jpg" alt=""><div class="slash"></div></div>
+      </div>
+      <!-- pick ×3 -->
+      <div class="pick-col main">
+        <div class="pick-slot"><span class="seq">B1</span><img src="https://ddragon.leagueoflegends.com/img/champion/splash/Ahri_0.jpg" alt=""><div class="name">阿狸</div></div>
+        <div class="pick-slot"><span class="seq">B2</span><img src="https://ddragon.leagueoflegends.com/img/champion/splash/Jinx_0.jpg" alt=""><div class="name">金克丝</div></div>
+        <div class="pick-slot"><span class="seq">B3</span><img src="https://ddragon.leagueoflegends.com/img/champion/splash/Thresh_0.jpg" alt=""><div class="name">锤石</div></div>
+      </div>
+      <!-- ban-row-2: 2槽 -->
+      <div class="ban-row">
+        <div class="ban-slot"><span class="seq">B4</span><img src="https://ddragon.leagueoflegends.com/img/champion/tiles/KaiSa_0.jpg" alt=""><div class="slash"></div></div>
+        <div class="ban-slot"><span class="seq">B5</span><img src="https://ddragon.leagueoflegends.com/img/champion/tiles/Lux_0.jpg" alt=""><div class="slash"></div></div>
+      </div>
+      <!-- pick ×2 -->
+      <div class="pick-col sub">
+        <div class="pick-slot"><span class="seq">B4</span><img src="https://ddragon.leagueoflegends.com/img/champion/splash/Yasuo_0.jpg" alt=""><div class="name">亚索</div></div>
+        <div class="pick-slot"><span class="seq">B5</span><img src="https://ddragon.leagueoflegends.com/img/champion/splash/Jhin_0.jpg" alt=""><div class="name">烬</div></div>
+      </div>
+    </div>
+
+    <!-- 中间英雄池占位 -->
+    <div class="hero-pool">
+      <div class="placeholder">中间英雄选择区（四个方案完全相同，本原型只对比 ban 间距）</div>
+    </div>
+
+    <!-- 红方 -->
+    <div class="team red">
+      <div class="team-name"><span class="dot"></span><h2>红方</h2></div>
+      <div class="ban-row">
+        <div class="ban-slot"><span class="seq">R1</span><img src="https://ddragon.leagueoflegends.com/img/champion/tiles/Vayne_0.jpg" alt=""><div class="slash"></div></div>
+        <div class="ban-slot"><span class="seq">R2</span><img src="https://ddragon.leagueoflegends.com/img/champion/tiles/Leblanc_0.jpg" alt=""><div class="slash"></div></div>
+        <div class="ban-slot"><span class="seq">R3</span><img src="https://ddragon.leagueoflegends.com/img/champion/tiles/Zed_0.jpg" alt=""><div class="slash"></div></div>
+      </div>
+      <div class="pick-col main">
+        <div class="pick-slot"><span class="seq">R1</span><img src="https://ddragon.leagueoflegends.com/img/champion/splash/Katarina_0.jpg" alt=""><div class="name">卡特琳娜</div></div>
+        <div class="pick-slot"><span class="seq">R2</span><img src="https://ddragon.leagueoflegends.com/img/champion/splash/Akali_0.jpg" alt=""><div class="name">阿卡丽</div></div>
+        <div class="pick-slot"><span class="seq">R3</span><img src="https://ddragon.leagueoflegends.com/img/champion/splash/Pyke_0.jpg" alt=""><div class="name">派克</div></div>
+      </div>
+      <div class="ban-row">
+        <div class="ban-slot"><span class="seq">R4</span><img src="https://ddragon.leagueoflegends.com/img/champion/tiles/Sett_0.jpg" alt=""><div class="slash"></div></div>
+        <div class="ban-slot"><span class="seq">R5</span><img src="https://ddragon.leagueoflegends.com/img/champion/tiles/Camille_0.jpg" alt=""><div class="slash"></div></div>
+      </div>
+      <div class="pick-col sub">
+        <div class="pick-slot"><span class="seq">R4</span><img src="https://ddragon.leagueoflegends.com/img/champion/splash/Irelia_0.jpg" alt=""><div class="name">艾瑞莉娅</div></div>
+        <div class="pick-slot"><span class="seq">R5</span><img src="https://ddragon.leagueoflegends.com/img/champion/splash/Sylas_0.jpg" alt=""><div class="name">塞拉斯</div></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>当前回合指示器方案对比</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lol-gold:#FFB300; --bg-dark:#15151A; --bg-secondary:#1F1F28;
+    --border:#2E2E3A; --text-muted:#8A8A99;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Rajdhani',sans-serif; background:var(--bg-dark); color:#fff; padding:30px 40px; }
+  h1 { font-family:'Orbitron'; font-size:22px; margin-bottom:6px; color:var(--lol-gold); }
+  .subtitle { color:var(--text-muted); font-size:14px; margin-bottom:28px; line-height:1.6; }
+  .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+  .card {
+    background:var(--bg-secondary); border:1px solid var(--border); border-radius:8px;
+    padding:18px; transition:all .2s; display:flex; flex-direction:column;
+  }
+  .card:hover { border-color:var(--lol-gold); transform:translateY(-2px); box-shadow:0 4px 12px rgba(255,179,0,0.15); }
+  .card h2 { font-family:'Orbitron'; font-size:14px; margin-bottom:6px; }
+  .card .desc { color:var(--text-muted); font-size:12px; line-height:1.5; margin-bottom:12px; flex:1; }
+  .preview {
+    background:var(--bg-dark); border-radius:6px; padding:14px; margin-bottom:12px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .mini-label { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; }
+  /* 迷你预览样式 */
+  .mini-bar { display:flex; align-items:center; padding:8px 14px; border-radius:4px; font-weight:700; font-size:11px; letter-spacing:0.5px; }
+  .mini-1 { justify-content:center; gap:8px; }
+  .mini-1.blue { background:rgba(21,101,192,0.2); border:1.5px solid rgba(21,101,192,0.5); color:#42A5F5; }
+  .mini-1.red { background:rgba(198,40,40,0.2); border:1.5px solid rgba(198,40,40,0.5); color:#EF5350; }
+  .mini-arrow { width:14px; height:14px; fill:currentColor; }
+  .mini-2.blue { background:linear-gradient(to right,rgba(21,101,192,0.55),rgba(21,101,192,0.10) 70%); border:1.5px solid rgba(21,101,192,0.6); color:#fff; justify-content:flex-start; }
+  .mini-2.red { background:linear-gradient(to left,rgba(198,40,40,0.55),rgba(198,40,40,0.10) 70%); border:1.5px solid rgba(198,40,40,0.6); color:#fff; justify-content:flex-end; }
+  .mini-3.blue { background:rgba(21,101,192,0.35); border:1.5px solid #42A5F5; color:#42A5F5; clip-path:polygon(0 50%,12px 0,100% 0,100% 100%,12px 100%); padding-left:24px; }
+  .mini-3.red { background:rgba(198,40,40,0.35); border:1.5px solid #EF5350; color:#EF5350; clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%); padding-right:24px; justify-content:flex-end; }
+  .mini-4 { display:flex; border-radius:4px; overflow:hidden; }
+  .mini-4 .h { flex:1; padding:8px 10px; font-size:10px; font-weight:700; }
+  .mini-4 .b { color:#42A5F5; } .mini-4 .r { color:#EF5350; justify-content:flex-end; display:flex; }
+  .mini-4 .h.act.b { background:rgba(21,101,192,0.45); } .mini-4 .h.dim { opacity:0.35; }
+  .mini-4 .h.act.r { background:rgba(198,40,40,0.45); }
+  .mini-4 .v { width:28px; background:rgba(0,0,0,0.6); color:#FFB300; display:flex; align-items:center; justify-content:center; font-family:'Orbitron'; font-size:9px; font-weight:900; }
+  .pros { font-size:11px; color:#6BCB77; margin-bottom:3px; }
+  .cons { font-size:11px; color:#FF6B6B; margin-bottom:12px; }
+  .card a { display:block; text-align:center; padding:9px; background:var(--lol-gold); color:#000; text-decoration:none; border-radius:4px; font-weight:700; font-size:12px; transition:filter .15s; }
+  .card a:hover { filter:brightness(1.15); }
+  .note { margin-top:24px; padding:14px; background:var(--bg-secondary); border-left:3px solid var(--lol-gold); border-radius:4px; font-size:13px; line-height:1.7; color:#ccc; }
+  .note strong { color:var(--lol-gold); }
+</style>
+</head>
+<body>
+  <h1>当前回合指示器方案对比</h1>
+  <p class="subtitle">中间列底部「禁用英雄 - 蓝方回合」这条提示,如何更明显地指向当前队伍方向。四版只换指示方式,点击打开完整预览(含蓝/红两态)。</p>
+
+  <div class="grid">
+    <div class="card">
+      <h2>方案 1 · 箭头指向</h2>
+      <p class="desc">条内放大箭头:蓝方◀朝左、红方▶朝右,指向对应队伍面板。方向最直白。</p>
+      <div class="preview">
+        <span class="mini-label">蓝方</span>
+        <div class="mini-bar mini-1 blue"><svg class="mini-arrow" viewBox="0 0 24 24"><path d="M14 6 L6 12 L14 18 Z"/></svg>禁用 - 蓝方回合</div>
+        <span class="mini-label">红方</span>
+        <div class="mini-bar mini-1 red">禁用 - 红方回合<svg class="mini-arrow" viewBox="0 0 24 24"><path d="M10 6 L18 12 L10 18 Z"/></svg></div>
+      </div>
+      <p class="pros">✓ 方向最明确 · ✓ 实现简单</p>
+      <p class="cons">✗ 箭头占空间 · ✗ 略显直白</p>
+      <a href="style-1-arrow.html" target="_blank">打开方案 1</a>
+    </div>
+
+    <div class="card">
+      <h2>方案 2 · 非对称渐变</h2>
+      <p class="desc">条用方向性渐变,视觉重心偏向当前方(蓝左红右),文字也偏移。含蓄优雅。</p>
+      <div class="preview">
+        <span class="mini-label">蓝方(重心左)</span>
+        <div class="mini-bar mini-2 blue">禁用 - 蓝方回合</div>
+        <span class="mini-label">红方(重心右)</span>
+        <div class="mini-bar mini-2 red">禁用 - 红方回合</div>
+      </div>
+      <p class="pros">✓ 含蓄优雅 · ✓ 不破坏极简</p>
+      <p class="cons">✗ 方向感较弱 · ✗ 需细看才察觉</p>
+      <a href="style-2-gradient.html" target="_blank">打开方案 2</a>
+    </div>
+
+    <div class="card">
+      <h2>方案 3 · 斜切箭头条</h2>
+      <p class="desc">整条用 clip-path 切成路标箭头形(蓝左尖红右尖)。形状本身就是方向,视觉冲击强。</p>
+      <div class="preview">
+        <span class="mini-label">蓝方(左尖)</span>
+        <div class="mini-bar mini-3 blue">禁用 - 蓝方回合</div>
+        <span class="mini-label">红方(右尖)</span>
+        <div class="mini-bar mini-3 red">禁用 - 红方回合</div>
+      </div>
+      <p class="pros">✓ 形状即方向 · ✓ 视觉冲击强</p>
+      <p class="cons">✗ clip-path 切边框 · ✗ 实现稍复杂</p>
+      <a href="style-3-chevron.html" target="_blank">打开方案 3</a>
+    </div>
+
+    <div class="card">
+      <h2>方案 4 · 双色对峙 VS</h2>
+      <p class="desc">条分左右两半+中间金色 VS,当前方高亮、对方暗淡。两军对峙的对决感。</p>
+      <div class="preview">
+        <span class="mini-label">蓝方回合</span>
+        <div class="mini-4"><div class="h b act">蓝方回合</div><div class="v">VS</div><div class="h r dim">红方</div></div>
+        <span class="mini-label">红方回合</span>
+        <div class="mini-4"><div class="h b dim">蓝方</div><div class="v">VS</div><div class="h r act">红方回合</div></div>
+      </div>
+      <p class="pros">✓ 对决感最强 · ✓ 双方都在视野内</p>
+      <p class="cons">✗ 占用更多高度 · ✗ 信息量略大</p>
+      <a href="style-4-vs.html" target="_blank">打开方案 4</a>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>说明</strong>:这条提示位于中间英雄选择区底部,横跨蓝红两队之间。当前仅用颜色(蓝/红)区分,方向感弱。
+    四个方案都加强"指向某一方":<strong>1 箭头</strong>(最直白)、<strong>2 渐变</strong>(最含蓄)、<strong>3 斜切</strong>(最有形)、<strong>4 VS</strong>(最有对决感)。
+    可混搭(如方案1箭头 + 方案2渐变背景)。选定后告诉我方案号。
+  </div>
+</body>
+</html>

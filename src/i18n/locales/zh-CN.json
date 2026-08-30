@@ -37,7 +37,16 @@
     "banHero": "禁用英雄",
     "pickHero": "选择英雄",
     "turn": "回合",
-    "picksCount": "{{count}}/5 已选择"
+    "picksCount": "{{count}}/5 已选择",
+    "timerPause": "暂停计时",
+    "timerResume": "继续计时",
+    "timerPaused": "已暂停",
+    "swapSourceHint": "已选中:点击同队另一个已选英雄交换位置",
+    "swapTargetHint": "点击与此槽交换",
+    "fearless": "无畏征召",
+    "fearlessTip": "系列赛模式:下一局起,本局所有出现过的英雄不可再选(2025 职业规则)",
+    "fearlessUsed": "无畏征召:此英雄在本系列赛已使用",
+    "nextGame": "下一局"
   },
   "hero": {
     "tags": {
@@ -47,6 +56,13 @@
       "marksman": "射手",
       "support": "辅助",
       "tank": "坦克"
+    },
+    "lanes": {
+      "top": "上单",
+      "jungle": "打野",
+      "mid": "中单",
+      "bot": "下路",
+      "support": "辅助"
     },
     "searchPlaceholder": "搜索英雄...",
     "tagFilter": "标签筛选",

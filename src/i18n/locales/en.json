@@ -37,7 +37,16 @@
     "banHero": "Ban champion",
     "pickHero": "Pick champion",
     "turn": "Turn",
-    "picksCount": "{{count}}/5 Selected"
+    "picksCount": "{{count}}/5 Selected",
+    "timerPause": "Pause timer",
+    "timerResume": "Resume timer",
+    "timerPaused": "Paused",
+    "swapSourceHint": "Selected: click another picked slot of this team to swap",
+    "swapTargetHint": "Click to swap with this slot",
+    "fearless": "Fearless",
+    "fearlessTip": "Series mode: champions used this game cannot be picked or banned next game (2025 pro rules)",
+    "fearlessUsed": "Fearless: already used in this series",
+    "nextGame": "Next Game"
   },
   "hero": {
     "tags": {
@@ -47,6 +56,13 @@
       "marksman": "Marksman",
       "support": "Support",
       "tank": "Tank"
+    },
+    "lanes": {
+      "top": "Top",
+      "jungle": "Jungle",
+      "mid": "Mid",
+      "bot": "ADC",
+      "support": "Support"
     },
     "searchPlaceholder": "Search champions...",
     "tagFilter": "Filter by tags",

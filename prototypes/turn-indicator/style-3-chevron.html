@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方案3 - 斜切箭头条</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lol-blue:#1565C0; --lol-blue-light:#42A5F5;
+    --lol-red:#C62828; --lol-red-light:#EF5350;
+    --bg-dark:#15151A; --text-muted:#8A8A99;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Rajdhani',sans-serif; background:var(--bg-dark); color:#fff; padding:24px; }
+  .container { max-width:680px; margin:0 auto; }
+  h1 { font-size:18px; margin-bottom:4px; color:#FFB300; }
+  .desc { color:var(--text-muted); font-size:13px; margin-bottom:24px; line-height:1.6; }
+  .demo { margin-bottom:28px; }
+  .demo-label { font-size:12px; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; }
+  /* 方案3 核心:clip-path 把条切成箭头形(路标)
+     蓝方:左侧凸出箭头(指向左);红方:右侧凸出箭头(指向右) */
+  .turn-bar {
+    display:flex; align-items:center; padding:14px 28px;
+    font-weight:700; font-size:15px; letter-spacing:1px;
+    min-height:48px;
+  }
+  .turn-bar.blue {
+    background:rgba(21,101,192,0.35);
+    border:2px solid var(--lol-blue-light);
+    color:var(--lol-blue-light); box-shadow:1px 1px 3px 0 #000;
+    /* 左侧切成三角箭头:左中点向左凸出 */
+    clip-path:polygon(0 50%, 20px 0, 100% 0, 100% 100%, 20px 100%);
+    padding-left:40px;
+    justify-content:flex-start;
+  }
+  .turn-bar.red {
+    background:rgba(198,40,40,0.35);
+    border:2px solid var(--lol-red-light);
+    color:var(--lol-red-light); box-shadow:1px 1px 3px 0 #000;
+    /* 右侧切成三角箭头:右中点向右凸出 */
+    clip-path:polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%);
+    padding-right:40px;
+    justify-content:flex-end;
+  }
+  .scheme-tag {
+    position:fixed; top:16px; right:24px; z-index:100;
+    background:#FFB300; color:#000; padding:6px 14px; border-radius:4px; font-weight:700; font-size:12px;
+  }
+  .note { margin-top:10px; font-size:11px; color:var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="scheme-tag">方案3 · 斜切箭头条</div>
+<div class="container">
+  <h1>方案 3 · 斜切箭头条（路标形）</h1>
+  <p class="desc">用 clip-path 把整条切成箭头形状:蓝方左侧凸出指向左、红方右侧凸出指向右,像方向路标。形状本身就是方向。</p>
+
+  <div class="demo">
+    <div class="demo-label">蓝方回合(左尖)</div>
+    <div class="turn-bar blue"><span>禁用英雄 - 蓝方回合</span></div>
+    <p class="note">注:clip-path 会切掉边框,这里用色块+描边模拟,实际需用 SVG 或双层结构保留完整描边</p>
+  </div>
+
+  <div class="demo">
+    <div class="demo-label">红方回合(右尖)</div>
+    <div class="turn-bar red"><span>禁用英雄 - 红方回合</span></div>
+  </div>
+</div>
+</body>
+</html>

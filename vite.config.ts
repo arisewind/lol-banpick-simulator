@@ -11,10 +11,10 @@ export default defineConfig({
     },
   },
   server: {
-    // 改用 5273:5173 落在 Windows 保留端口排除区间 [5145,5244],
-    // 会被 Hyper-V/WSL2 预留,bind ::1 时报 EACCES。strictPort 固定端口,
-    // 保证与 package.json 中 wait-on 的 URL 一致,避免静默换端口后 wait-on 失配。
-    port: 5273,
+    // Windows Hyper-V/WSL2 会动态预留端口排除段,5173/5273 都曾落进排除区间
+    // ([5145,5244] / [5245,5344]) 导致 bind ::1 报 EACCES。7357 不在任何排除段。
+    // strictPort 固定端口,保证与 package.json 中 wait-on 的 URL 一致。
+    port: 7357,
     strictPort: true,
   },
   base: './',

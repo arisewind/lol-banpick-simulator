@@ -11,7 +11,8 @@
  * 导出/导入等文件操作在浏览器里无法真正实现,用 no-op + 提示替代(预览用途足够)。
  */
 import type { ElectronAPI } from '../types/global'
-import type { Hero } from '../types/hero'
+import type { Hero, Lane } from '../types/hero'
+import championLanes from '../data/championLanes.json'
 
 const DATA_DRAGON_BASE = 'https://ddragon.leagueoflegends.com'
 const DATA_DRAGON_CDN = 'https://ddragon.leagueoflegends.com/cdn'
@@ -51,7 +52,11 @@ async function fetchHeroes(): Promise<Hero[]> {
   const v = await getCurrentVersion()
   const res = await fetch(`${DATA_DRAGON_CDN}/${v}/data/zh_CN/champion.json`)
   const data: DataDragonChampionResponse = await res.json()
-  const heroes: Hero[] = Object.values(data.data).map((hero) => ({
+  const heroes: Hero[] = Object.values(data.data)
+    // 过滤 Data Dragon 16.x 起混入的 Jade_* 怀旧变体条目(与 heroService 保持同步)。
+    // 详见 heroService.fetchHeroes 中同名 filter 的注释。
+    .filter((hero) => !hero.id.startsWith('Jade_'))
+    .map((hero) => ({
     id: hero.id,
     name: hero.name,
     title: hero.title,
@@ -67,6 +72,9 @@ async function fetchHeroes(): Promise<Hero[]> {
       h: hero.image.h,
     },
     tags: hero.tags,
+    // 注入主流分路(映射表查不到的默认空数组,与 heroService 同源)
+    // JSON 含 _comment/_lanes 元数据键,用 unknown 中转避免它们污染 Lane[] 索引签名
+    lanes: (championLanes as unknown as Record<string, Lane[]>)[hero.id] || [],
   }))
   heroes.forEach(h => heroCache.set(h.id, h))
   return heroes
@@ -100,7 +108,11 @@ export async function setupDevMock(): Promise<void> {
     },
 
     getHeroSplashUrl: async (heroId: string, type: 'loading' | 'splash' | 'centered' = 'loading') => {
-      const folder = type === 'splash' ? 'splash' : type === 'centered' ? 'centered' : 'loading'
+      // SPLASH_FALLBACK 必须与 heroService.SPLASH_FALLBACK 保持同步
+      // (splash 横版原画挂旧版的英雄,回退到 loading 竖版新版)
+      const SPLASH_FALLBACK = new Set(['Fiddlesticks'])
+      const effectiveType = type === 'splash' && SPLASH_FALLBACK.has(heroId) ? 'loading' : type
+      const folder = effectiveType === 'splash' ? 'splash' : effectiveType === 'centered' ? 'centered' : 'loading'
       return { success: true as const, data: `${DATA_DRAGON_CDN}/img/champion/${folder}/${heroId}_0.jpg` }
     },
 

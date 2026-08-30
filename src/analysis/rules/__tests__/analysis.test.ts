@@ -8,6 +8,7 @@ const mkHero = (id: string, tags: string[]): Hero => ({
   id, name: id, title: '', blurb: '', version: '1',
   image: { full: '', sprite: '', group: '', x: 0, y: 0, w: 0, h: 0 },
   tags,
+  lanes: [],
 })
 
 describe('calcSynergy', () => {

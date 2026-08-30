@@ -1,14 +1,16 @@
 import { createContext, useContext, useState, useCallback, useEffect, useMemo, ReactNode } from 'react'
-import type { HeroWithStats } from '../types/hero'
+import type { HeroWithStats, Lane } from '../types/hero'
 import { isHeroArray } from '../utils/typeGuards'
+
+// 五个分路常量(固定,不需从数据动态聚合)
+export const LANES: Lane[] = ['top', 'jungle', 'mid', 'bot', 'support']
 
 interface HeroState {
   heroes: HeroWithStats[]
   loading: boolean
   error: string | null
   searchQuery: string
-  selectedTags: string[]
-  availableTags: string[]
+  selectedLanes: Lane[]
 }
 
 interface HeroContextValue {
@@ -17,10 +19,10 @@ interface HeroContextValue {
   error: string | null
   filteredHeroes: HeroWithStats[]
   searchQuery: string
-  selectedTags: string[]
-  availableTags: string[]
+  selectedLanes: Lane[]
+  availableLanes: Lane[]
   setSearchQuery: (query: string) => void
-  setSelectedTags: (tags: string[]) => void
+  setSelectedLanes: (lanes: Lane[]) => void
   getHeroById: (id: string) => HeroWithStats | undefined
   refreshHeroes: () => Promise<void>
 }
@@ -33,8 +35,7 @@ export function HeroProvider({ children }: { children: ReactNode }) {
     loading: true,
     error: null,
     searchQuery: '',
-    selectedTags: [],
-    availableTags: [],
+    selectedLanes: [],
   })
 
   // 过滤英雄 - 使用 useMemo 优化性能
@@ -51,15 +52,15 @@ export function HeroProvider({ children }: { children: ReactNode }) {
       )
     }
 
-    // 标签过滤 - OR 逻辑，满足任一标签即可
-    if (state.selectedTags.length > 0) {
+    // 分路过滤 - OR 逻辑，英雄属于任一选中分路即匹配
+    if (state.selectedLanes.length > 0) {
       filtered = filtered.filter(hero =>
-        state.selectedTags.some(tag => hero.tags.includes(tag))
+        state.selectedLanes.some(lane => hero.lanes?.includes(lane))
       )
     }
 
     return filtered
-  }, [state.heroes, state.searchQuery, state.selectedTags])
+  }, [state.heroes, state.searchQuery, state.selectedLanes])
 
   // 搜索查询
   const setSearchQuery = useCallback((query: string) => {
@@ -70,12 +71,12 @@ export function HeroProvider({ children }: { children: ReactNode }) {
     }))
   }, [])
 
-  // 标签选择
-  const setSelectedTags = useCallback((tags: string[]) => {
+  // 分路选择
+  const setSelectedLanes = useCallback((lanes: Lane[]) => {
     setState(prev => ({
       ...prev,
-      selectedTags: tags,
-      // 只更新标签，让 useMemo 处理过滤
+      selectedLanes: lanes,
+      // 只更新分路选择，让 useMemo 处理过滤
     }))
   }, [])
 
@@ -107,17 +108,9 @@ export function HeroProvider({ children }: { children: ReactNode }) {
         }
         const heroes = result.data
 
-        // 提取所有标签
-        const tagsSet = new Set<string>()
-        heroes.forEach((hero) => {
-          hero.tags.forEach((tag) => tagsSet.add(tag))
-        })
-        const availableTags = Array.from(tagsSet).sort()
-
         setState(prev => ({
           ...prev,
           heroes,
-          availableTags,
           loading: false,
         }))
       } else {
@@ -145,10 +138,10 @@ export function HeroProvider({ children }: { children: ReactNode }) {
     error: state.error,
     filteredHeroes,
     searchQuery: state.searchQuery,
-    selectedTags: state.selectedTags,
-    availableTags: state.availableTags,
+    selectedLanes: state.selectedLanes,
+    availableLanes: LANES,
     setSearchQuery,
-    setSelectedTags,
+    setSelectedLanes,
     getHeroById,
     refreshHeroes,
   }

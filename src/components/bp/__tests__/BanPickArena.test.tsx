@@ -37,13 +37,13 @@ vi.mock('../../../contexts/BPContext', async (importOriginal) => {
 // 新布局下 BanPickArena 内含 HeroGrid,需补全 useHeroes 的全部字段
 vi.mock('../../../contexts/HeroContext', () => ({
   useHeroes: () => ({
-    getHeroById: (id: string | null) => (id ? { id, name: id, title: '', tags: [] } : null),
+    getHeroById: (id: string | null) => (id ? { id, name: id, title: '', tags: [], lanes: [] } : null),
     filteredHeroes: [],
     searchQuery: '',
     setSearchQuery: () => {},
-    selectedTags: [],
-    setSelectedTags: () => {},
-    availableTags: [],
+    selectedLanes: [],
+    setSelectedLanes: () => {},
+    availableLanes: ['top', 'jungle', 'mid', 'bot', 'support'],
     loading: false,
     error: null,
     refreshHeroes: () => {},

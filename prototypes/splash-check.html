@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>VGU 英雄 splash 核查表</title>
+<style>
+  body { background:#15151A; color:#fff; font-family:sans-serif; padding:20px; margin:0; }
+  h1 { font-size:16px; color:#FFB300; margin:0 0 4px; }
+  .desc { color:#888; font-size:12px; margin-bottom:16px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:6px; }
+  .cell { position:relative; border:1px solid #2E2E3A; border-radius:4px; overflow:hidden; aspect-ratio:16/9; background:#000; }
+  .cell img { width:100%; height:100%; object-fit:cover; display:block; }
+  .cell .name { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,#000); padding:8px 6px 4px; font-size:11px; font-weight:bold; }
+  .cell .badge { position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.7); color:#FFB300; font-size:9px; padding:2px 5px; border-radius:2px; }
+</style>
+</head>
+<body>
+<h1>高风险英雄 splash 原画核查(Riot 官方 VGU/ASU 候选)</h1>
+<p class="desc">下方是经历过视觉更新的英雄的横版原画。请扫一眼,哪个画风明显老旧/和正式服不符,告诉我英雄名。</p>
+<div class="grid" id="grid"></div>
+<script>
+// Riot 官方确认的完整 VGU / ASU(视觉更新)英雄列表
+const vgu = ['Aatrox','Akali','Amumu','Ashe','Blitzcrank','Caitlyn','ChoGath','DrMundo','Evelynn','Ezreal','Fiddlesticks','Fizz','Galio','Gangplank','Garen','Gragas','Heimerdinger','Irelia','Jax','Kayle','Kennen','KogMaw','Leona','Lucian','Lux','Malphite','Maokai','MasterYi','MissFortune','Morgana','Nasus','Nidalee','Nunu','Olaf','Pantheon','Poppy','Rammus','Renekton','Ryze','Shaco','Shen','Shyvana','Sion','Sivir','Skarner','Sona','Soraka','Swain','TahmKench','Talon','Taric','Teemo','Thresh','Tristana','Tryndamere','TwistedFate','Twitch','Udyr','Urgot','Vayne','Veigar','Volibear','Warwick','MonkeyKing','XinZhao','Yorick','Zac','Ziggs'];
+const grid = document.getElementById('grid');
+const BASE = 'https://ddragon.leagueoflegends.com/img/champion/splash';
+vgu.forEach(id => {
+  const cell = document.createElement('div');
+  cell.className = 'cell';
+  // Fiddlesticks 已知怀旧,标记
+  const badge = id === 'Fiddlesticks' ? '<span class="badge">已知怀旧</span>' : '';
+  cell.innerHTML = '<img loading="lazy" src="' + BASE + '/' + id + '_0.jpg" alt="' + id + '" onerror="this.style.display=\'none\'">' + badge + '<div class="name">' + id + '</div>';
+  grid.appendChild(cell);
+});
+</script>
+</body>
+</html>

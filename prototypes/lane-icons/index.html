@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分路图标方案对比</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lol-gold:#FFB300; --bg-dark:#15151A; --bg-secondary:#1F1F28; --bg-card:#25252F;
+    --border:#2E2E3A; --text-muted:#8A8A99;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Rajdhani',sans-serif; background:var(--bg-dark); color:#fff; padding:30px 40px; }
+  h1 { font-family:'Orbitron'; font-size:22px; margin-bottom:6px; color:var(--lol-gold); }
+  .subtitle { color:var(--text-muted); font-size:14px; margin-bottom:28px; line-height:1.6; }
+  .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+  .card {
+    background:var(--bg-secondary); border:1px solid var(--border); border-radius:8px;
+    padding:18px; transition:all .2s; display:flex; flex-direction:column;
+  }
+  .card:hover { border-color:var(--lol-gold); transform:translateY(-2px); box-shadow:0 4px 12px rgba(255,179,0,0.15); }
+  .card h2 { font-family:'Orbitron'; font-size:15px; margin-bottom:6px; }
+  .card .desc { color:var(--text-muted); font-size:13px; line-height:1.6; margin-bottom:14px; flex:1; }
+  .preview {
+    background:var(--bg-dark); border-radius:6px; padding:14px; margin-bottom:14px;
+    display:flex; align-items:center; gap:6px;
+  }
+  .preview .label { font-size:11px; color:var(--text-muted); margin-right:6px; white-space:nowrap; }
+  .preview .icons { display:flex; gap:6px; }
+  .preview svg { width:22px; height:22px; display:block; }
+  .ic-default { color:var(--text-muted); }
+  .ic-active { color:var(--lol-gold); }
+  .pros { font-size:12px; color:#6BCB77; margin-bottom:3px; }
+  .cons { font-size:12px; color:#FF6B6B; margin-bottom:14px; }
+  .card a {
+    display:block; text-align:center; padding:9px; background:var(--lol-gold); color:#000;
+    text-decoration:none; border-radius:4px; font-weight:700; font-size:13px; transition:filter .15s;
+  }
+  .card a:hover { filter:brightness(1.15); }
+  .note {
+    margin-top:26px; padding:14px; background:var(--bg-secondary); border-left:3px solid var(--lol-gold);
+    border-radius:4px; font-size:13px; line-height:1.7; color:#ccc;
+  }
+  .note strong { color:var(--lol-gold); }
+  .badge-circle { width:24px; height:24px; border-radius:50%; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-family:'Orbitron'; font-weight:900; font-size:12px; }
+  .badge-circle.active { background:var(--lol-gold); color:#000; border-color:var(--lol-gold); }
+</style>
+</head>
+<body>
+  <h1>分路图标方案对比</h1>
+  <p class="subtitle">5 个分路筛选按钮的图标设计语言。四版共享同一套筛选交互，只换图标风格。点击打开各原型完整预览。</p>
+
+  <div class="grid">
+    <!-- 方案1 -->
+    <div class="card">
+      <h2>方案 1 · LOL 地图方位（当前）</h2>
+      <p class="desc">菱形地图 + 河道对角线，各分路在对应方位亮起。语义最贴 LOL，但小尺寸细节密集。</p>
+      <div class="preview">
+        <span class="label">未选 / 选中</span>
+        <div class="icons">
+          <svg class="ic-default" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2 L22 12 L12 22 L2 12 Z" opacity="0.4"/><circle cx="6" cy="6" r="2.6" fill="currentColor" stroke="none"/></svg>
+          <svg class="ic-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2 L22 12 L12 22 L2 12 Z" opacity="0.4"/><circle cx="6" cy="6" r="2.6" fill="currentColor" stroke="none"/></svg>
+        </div>
+      </div>
+      <p class="pros">✓ LOL 语义最强 · ✓ 离线 SVG</p>
+      <p class="cons">✗ 小尺寸辨识度低 · ✗ 细节太密（你说效果不好）</p>
+      <a href="style-1-map.html" target="_blank">打开方案 1</a>
+    </div>
+
+    <!-- 方案2 -->
+    <div class="card">
+      <h2>方案 2 · 字母圆牌</h2>
+      <p class="desc">圆形牌 + 大写首字母 T/J/M/A/S（Orbitron 字体）。最简洁、辨识度最高，纯符号化。</p>
+      <div class="preview">
+        <span class="label">未选 / 选中</span>
+        <div class="icons" style="gap:10px;">
+          <span class="badge-circle" style="color:var(--text-muted);">T</span>
+          <span class="badge-circle active">T</span>
+        </div>
+      </div>
+      <p class="pros">✓ 辨识度最高 · ✓ 极简干净 · ✓ 一眼区分</p>
+      <p class="cons">✗ 无 LOL 语义 · ✗ 需记忆字母对应</p>
+      <a href="style-2-letter.html" target="_blank">打开方案 2</a>
+    </div>
+
+    <!-- 方案3 -->
+    <div class="card">
+      <h2>方案 3 · 简笔线性符号</h2>
+      <p class="desc">具象战斗符号：剑（上单）/树（打野）/闪电（中单）/弓（下路）/盾（辅助）。线条粗壮清晰。</p>
+      <div class="preview">
+        <span class="label">未选 / 选中</span>
+        <div class="icons">
+          <svg class="ic-default" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L12 16"/><path d="M8 7 L16 7"/><path d="M12 16 L10 21 M12 16 L14 21"/></svg>
+          <svg class="ic-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L12 16"/><path d="M8 7 L16 7"/><path d="M12 16 L10 21 M12 16 L14 21"/></svg>
+        </div>
+      </div>
+      <p class="pros">✓ 战斗语义直白 · ✓ 线条粗壮清晰 · ✓ 小尺寸好认</p>
+      <p class="cons">✗ 符号与分路关联需联想（树=打野?）</p>
+      <a href="style-3-symbol.html" target="_blank">打开方案 3</a>
+    </div>
+
+    <!-- 方案4 -->
+    <div class="card">
+      <h2>方案 4 · 实心填充彩色徽章</h2>
+      <p class="desc">每分路独立配色（品红/绿/红/青/金），未选灰度化、选中恢复彩色+金边。最接近游戏内观感。</p>
+      <div class="preview">
+        <span class="label">未选 / 选中</span>
+        <div class="icons" style="gap:10px;">
+          <span style="width:24px;height:24px;border-radius:6px;background:var(--bg-card);filter:grayscale(0.7) brightness(0.7);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;">⚔</span>
+          <span style="width:24px;height:24px;border-radius:6px;background:var(--bg-card);border:2px solid var(--lol-gold);display:flex;align-items:center;justify-content:center;color:#E83E8C;font-size:10px;">⚔</span>
+        </div>
+      </div>
+      <p class="pros">✓ 最接近游戏内观感 · ✓ 彩色区分明显 · ✓ 视觉冲击力强</p>
+      <p class="cons">✗ 色彩较多可能显乱 · ✗ 与整体金/蓝红主题需协调</p>
+      <a href="style-4-badge.html" target="_blank">打开方案 4</a>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>对比建议</strong>：四个原型的筛选交互完全相同，<strong>唯一差异是图标设计语言</strong>。
+    方案 1 是你当前觉得不好的版本（地图方位，细节太密）。2/3/4 是新方案：字母圆牌（最简）、线性符号（具象）、彩色徽章（最炫）。
+    建议都打开横向对比，选定后告诉我方案号，我集成进 React 项目。
+  </div>
+</body>
+</html>

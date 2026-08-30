@@ -4,8 +4,10 @@ import { BPProvider as BPContext } from './contexts/BPContext'
 import { HeroProvider as HeroContext } from './contexts/HeroContext'
 import { DataProvider as DataContext } from './contexts/DataContext'
 import BanPickArena from './components/bp/BanPickArena'
+import PhaseTimer from './components/bp/PhaseTimer'
 import AnalysisDrawer from './components/analysis/AnalysisDrawer'
 import { useBP } from './contexts/BPContext'
+import { cn } from './utils/cn'
 import { isValidBPSnapshotRenderer } from './utils/typeGuards'
 
 // 环境检测组件
@@ -86,7 +88,8 @@ function EnvironmentGuard({ children }: { children: React.ReactNode }) {
 
 function AppContent() {
   const { t, i18n } = useTranslation()
-  const { undo, reset, currentPhase, totalPhases, blueTeam, redTeam, history, isComplete, loadSnapshot } = useBP()
+  const { undo, reset, currentPhase, totalPhases, blueTeam, redTeam, history, isComplete, loadSnapshot,
+    getCurrentPhase, fearlessEnabled, setFearlessEnabled, startNextGame } = useBP()
   const [notice, setNotice] = useState<{ text: string; type: 'success' | 'error' } | null>(null)
   const [analysisOpen, setAnalysisOpen] = useState(false)
   // 游戏版本号(从 Data Dragon 拉取,用于 Header PATCH 标签;拉取失败留空)
@@ -164,7 +167,7 @@ function AppContent() {
           </span>
         )}
 
-        {/* 中:当前阶段信息 + 进度计数 */}
+        {/* 中:当前阶段信息 + 进度计数 + 阶段倒计时(学 DraftLoL) */}
         <div className="flex min-w-0 flex-1 items-center justify-center gap-3">
           <span className="font-display text-xs text-lol-text-secondary">
             {Math.min(currentPhase + 1, totalPhases)}/{totalPhases}
@@ -175,6 +178,7 @@ function AppContent() {
               style={{ width: `${progressPct}%` }}
             />
           </div>
+          <PhaseTimer phase={getCurrentPhase()} />
         </div>
 
         {/* 右:功能按钮组(原 Header + Footer 所有按钮集中于此) */}
@@ -209,6 +213,30 @@ function AppContent() {
           >
             {t('common.reset')}
           </button>
+          {/* 无畏征召开关(学 Drafter.lol/DraftVision:2025 职业主流系列赛规则) */}
+          <button
+            onClick={() => setFearlessEnabled(!fearlessEnabled)}
+            aria-pressed={fearlessEnabled}
+            title={t('bp.fearlessTip')}
+            className={cn(
+              'btn-game rounded px-3 py-1.5 text-xs uppercase tracking-wide transition-colors',
+              fearlessEnabled
+                ? 'border border-lol-gold/60 bg-lol-gold/20 font-medium text-lol-gold'
+                : 'bg-lol-bg-secondary text-lol-text-muted hover:text-lol-text-secondary',
+            )}
+          >
+            {t('bp.fearless')}
+          </button>
+          {/* 下一局:仅本局 BP 完成(且有操作)后出现,推进系列赛并按开关累计无畏池 */}
+          {isComplete && history.length > 0 && (
+            <button
+              onClick={startNextGame}
+              title={t('bp.fearlessTip')}
+              className="btn-game rounded border border-lol-gold/60 bg-lol-gold/20 px-3 py-1.5 text-xs font-medium uppercase tracking-wide text-lol-gold transition-colors hover:bg-lol-gold/30"
+            >
+              {t('bp.nextGame')}
+            </button>
+          )}
           <div className="mx-1 h-5 w-px bg-lol-border" />
           <button
             onClick={() => setAnalysisOpen(true)}

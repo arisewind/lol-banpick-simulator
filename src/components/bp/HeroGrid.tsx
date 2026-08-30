@@ -1,25 +1,21 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useBP } from '../../contexts/BPContext'
 import { useHeroes } from '../../contexts/HeroContext'
+import type { Lane } from '../../types/hero'
 import HeroCard from './HeroCard'
+import PositionIcon from './PositionIcon'
 import { cn } from '../../utils/cn'
-
-// 获取标签的翻译文本
-function getTagLabel(tag: string, t: (key: string) => string): string {
-  return t(`hero.tags.${tag.toLowerCase()}`)
-}
 
 /**
  * 英雄选择区 - pickban.pro 中列范式
- * 三行 grid:搜索+role过滤(顶) / 英雄网格(中,可滚) / 当前操作提示(底)
- * 功能逻辑(搜索/标签筛选/点击 ban/pick)全部保留,只重构布局容器。
+ * 三行 grid:搜索+分路过滤(顶) / 英雄网格(中,可滚) / 当前操作提示(底)
+ * 功能逻辑(搜索/分路筛选/点击 ban/pick)全部保留,只重构布局容器。
  */
 export default function HeroGrid() {
   const { t } = useTranslation()
-  const { filteredHeroes, searchQuery, setSearchQuery, selectedTags, setSelectedTags, availableTags, loading, error, refreshHeroes } = useHeroes()
-  const { getCurrentPhase, banHero, pickHero, blueTeam, redTeam } = useBP()
-  const [showTags, setShowTags] = useState(false)
+  const { filteredHeroes, searchQuery, setSearchQuery, selectedLanes, setSelectedLanes, availableLanes, loading, error, refreshHeroes } = useHeroes()
+  const { getCurrentPhase, banHero, pickHero, blueTeam, redTeam, fearlessUsed } = useBP()
 
   // 获取所有已选择的英雄 ID(useMemo 稳定引用,避免每次渲染新建 Set 导致 HeroCard memo 失效)
   const selectedIds = useMemo(() => {
@@ -30,92 +26,86 @@ export default function HeroGrid() {
     redTeam.picks.forEach(id => selected.add(id))
     return selected
   }, [blueTeam, redTeam])
+  // 无畏征召:系列赛前几局用过的英雄,本局不可再选
+  const fearlessIds = useMemo(() => new Set(fearlessUsed), [fearlessUsed])
   const phase = getCurrentPhase()
 
   // 处理英雄点击(useCallback 稳定引用,作为 onSelect 传给 memo 化的 HeroCard)
   const handleHeroClick = useCallback((heroId: string) => {
     if (!phase) return
-    if (selectedIds.has(heroId)) return
+    if (selectedIds.has(heroId) || fearlessIds.has(heroId)) return
     if (phase.action === 'ban') {
       banHero(heroId)
     } else {
       pickHero(heroId)
     }
-  }, [phase, selectedIds, banHero, pickHero])
+  }, [phase, selectedIds, fearlessIds, banHero, pickHero])
+
+  // 分路按钮切换(toggle 语义)
+  const toggleLane = useCallback((lane: Lane) => {
+    setSelectedLanes(
+      selectedLanes.includes(lane)
+        ? selectedLanes.filter(l => l !== lane)
+        : [...selectedLanes, lane]
+    )
+  }, [selectedLanes, setSelectedLanes])
 
   return (
     <div className="grid h-full grid-rows-[auto_1fr_auto] gap-2 px-3 py-3 min-h-0">
-      {/* 第 1 行:搜索框 + 标签筛选 + 统计(横向单行) */}
-      <div className="flex items-center gap-2">
+      {/* 第 1 行:五个分路图标(左) + 统计 + 搜索框(右) */}
+      <div className="flex items-center gap-1.5">
+        {/* 五个分路实体按钮(图标式,左侧) */}
+        <div className="flex items-center gap-1">
+          {availableLanes.map((lane) => {
+            const isSelected = selectedLanes.includes(lane)
+            const laneLabel = t(`hero.lanes.${lane}`)
+            return (
+              <button
+                key={lane}
+                onClick={() => toggleLane(lane)}
+                aria-pressed={isSelected}
+                aria-label={laneLabel}
+                title={laneLabel}
+                className={cn(
+                  'flex shrink-0 items-center justify-center p-0.5 transition-all duration-150',
+                  // 官方分路图标:明暗对比。未选暗灰、选中金色(贴 LOL 客户端 #c8aa6e)。
+                  // hover 提至次亮,给未选态一个可交互的反馈梯度。无边框/底色。
+                  isSelected
+                    ? 'text-lol-gold'
+                    : 'text-lol-text-muted/60 hover:text-lol-text-secondary',
+                )}
+              >
+                <PositionIcon lane={lane} title={laneLabel} />
+              </button>
+            )
+          })}
+          {/* 清除筛选(有选中时显示) */}
+          {selectedLanes.length > 0 && (
+            <button
+              onClick={() => setSelectedLanes([])}
+              className={cn(
+                'shrink-0 rounded px-2 py-2 text-xs font-medium transition-all duration-150',
+                'text-lol-text-muted hover:text-lol-gold',
+              )}
+            >
+              ✕
+            </button>
+          )}
+        </div>
+        {/* 统计(ml-auto 把自己和搜索框推到右侧) */}
+        <span className="ml-auto shrink-0 text-xs text-lol-text-muted">
+          {t('hero.totalHeroes', { count: filteredHeroes.length })}
+        </span>
+        {/* 搜索框(最右) */}
         <input
           type="text"
           placeholder={t('hero.searchPlaceholder')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className={cn(
-            'input-game w-44 rounded px-3 py-2 text-sm text-lol-text-primary placeholder-lol-text-muted',
+            'input-game w-36 shrink-0 rounded px-3 py-2 text-sm text-lol-text-primary placeholder-lol-text-muted',
           )}
         />
-        <div className="relative">
-          <button
-            onClick={() => setShowTags(!showTags)}
-            className={cn(
-              'flex items-center gap-1 rounded px-3 py-2 text-xs font-medium',
-              'border border-lol-border bg-lol-bg-secondary text-lol-text-secondary',
-              'transition-all duration-150 hover:bg-lol-bg-card',
-            )}
-          >
-            <span>{t('hero.tagFilter')} {selectedTags.length > 0 && `(${selectedTags.length})`}</span>
-            <span className={cn('transition-transform duration-150', showTags ? 'rotate-90' : '')}>▶</span>
-          </button>
-          {showTags && (
-            <div className={cn(
-              'absolute left-0 top-full z-30 mt-1 w-64 rounded p-3',
-              'border border-lol-border bg-lol-bg-dark shadow-hard',
-              'animate-slide-in-up',
-            )}>
-              <div className="flex flex-wrap gap-2">
-                {availableTags.map((tagEn) => {
-                  const isSelected = selectedTags.includes(tagEn)
-                  return (
-                    <button
-                      key={tagEn}
-                      onClick={() => {
-                        if (isSelected) {
-                          setSelectedTags(selectedTags.filter((tg) => tg !== tagEn))
-                        } else {
-                          setSelectedTags([...selectedTags, tagEn])
-                        }
-                      }}
-                      className={cn(
-                        'rounded px-3 py-1.5 text-xs font-semibold transition-all duration-150',
-                        isSelected
-                          ? 'border-2 border-lol-blue bg-lol-blue text-black'
-                          : 'border border-lol-border bg-lol-bg-black text-lol-text-secondary hover:text-lol-text-primary',
-                      )}
-                    >
-                      {getTagLabel(tagEn, t)}
-                    </button>
-                  )
-                })}
-              </div>
-              {selectedTags.length > 0 && (
-                <button
-                  onClick={() => setSelectedTags([])}
-                  className={cn(
-                    'mt-2 rounded px-3 py-1.5 text-xs font-medium transition-all duration-150',
-                    'text-lol-text-muted hover:text-lol-gold',
-                  )}
-                >
-                  {t('common.clear')}
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-        <span className="ml-auto text-xs text-lol-text-muted">
-          {t('hero.totalHeroes', { count: filteredHeroes.length })}
-        </span>
       </div>
 
       {/* 第 2 行:英雄网格(pickban.pro 规范:110px 卡片 + 10px gap,限高滚动)
@@ -151,6 +141,7 @@ export default function HeroGrid() {
               key={hero.id}
               hero={hero}
               isDisabled={selectedIds.has(hero.id)}
+              isFearless={fearlessIds.has(hero.id)}
               isCurrentPhase={!!phase}
               actionType={phase?.action || null}
               onSelect={handleHeroClick}
@@ -159,14 +150,16 @@ export default function HeroGrid() {
         )}
       </div>
 
-      {/* 第 3 行:当前操作提示(pickban.pro 风格:队伍色描边 + 硬阴影,无发光) */}
+      {/* 第 3 行:当前操作提示(方案2:非对称渐变,视觉重心指向当前方,文字居中) */}
       {phase && (
         <div className={cn(
           'rounded p-2 text-center border-2 transition-all duration-200',
           'animate-fade-in',
+          // 非对称渐变:蓝方左实右淡(重心偏左,指向蓝方面板)、红方右实左淡(重心偏右)
+          // 文字保持 text-center 居中,方向感由背景渐变承担
           phase.side === 'blue'
-            ? 'bg-lol-blue/20 border-lol-blue/50 text-lol-blue shadow-blue-sm'
-            : 'bg-lol-red/20 border-lol-red/50 text-lol-red shadow-red-sm',
+            ? 'bg-gradient-to-r from-lol-blue/55 via-lol-blue/15 to-transparent border-lol-blue/60 text-lol-blue-light shadow-blue-sm'
+            : 'bg-gradient-to-l from-lol-red/55 via-lol-red/15 to-transparent border-lol-red/60 text-lol-red-light shadow-red-sm',
         )}>
           <span className="text-sm font-bold uppercase tracking-wide">
             {t(`bp.${phase.action}Hero`)} - {t(`bp.${phase.side}Team`)}{t('bp.turn')}

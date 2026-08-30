@@ -7,6 +7,8 @@ import { useHeroImage } from '../../hooks/useHeroImage'
 interface HeroCardProps {
   hero: HeroWithStats
   isDisabled: boolean
+  /** 无畏征召禁用:本系列赛前几局用过,不可再选(样式同禁用但不带"已选择"绿点) */
+  isFearless?: boolean
   isCurrentPhase: boolean
   actionType: 'ban' | 'pick' | null
   onSelect: (heroId: string) => void
@@ -21,12 +23,14 @@ interface HeroCardProps {
  * - hover:背景变浅灰 + 提亮(非放大)
  * - 禁用(已 ban/pick):grayscale + #1c1c1c 灰底,名字变灰 —— 「被锁住」的视觉
  */
-function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onSelect }: HeroCardProps) {
+function HeroCard({ hero, isDisabled, isFearless = false, isCurrentPhase, actionType, onSelect }: HeroCardProps) {
   const { t } = useTranslation()
   const { imageUrl, imageError } = useHeroImage(hero.id)
 
+  const effectivelyDisabled = isDisabled || isFearless
+
   const getCardStyle = () => {
-    if (isDisabled) {
+    if (effectivelyDisabled) {
       // C 风格:禁用态半透明黑底 + 灰度
       return cn(
         'grayscale cursor-not-allowed bg-black/30 border-2 border-lol-border',
@@ -76,7 +80,7 @@ function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onSelect }: He
       onClick={() => onSelect(hero.id)}
       // 固定 110px 宽透明按钮(grid 布局),居中放进网格格子 —— 对齐 pickban 规范
       className={`group relative grid w-[110px] mx-auto border-2 px-[5px] pt-[15px] pb-[10px] ${getCardStyle()}`}
-      title={`${hero.name} - ${hero.title}`}
+      title={isFearless ? `${hero.name} - ${t('bp.fearlessUsed')}` : `${hero.name} - ${hero.title}`}
     >
       {/* 英雄头像:80px 方形黑底,居中(pickban 规范:图片底色纯黑) */}
       {imageUrl && !imageError ? (
@@ -102,8 +106,8 @@ function HeroCard({ hero, isDisabled, isCurrentPhase, actionType, onSelect }: He
       {/* 操作标签:hover 显示 */}
       {getActionBadge()}
 
-      {/* 已选择标记 */}
-      {isDisabled && (
+      {/* 已选择标记(仅本局已选;无畏征召禁用的不带绿点) */}
+      {isDisabled && !isFearless && (
         <div className="absolute right-1 bottom-1 h-2 w-2 rounded-full bg-green-500 shadow-hard-sm" />
       )}
     </div>

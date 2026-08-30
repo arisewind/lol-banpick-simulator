@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方案1 - LOL地图方位风格</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lol-gold:#FFB300; --lol-gold-light:#FFCA28;
+    --bg-dark:#15151A; --bg-secondary:#1F1F28; --bg-card:#25252F;
+    --lol-black:#010a13; --border:#2E2E3A;
+    --text-muted:#8A8A99; --text-secondary:#CCCCCC;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Rajdhani',sans-serif; background:var(--bg-dark); color:#fff; padding:24px; }
+  .container { max-width:720px; margin:0 auto; }
+  h1 { font-size:18px; margin-bottom:4px; color:var(--lol-gold); }
+  .desc { color:var(--text-muted); font-size:13px; margin-bottom:20px; line-height:1.6; }
+  .toolbar {
+    display:flex; align-items:center; gap:6px; padding:12px;
+    background:var(--bg-secondary); border:1px solid var(--border); border-radius:8px;
+  }
+  .search {
+    width:144px; flex-shrink:0; padding:8px 12px; font-size:14px;
+    background:var(--lol-black); border:1px solid var(--border); border-radius:4px; color:#fff;
+    font-family:inherit;
+  }
+  .search::placeholder { color:var(--text-muted); }
+  .lanes { display:flex; align-items:center; gap:4px; }
+  .lane-btn {
+    display:flex; align-items:center; justify-content:center;
+    padding:6px; border-radius:4px; cursor:pointer; transition:all .15s;
+    border:1px solid var(--border); background:var(--bg-card); color:var(--text-secondary);
+  }
+  .lane-btn:hover { border-color:rgba(255,179,0,0.5); color:#fff; }
+  .lane-btn.active {
+    border:2px solid var(--lol-gold); background:var(--lol-gold); color:#000;
+    box-shadow:2px 2px 5px 0 #000; padding:5px;
+  }
+  .lane-btn svg { width:20px; height:20px; display:block; }
+  .count { margin-left:auto; flex-shrink:0; font-size:12px; color:var(--text-muted); }
+  .scheme-tag {
+    position:fixed; top:16px; right:24px; z-index:100;
+    background:var(--lol-gold); color:#000; padding:6px 14px;
+    border-radius:4px; font-weight:700; font-size:12px;
+  }
+  .hint { margin-top:16px; font-size:12px; color:var(--text-muted); }
+  .clear { padding:8px 10px; font-size:12px; color:var(--text-muted); cursor:pointer; background:none; border:none; }
+  .clear:hover { color:var(--lol-gold); }
+</style>
+</head>
+<body>
+<div class="scheme-tag">方案1 · LOL地图方位</div>
+<div class="container">
+  <h1>方案 1 · LOL 地图方位风格（当前版本，对照基准）</h1>
+  <p class="desc">菱形地图 + 河道对角线，各分路在对应方位亮起。语义最贴 LOL，但小尺寸下细节密集、辨识度一般。</p>
+  <div class="toolbar">
+    <input class="search" placeholder="搜索英雄...">
+    <div class="lanes">
+      <!-- 上单:左上方位 -->
+      <button class="lane-btn" title="上单" aria-label="上单">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2 L22 12 L12 22 L2 12 Z" opacity="0.4"/>
+          <path d="M5 5 L19 19" opacity="0.25" stroke-width="1"/>
+          <circle cx="6" cy="6" r="2.6" fill="currentColor" stroke="none"/>
+          <path d="M6 6 L10 10" stroke-width="2"/>
+        </svg>
+      </button>
+      <!-- 打野:中央交叉 -->
+      <button class="lane-btn" title="打野" aria-label="打野">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2 L22 12 L12 22 L2 12 Z" opacity="0.4"/>
+          <path d="M5 5 L19 19" opacity="0.25" stroke-width="1"/>
+          <path d="M8 8 L12 12 M12 8 L8 12" stroke-width="2"/>
+          <path d="M14 14 L18 18 M18 14 L14 18" stroke-width="2"/>
+          <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>
+        </svg>
+      </button>
+      <!-- 中单:对角线中段 -->
+      <button class="lane-btn" title="中单" aria-label="中单">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2 L22 12 L12 22 L2 12 Z" opacity="0.4"/>
+          <path d="M5 5 L19 19" opacity="0.25" stroke-width="1"/>
+          <circle cx="12" cy="12" r="2.6" fill="currentColor" stroke="none"/>
+          <path d="M12 12 L17 7" stroke-width="2"/>
+          <path d="M12 12 L7 17" stroke-width="2"/>
+        </svg>
+      </button>
+      <!-- 下路:右下方位 -->
+      <button class="lane-btn" title="下路" aria-label="下路">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2 L22 12 L12 22 L2 12 Z" opacity="0.4"/>
+          <path d="M5 5 L19 19" opacity="0.25" stroke-width="1"/>
+          <circle cx="18" cy="18" r="2.6" fill="currentColor" stroke="none"/>
+          <path d="M18 18 L14 14" stroke-width="2"/>
+        </svg>
+      </button>
+      <!-- 辅助:盾形 -->
+      <button class="lane-btn" title="辅助" aria-label="辅助">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2 L22 12 L12 22 L2 12 Z" opacity="0.4"/>
+          <path d="M5 5 L19 19" opacity="0.25" stroke-width="1"/>
+          <path d="M18 13 L18 18 C18 19.5 16 20.5 15 21 C14 20.5 12 19.5 12 18 L12 13 Z" fill="currentColor" stroke="none" opacity="0.85"/>
+        </svg>
+      </button>
+    </div>
+    <span class="count">共 173 位英雄</span>
+  </div>
+  <p class="hint">点击图标切换选中态（金色高亮）。此方案是当前线上的图标，作为对比基准。</p>
+</div>
+<script>
+  document.querySelectorAll('.lane-btn').forEach(b => b.addEventListener('click', () => b.classList.toggle('active')));
+</script>
+</body>
+</html>

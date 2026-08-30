@@ -62,6 +62,11 @@ interface BPState {
   redTeam: TeamState
   history: HeroAction[]
   isComplete: boolean
+  // 无畏征召(Fearless Draft)系列赛状态:本系列赛之前若干局中 ban/pick 过的英雄,
+  // 下一局起这些英雄全局不可再选(职业 2025 赛季主流规则,参考 Drafter.lol/DraftVision)。
+  // 仅存在于会话中,不进 BPSnapshot(快照始终是单局的)。
+  fearlessUsed: string[]
+  fearlessEnabled: boolean
 }
 
 // BP 快照（导入导出用）：BPState 的可序列化字段集
@@ -76,8 +81,14 @@ export interface BPSnapshot {
 interface BPContextValue extends BPState {
   banHero: (heroId: string) => void
   pickHero: (heroId: string) => void
+  /** 交换本队两个已填的 pick 槽(学 DraftLoL:灵活位换人/选手位分配)。不记入 history */
+  swapPicks: (side: TeamSide, i: number, j: number) => void
   undo: () => void
   reset: () => void
+  /** 无畏征召开关(模式偏好;开启后 startNextGame 才会把本局英雄累计进 fearlessUsed) */
+  setFearlessEnabled: (enabled: boolean) => void
+  /** 结束本局、开启系列赛下一局:本局英雄按开关累计进 fearlessUsed,BP 流程归零 */
+  startNextGame: () => void
   loadSnapshot: (snap: BPSnapshot) => boolean
   getCurrentPhase: () => BPPhase | null
   totalPhases: number
@@ -92,6 +103,8 @@ export function BPProvider({ children }: { children: ReactNode }) {
     redTeam: { bans: [], picks: [] },
     history: [],
     isComplete: false,
+    fearlessUsed: [],
+    fearlessEnabled: false,
   })
 
   const getCurrentPhase = useCallback((): BPPhase | null => {
@@ -108,8 +121,9 @@ export function BPProvider({ children }: { children: ReactNode }) {
       const phase = BP_PHASES[prev.currentPhase]
       if (!phase || phase.action !== expectedAction) return prev
 
-      // 检查英雄是否已被选择
+      // 检查英雄是否已被选择(含无畏征召:系列赛前几局用过的英雄同样不可再选)
       const allSelected = new Set([
+        ...prev.fearlessUsed,
         ...prev.blueTeam.bans,
         ...prev.redTeam.bans,
         ...prev.blueTeam.picks,
@@ -147,6 +161,23 @@ export function BPProvider({ children }: { children: ReactNode }) {
 
   const banHero = useCallback((heroId: string) => applyAction(heroId, 'ban'), [applyAction])
   const pickHero = useCallback((heroId: string) => applyAction(heroId, 'pick'), [applyAction])
+
+  // 交换同队两个已填的 pick 槽。学 DraftLoL 的核心交互:pick 顺序是 BP 流程决定的,
+  // 但英雄与选手位的对应由队伍自行安排,故允许事后对调(灵活位/flex pick 场景)。
+  // 刻意不写入 history:交换不推进 BP 流程;undo 按 heroId 从队伍数组中剔除,
+  // 与槽位顺序无关,因此交换后 undo 依然正确。
+  const swapPicks = useCallback((side: TeamSide, i: number, j: number) => {
+    if (i === j || i < 0 || i >= SLOTS_PER_TEAM || j < 0 || j >= SLOTS_PER_TEAM) return
+    setState((prev) => {
+      const picks = side === 'blue' ? prev.blueTeam.picks : prev.redTeam.picks
+      if (!picks[i] || !picks[j]) return prev
+      const swapped = [...picks]
+      ;[swapped[i], swapped[j]] = [swapped[j], swapped[i]]
+      return side === 'blue'
+        ? { ...prev, blueTeam: { ...prev.blueTeam, picks: swapped } }
+        : { ...prev, redTeam: { ...prev.redTeam, picks: swapped } }
+    })
+  }, [])
 
   const undo = useCallback(() => {
     setState((prev) => {
@@ -190,17 +221,52 @@ export function BPProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
+  // 重置 = 开启全新系列赛:清空 fearlessUsed(系列赛累计归零)。
+  // 开关 fearlessEnabled 是模式偏好,保持不变。
   const reset = useCallback(() => {
-    setState({
+    setState((prev) => ({
       currentPhase: 0,
       blueTeam: { bans: [], picks: [] },
       redTeam: { bans: [], picks: [] },
       history: [],
       isComplete: false,
+      fearlessUsed: [],
+      fearlessEnabled: prev.fearlessEnabled,
+    }))
+  }, [])
+
+  // 无畏征召开关
+  const setFearlessEnabled = useCallback((enabled: boolean) => {
+    setState((prev) => ({ ...prev, fearlessEnabled: enabled }))
+  }, [])
+
+  // 系列赛下一局:本局所有 ban/pick 过的英雄按开关累计进 fearlessUsed,BP 流程归零。
+  // 开关关闭时仅做普通重置(不累计)。本局无任何操作时是误触,不响应。
+  const startNextGame = useCallback(() => {
+    setState((prev) => {
+      if (prev.history.length === 0) return prev
+      const usedThisGame = [
+        ...prev.blueTeam.bans,
+        ...prev.blueTeam.picks,
+        ...prev.redTeam.bans,
+        ...prev.redTeam.picks,
+      ]
+      return {
+        currentPhase: 0,
+        blueTeam: { bans: [], picks: [] },
+        redTeam: { bans: [], picks: [] },
+        history: [],
+        isComplete: false,
+        fearlessUsed: prev.fearlessEnabled
+          ? Array.from(new Set([...prev.fearlessUsed, ...usedThisGame]))
+          : prev.fearlessUsed,
+        fearlessEnabled: prev.fearlessEnabled,
+      }
     })
   }, [])
 
-  // 从快照恢复 BP 状态（导入用）。带 schema 校验 + 字段白名单，返回是否加载成功
+  // 从快照恢复 BP 状态（导入用）。带 schema 校验 + 字段白名单，返回是否加载成功。
+  // 快照是单局的,fearlessUsed/fearlessEnabled 属会话级状态,原样保留。
   const loadSnapshot = useCallback((snap: BPSnapshot): boolean => {
     if (
       typeof snap?.currentPhase !== 'number' ||
@@ -211,13 +277,15 @@ export function BPProvider({ children }: { children: ReactNode }) {
     ) {
       return false
     }
-    setState({
+    setState((prev) => ({
       currentPhase: snap.currentPhase,
       blueTeam: { bans: [...snap.blueTeam.bans], picks: [...snap.blueTeam.picks] },
       redTeam: { bans: [...snap.redTeam.bans], picks: [...snap.redTeam.picks] },
       history: [...snap.history],
       isComplete: snap.isComplete,
-    })
+      fearlessUsed: prev.fearlessUsed,
+      fearlessEnabled: prev.fearlessEnabled,
+    }))
     return true
   }, [])
 
@@ -225,8 +293,11 @@ export function BPProvider({ children }: { children: ReactNode }) {
     ...state,
     banHero,
     pickHero,
+    swapPicks,
     undo,
     reset,
+    setFearlessEnabled,
+    startNextGame,
     loadSnapshot,
     getCurrentPhase,
     totalPhases: BP_PHASES.length,

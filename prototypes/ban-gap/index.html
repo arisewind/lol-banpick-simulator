@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ban 位间距方案对比</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #15151A; --bg-secondary: #1F1F28; --bg-card: #25252F;
+    --border: #2E2E3A; --lol-gold: #FFB300;
+    --lol-blue: #42A5F5; --lol-red: #EF5350; --text-muted: #8A8A99;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--bg-dark); color: #fff;
+    min-height: 100vh; padding: 30px 40px;
+  }
+  h1 {
+    font-family: 'Orbitron'; font-size: 24px; font-weight: 700;
+    margin-bottom: 8px; color: var(--lol-gold);
+  }
+  .subtitle { color: var(--text-muted); font-size: 15px; margin-bottom: 30px; line-height: 1.6; }
+  .grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+  }
+  .card {
+    background: var(--bg-secondary); border: 1px solid var(--border);
+    border-radius: 8px; padding: 20px; transition: all 0.2s;
+    display: flex; flex-direction: column;
+  }
+  .card:hover {
+    border-color: var(--lol-gold); transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255,179,0,0.15);
+  }
+  .card h2 {
+    font-family: 'Orbitron'; font-size: 16px; margin-bottom: 6px;
+  }
+  .card .label-A { color: var(--lol-blue); }
+  .card .label-B { color: var(--lol-blue); }
+  .card .label-C { color: var(--lol-red); }
+  .card .label-D { color: var(--lol-gold); }
+  .card .desc {
+    color: var(--text-muted); font-size: 13px; line-height: 1.6;
+    margin-bottom: 14px; flex: 1;
+  }
+  .card .asci {
+    background: var(--bg-dark); border-radius: 4px; padding: 12px;
+    font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 12px;
+    color: #ccc; white-space: pre; line-height: 1.5; margin-bottom: 14px;
+    overflow-x: auto;
+  }
+  .card .pros { font-size: 12px; margin-bottom: 4px; color: #6BCB77; }
+  .card .cons { font-size: 12px; margin-bottom: 14px; color: #FF6B6B; }
+  .card a {
+    display: block; text-align: center; padding: 10px;
+    background: var(--lol-gold); color: #000; text-decoration: none;
+    border-radius: 4px; font-weight: 700; font-size: 14px;
+    transition: filter 0.15s;
+  }
+  .card a:hover { filter: brightness(1.15); }
+  .note {
+    margin-top: 30px; padding: 16px; background: var(--bg-secondary);
+    border-left: 3px solid var(--lol-gold); border-radius: 4px;
+    font-size: 13px; line-height: 1.7; color: #ccc;
+  }
+  .note strong { color: var(--lol-gold); }
+</style>
+</head>
+<body>
+  <h1>Ban 位间距方案对比</h1>
+  <p class="subtitle">
+    <strong>问题根因</strong>：ban-row-1 是 3 列、ban-row-2 是 2 列，grid 把行宽均分给列，
+    导致第二组格子更宽，槽居中后净距变成第一组的 2.5 倍（实测 33px vs 84px）。<br>
+    四个方案共享同一套 BP 场景，只换 ban 行布局，点击打开对比。
+  </p>
+
+  <div class="grid">
+    <div class="card">
+      <h2 class="label-A">方案 A · 固定槽宽 + 左对齐</h2>
+      <p class="desc">最小改动：grid 里槽用 aspect-square + justify-self-center 改为左对齐，槽宽固定 64px 不随列数伸缩。两组槽间距物理完全相同。</p>
+      <div class="asci">ban-row-1 (3槽, gap 6px, 左对齐):
+[B1][B2][B3]________
+净距 6px 均匀
+
+ban-row-2 (2槽, gap 6px, 左对齐):
+[B4][B5]____________
+净距 6px 同上 ✓</div>
+      <p class="pros">✓ 改动最小 · ✓ 间距完全一致 · ✓ 最接近 pickban.pro</p>
+      <p class="cons">✗ 第二组右侧留白较多</p>
+      <a href="style-a-fixed-left.html" target="_blank">打开方案 A</a>
+    </div>
+
+    <div class="card">
+      <h2 class="label-B">方案 B · flex + 紧凑</h2>
+      <p class="desc">ban 行从 grid 改成 flex，槽宽 56px、gap 4px，左对齐。两组物理距离完全相同，整体更省空间（留给 pick 更多宽度）。</p>
+      <div class="asci">ban-row-1 (flex, 56px, gap 4px):
+[B1][B2][B3]________
+紧凑左对齐
+
+ban-row-2 (flex, 56px, gap 4px):
+[B4][B5]____________
+间距同上 ✓ 更省空间</div>
+      <p class="pros">✓ 最紧凑 · ✓ 间距完全一致 · ✓ 给 pick 更多空间</p>
+      <p class="cons">✗ ban 槽偏小(56px) · ✗ 第二组右侧留白</p>
+      <a href="style-b-flex-compact.html" target="_blank">打开方案 B</a>
+    </div>
+
+    <div class="card">
+      <h2 class="label-C">方案 C · 两组两端对齐</h2>
+      <p class="desc">两组都 flex + justify-between（两端对齐）。第一组 3 槽均匀分布在行宽两端及中间，第二组 2 槽分布在行宽两端。两组左右边缘严格对齐，形成整齐秩序感。</p>
+      <div class="asci">ban-row-1 (space-between, 3槽):
+[B1]________[B2]________[B3]
+←两端对齐, 中间均匀分布→
+
+ban-row-2 (space-between, 2槽):
+[B4]____________________[B5]
+←两端对齐, 边缘与上组一致→</div>
+      <p class="pros">✓ 左右边缘严格对齐 · ✓ 秩序感强 · ✓ 两端对齐整齐</p>
+      <p class="cons">✗ 槽间距仍不一致(3槽密/2槽疏) · ✗ 中间留白大</p>
+      <a href="style-c-row2-center.html" target="_blank">打开方案 C</a>
+    </div>
+
+    <div class="card">
+      <h2 class="label-D">方案 D · 两组都居中（推荐）</h2>
+      <p class="desc">两组都用 flex + justify-center，槽宽 64px、gap 6px。两组槽间距物理完全相同，且都居中显示，最对称美观。</p>
+      <div class="asci">ban-row-1 (flex + 居中, 64px):
+  [B1][B2][B3]
+  ←── 居中 ──→
+
+ban-row-2 (flex + 居中, 64px):
+   [B4][B5]
+   ←── 居中 ──→
+
+间距完全相同(6px) ✓ 最对称</div>
+      <p class="pros">✓ 间距完全一致 · ✓ 两组都居中 · ✓ 最对称美观</p>
+      <p class="cons">✗ 第一组不再撑满(视觉变化最大)</p>
+      <a href="style-d-both-center.html" target="_blank">打开方案 D</a>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>对比建议</strong>：A/B/C/D 四个原型的中间英雄池、pick 槽、配色完全相同，<strong>唯一差异是 ban 行布局</strong>。
+    建议四个标签页都打开，来回切换横向对比。选定后告诉我方案字母，我会把对应布局集成进 React 项目（<code>TeamSection.tsx</code>）。
+  </div>
+</body>
+</html>

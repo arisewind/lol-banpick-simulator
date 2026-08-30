@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方案1 - 箭头指向</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lol-blue:#1565C0; --lol-blue-light:#42A5F5;
+    --lol-red:#C62828; --lol-red-light:#EF5350;
+    --bg-dark:#15151A; --bg-secondary:#1F1F28;
+    --text-muted:#8A8A99;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Rajdhani',sans-serif; background:var(--bg-dark); color:#fff; padding:24px; }
+  .container { max-width:680px; margin:0 auto; }
+  h1 { font-size:18px; margin-bottom:4px; color:#FFB300; }
+  .desc { color:var(--text-muted); font-size:13px; margin-bottom:24px; line-height:1.6; }
+  .demo { margin-bottom:28px; }
+  .demo-label { font-size:12px; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; }
+  /* 方案1 核心:条内放大箭头,指向对应队伍方向 */
+  .turn-bar {
+    display:flex; align-items:center; justify-content:center; gap:14px;
+    padding:12px 20px; border-radius:6px; border:2px solid;
+    font-weight:700; font-size:15px; letter-spacing:1px;
+  }
+  .turn-bar.blue {
+    background:rgba(21,101,192,0.20); border-color:rgba(21,101,192,0.5);
+    color:var(--lol-blue-light); box-shadow:1px 1px 3px 0 #000;
+  }
+  .turn-bar.red {
+    background:rgba(198,40,40,0.20); border-color:rgba(198,40,40,0.5);
+    color:var(--lol-red-light); box-shadow:1px 1px 3px 0 #000;
+  }
+  /* 大箭头:蓝方朝左(指向蓝方面板),红方朝右 */
+  .arrow { width:28px; height:28px; flex-shrink:0; }
+  .scheme-tag {
+    position:fixed; top:16px; right:24px; z-index:100;
+    background:#FFB300; color:#000; padding:6px 14px; border-radius:4px; font-weight:700; font-size:12px;
+  }
+</style>
+</head>
+<body>
+<div class="scheme-tag">方案1 · 箭头指向</div>
+<div class="container">
+  <h1>方案 1 · 箭头指向</h1>
+  <p class="desc">条内放一个大箭头:蓝方回合箭头朝左(◀ 指向蓝方面板),红方回合朝右(▶ 指向红方面板)。方向最直白。</p>
+
+  <div class="demo">
+    <div class="demo-label">蓝方回合</div>
+    <div class="turn-bar blue">
+      <svg class="arrow" viewBox="0 0 24 24" fill="currentColor"><path d="M14 6 L6 12 L14 18 Z"/></svg>
+      <span>禁用英雄 - 蓝方回合</span>
+    </div>
+  </div>
+
+  <div class="demo">
+    <div class="demo-label">红方回合</div>
+    <div class="turn-bar red">
+      <span>禁用英雄 - 红方回合</span>
+      <svg class="arrow" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6 L18 12 L10 18 Z"/></svg>
+    </div>
+  </div>
+</div>
+</body>
+</html>

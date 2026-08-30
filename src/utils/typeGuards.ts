@@ -21,7 +21,9 @@ export function isHero(data: unknown): data is Hero {
     typeof hero.image === 'object' &&
     hero.image !== null &&
     typeof hero.version === 'string' &&
-    Array.isArray(hero.tags)
+    Array.isArray(hero.tags) &&
+    // lanes 字段宽松校验:存在时必须是数组(展示用,缺失按空数组兜底,不阻断导入)
+    (hero.lanes === undefined || Array.isArray(hero.lanes))
   )
 }
 

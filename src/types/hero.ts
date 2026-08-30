@@ -1,5 +1,8 @@
 // 英雄相关类型定义
 
+// 英雄主流分路(数据源:src/data/championLanes.json,源自 LoL Wiki draft position)
+export type Lane = 'top' | 'jungle' | 'mid' | 'bot' | 'support'
+
 export interface Hero {
   id: string
   name: string
@@ -15,6 +18,8 @@ export interface Hero {
     h: number
   }
   tags: string[]
+  // 主流分路(映射表查不到时为空数组,表示该英雄无明确分路归类)
+  lanes: Lane[]
   version: string
 }
 

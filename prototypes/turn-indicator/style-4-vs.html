@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方案4 - 双色对峙VS</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lol-blue:#1565C0; --lol-blue-light:#42A5F5;
+    --lol-red:#C62828; --lol-red-light:#EF5350;
+    --bg-dark:#15151A; --text-muted:#8A8A99;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Rajdhani',sans-serif; background:var(--bg-dark); color:#fff; padding:24px; }
+  .container { max-width:680px; margin:0 auto; }
+  h1 { font-size:18px; margin-bottom:4px; color:#FFB300; }
+  .desc { color:var(--text-muted); font-size:13px; margin-bottom:24px; line-height:1.6; }
+  .demo { margin-bottom:28px; }
+  .demo-label { font-size:12px; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; }
+  /* 方案4 核心:条分左右两半,中间 VS 分隔,当前方那半高亮实色 */
+  .turn-bar {
+    display:flex; align-items:stretch; border-radius:6px; overflow:hidden;
+    border:2px solid rgba(46,46,58,0.8); box-shadow:1px 1px 3px 0 #000;
+    min-height:48px;
+  }
+  .half {
+    flex:1; display:flex; align-items:center; padding:12px 20px;
+    font-weight:700; font-size:14px; letter-spacing:1px; transition:all .2s;
+  }
+  .half.blue { color:var(--lol-blue-light); }
+  .half.red { color:var(--lol-red-light); justify-content:flex-end; }
+  /* 当前方:实色高亮;对方:暗淡 */
+  .half.active.blue { background:rgba(21,101,192,0.45); }
+  .half.active.red { background:rgba(198,40,40,0.45); }
+  .half.dim { opacity:0.35; }
+  /* 中间 VS 徽章 */
+  .vs {
+    display:flex; align-items:center; justify-content:center;
+    width:44px; flex-shrink:0;
+    background:rgba(0,0,0,0.6); color:#FFB300;
+    font-family:'Orbitron'; font-weight:900; font-size:14px;
+    border-inline:1px solid rgba(46,46,58,0.8);
+  }
+  .scheme-tag {
+    position:fixed; top:16px; right:24px; z-index:100;
+    background:#FFB300; color:#000; padding:6px 14px; border-radius:4px; font-weight:700; font-size:12px;
+  }
+</style>
+</head>
+<body>
+<div class="scheme-tag">方案4 · 双色对峙VS</div>
+<div class="container">
+  <h1>方案 4 · 双色对峙 + VS 徽章</h1>
+  <p class="desc">条分左右两半,中间金色 VS 分隔。当前方那半高亮实色、对方那半暗淡,形成"两军对峙、当前轮到谁"的对决感。</p>
+
+  <div class="demo">
+    <div class="demo-label">蓝方回合(左亮右暗)</div>
+    <div class="turn-bar">
+      <div class="half blue active"><span>禁用英雄 - 蓝方回合</span></div>
+      <div class="vs">VS</div>
+      <div class="half red dim"><span>红方</span></div>
+    </div>
+  </div>
+
+  <div class="demo">
+    <div class="demo-label">红方回合(左暗右亮)</div>
+    <div class="turn-bar">
+      <div class="half blue dim"><span>蓝方</span></div>
+      <div class="vs">VS</div>
+      <div class="half red active"><span>禁用英雄 - 红方回合</span></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

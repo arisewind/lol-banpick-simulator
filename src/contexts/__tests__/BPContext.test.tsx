@@ -249,3 +249,127 @@ describe('BPContext loadSnapshot', () => {
     expect(ok).toBe(false)
   })
 })
+
+describe('BPContext swapPicks', () => {
+  // 走完 6 个 ban + 6 个 pick:blue.picks = [P0,P3,P4](step 7,10,11),red.picks = [P1,P2,P5]
+  const fillAll = (bp: { current: ReturnType<typeof useBP> }) => {
+    for (let i = 0; i < 6; i++) act(() => bp.current.banHero(`B${i}`))
+    for (let i = 0; i < 6; i++) act(() => bp.current.pickHero(`P${i}`))
+  }
+
+  it('交换同队两个已填的 pick 槽', () => {
+    const { result } = renderBP()
+    fillAll(result)
+    act(() => result.current.swapPicks('blue', 0, 1))
+    expect(result.current.blueTeam.picks).toEqual(['P3', 'P0', 'P4'])
+  })
+
+  it('交换不影响另一队与 history', () => {
+    const { result } = renderBP()
+    fillAll(result)
+    const historyBefore = result.current.history
+    act(() => result.current.swapPicks('red', 0, 2))
+    expect(result.current.redTeam.picks).toEqual(['P5', 'P2', 'P1'])
+    expect(result.current.blueTeam.picks).toEqual(['P0', 'P3', 'P4'])
+    expect(result.current.history).toBe(historyBefore)
+    expect(result.current.currentPhase).toBe(12)
+  })
+
+  it('空槽参与交换无效', () => {
+    const { result } = renderBP()
+    for (let i = 0; i < 6; i++) act(() => result.current.banHero(`B${i}`))
+    act(() => result.current.pickHero('Only')) // blue.picks = ['Only'],picks[1] 未填
+    act(() => result.current.swapPicks('blue', 0, 1))
+    expect(result.current.blueTeam.picks).toEqual(['Only'])
+  })
+
+  it('非法索引或相同索引无效', () => {
+    const { result } = renderBP()
+    fillAll(result)
+    act(() => result.current.swapPicks('blue', -1, 1))
+    act(() => result.current.swapPicks('blue', 0, 5))
+    act(() => result.current.swapPicks('blue', 2, 2))
+    expect(result.current.blueTeam.picks).toEqual(['P0', 'P3', 'P4'])
+  })
+
+  it('交换后 undo 仍正确撤销最后一步 pick(undo 按 heroId 剔除)', () => {
+    const { result } = renderBP()
+    fillAll(result)
+    act(() => result.current.swapPicks('blue', 0, 1))
+    act(() => result.current.undo())
+    // 最后一步是 step12 红方 pick P5,与蓝方交换无关
+    expect(result.current.redTeam.picks).toEqual(['P1', 'P2'])
+    expect(result.current.currentPhase).toBe(11)
+  })
+})
+
+describe('BPContext 无畏征召(Fearless Draft)', () => {
+  it('默认关闭且 fearlessUsed 为空', () => {
+    const { result } = renderBP()
+    expect(result.current.fearlessEnabled).toBe(false)
+    expect(result.current.fearlessUsed).toEqual([])
+  })
+
+  it('开启开关后 startNextGame 累计本局英雄并重置流程', () => {
+    const { result } = renderBP()
+    act(() => result.current.setFearlessEnabled(true))
+    act(() => result.current.banHero('Ahri'))
+    act(() => result.current.banHero('Yasuo'))
+    act(() => result.current.startNextGame())
+    expect(result.current.currentPhase).toBe(0)
+    expect(result.current.history).toHaveLength(0)
+    expect(result.current.isComplete).toBe(false)
+    expect(result.current.fearlessUsed).toEqual(['Ahri', 'Yasuo'])
+    // 开关保持
+    expect(result.current.fearlessEnabled).toBe(true)
+  })
+
+  it('下一局中 fearlessUsed 英雄不能被 ban/pick', () => {
+    const { result } = renderBP()
+    act(() => result.current.setFearlessEnabled(true))
+    act(() => result.current.banHero('Ahri'))
+    act(() => result.current.startNextGame())
+    act(() => result.current.banHero('Ahri'))
+    expect(result.current.currentPhase).toBe(0)
+    expect(result.current.blueTeam.bans).toHaveLength(0)
+  })
+
+  it('开关关闭时 startNextGame 不累计(普通重置)', () => {
+    const { result } = renderBP()
+    act(() => result.current.banHero('Ahri'))
+    act(() => result.current.startNextGame())
+    expect(result.current.currentPhase).toBe(0)
+    expect(result.current.fearlessUsed).toEqual([])
+  })
+
+  it('本局无操作时 startNextGame 无效', () => {
+    const { result } = renderBP()
+    act(() => result.current.setFearlessEnabled(true))
+    act(() => result.current.startNextGame())
+    expect(result.current.fearlessUsed).toEqual([])
+  })
+
+  it('跨多局去重累计', () => {
+    const { result } = renderBP()
+    act(() => result.current.setFearlessEnabled(true))
+    act(() => result.current.banHero('Ahri'))
+    act(() => result.current.startNextGame())
+    // 第二局继续 ban 6 个 + pick Yasuo(step7 为蓝方 pick)
+    for (let i = 0; i < 6; i++) act(() => result.current.banHero(`B${i}`))
+    act(() => result.current.pickHero('Yasuo'))
+    act(() => result.current.startNextGame())
+    // 累计顺序 = usedThisGame 的拼接序:蓝 bans → 蓝 picks → 红 bans → 红 picks
+    expect(result.current.fearlessUsed).toEqual(['Ahri', 'B0', 'B2', 'B4', 'Yasuo', 'B1', 'B3', 'B5'])
+    expect(new Set(result.current.fearlessUsed).size).toBe(result.current.fearlessUsed.length)
+  })
+
+  it('reset 清空 fearlessUsed(全新系列赛)但保留开关偏好', () => {
+    const { result } = renderBP()
+    act(() => result.current.setFearlessEnabled(true))
+    act(() => result.current.banHero('Ahri'))
+    act(() => result.current.startNextGame())
+    act(() => result.current.reset())
+    expect(result.current.fearlessUsed).toEqual([])
+    expect(result.current.fearlessEnabled).toBe(true)
+  })
+})

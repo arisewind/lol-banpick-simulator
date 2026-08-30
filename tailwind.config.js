@@ -73,6 +73,8 @@ export default {
         'fade-in': 'fade-in 0.3s ease-out',
         'slide-in-up': 'slide-in-up 0.3s ease-out',
         'scale-in': 'scale-in 0.2s ease-out',
+        // 当前待操作槽的呼吸提示:边框 + 阴影缓慢脉动,1.8s 循环
+        'breathe': 'breathe 1.8s ease-in-out infinite',
       },
       keyframes: {
         'fade-in': {
@@ -97,6 +99,18 @@ export default {
           'to': {
             opacity: '1',
             transform: 'scale(1)',
+          },
+        },
+        // 呼吸:边框亮度 + 阴影脉动,提示"该这里操作了"。用 currentColor
+        // 染色,边框/阴影颜色随槽位的队伍色 token 变化(蓝/红)。
+        'breathe': {
+          '0%, 100%': {
+            borderColor: 'rgba(255,179,0,0.35)',
+            boxShadow: '0 0 0 0 rgba(255,179,0,0.0)',
+          },
+          '50%': {
+            borderColor: 'rgba(255,179,0,0.95)',
+            boxShadow: '0 0 14px 1px rgba(255,179,0,0.45)',
           },
         },
       },
